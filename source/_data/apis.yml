@@ -1,0 +1,33 @@
+fragment:
+  label: Fragment API
+  description: Description of what it does
+  tech_description: More tech description
+  image: assets/images/icons/image@2x.png
+  alt_text: Fragment API icon
+  latest:
+    label: Beta
+    major: 0
+    minor: 1
+    patch: 0
+presentation:
+  label: Presentation API
+  description: Description of what it does
+  tech_description: More tech description
+  image: assets/images/icons/image@2x.png
+  alt_text: Presentation API icon
+  latest:
+    label: Beta
+    major: 0
+    minor: 1
+    patch: 0
+annotation:
+  label: Annotation API
+  description: Description of what it does
+  tech_description: More tech description
+  image: assets/images/icons/image@2x.png
+  alt_text: Fragment API icon
+  latest:
+    label: Beta
+    major: 0
+    minor: 1
+    patch: 0

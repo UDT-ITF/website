@@ -1,0 +1,15 @@
+_site
+node_modules/
+scripts/factory.py
+scripts/factory.pyc
+.DS_Store
+*.swp
+.jekyll-cache
+.jekyll-metadata
+
+# local clones
+udt-itf-theme
+vendor
+Gemfile.lock
+questions.md
+

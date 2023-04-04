@@ -1,0 +1,14 @@
+- label: "Here add an event"
+  time:
+    start: 2023-04-17T11:00:00Z
+    end: 2023-04-21T12:00:00Z
+  links:
+    - label: More info and register
+      link: "https://www.link.to.registration"
+- label: "Here add another event"
+  time:
+    start: 2023-05-15T18:00:00Z
+    end: 2023-05-19T19:00:00Z
+  links:
+    - label: More info and register
+      link: "https://www.link.to.registration"

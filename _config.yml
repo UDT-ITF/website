@@ -1,0 +1,70 @@
+site_id:        root
+theme:          udt-itf-theme
+source:         source
+permalink:      pretty
+
+root_url:       ''
+
+collections:
+  news:
+    output: true
+    permalink: /news/:year/:month/:day/:title/
+  events:
+    permalink: /:collection/:path
+    output: true
+
+plugins:
+  - jekyll-data
+  - jekyll-gzip
+  - jekyll-redirect-from
+  - jekyll-liquify
+  - jekyll-datapage-generator
+  - jekyll-seo-tag
+
+page_gen-dirs: false
+page_gen:
+  - index_files: false
+    data: 'old.washington_submissions'
+    template: 'submission'
+    name: 'id'
+    dir: 'event/2018/washington/program'
+    extension: 'html'
+    filter_condition: "record['decision'] == 'ACCEPT'"
+  - index_files: false
+    data: 'old.2019-conference-submissions'
+    template: '2019_submission'
+    name: 'id'
+    dir: 'event/2019/goettingen/program'
+    extension: 'html'
+
+# notification:
+#   enabled: true
+#   title: This website design is in pre-beta.
+#   subtitle: Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+#   link: '#'
+#   link_label: This is a test link
+
+
+banner:
+  enabled: true
+  title: "Registration is now open for the 2023 IIIF Annual Conference!"
+  subtitle: "Discounted hotel rates still available."
+  link: 'https://iiif.io/event/2023/naples/'
+  link_label: Learn more
+
+# Jekyll SEO plugin info
+#title: IIIF APIs and Community Site
+tagline: "Here give a punchline for what UDT-ITF is."
+#description: IIIF is an open standard for delivering high-quality, attributed digital objects online at scale. It’s also an international community developing and implementing the IIIF APIs, backed by a consortium of leading academic and cultural institutions.
+#url: https://iiif.io/
+twitter:
+  username: iiif_io
+  card: summary
+logo: /assets/favicon.ico
+image: /assets/images/zeplin/png/UDT-ITF-logo-withtext.png
+social:
+  name: IIIF
+  links:
+    - https://twitter.com/IIIF_io
+    - https://www.linkedin.com/company/iiif-c/
+    - https://github.com/IIIF/
