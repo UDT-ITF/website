@@ -5,7 +5,7 @@ image: "/assets/uploads/2019-06-IIIF-Conference-0705.jpg"
 banner: true
 hero:
   image: "/assets/uploads/Bodleian_MS Auct F 4 32.jpeg"
-  title: "Unlocking Digital Texts: Towards an interoperable text framework"
+  title: "Unlocking Digital Texts:<br>Towards an Interoperable Text Framework"
   subtitle: Unlocking Digital Texts (UDT) aims to lay the foundation for the creation of the Interoperable Text Framework (ITF). Just as the International Image Interoperability Framework (IIIF) enables users to present, annotate and reuse digital images easily without having to worry about the underlying infrastructure, ITF will empower users to create a richer and more layered approach to the presentation, analysis and reuse of textual resources.
   button:
     label: "Get started"
