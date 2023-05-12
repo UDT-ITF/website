@@ -2,7 +2,7 @@
 layout: default
 title: Home
 image: "/assets/uploads/2019-06-IIIF-Conference-0705.jpg"
-banner: true
+banner: false
 hero:
   image: "/assets/uploads/Bodleian_MS Auct F 4 32.jpeg"
   title: "Unlocking Digital Texts:<br>Towards an Interoperable Text Framework"
@@ -98,30 +98,29 @@ stay_connected_cards:
     link: /community/consortium/join
 ---
 
-{{ theme.block-center-start }}
+<!-- {{ theme.block-center-start }}
 
 ## Break down silos with open APIs
 Many of the images and audio/visual resources that are fundamental to research exist in silos, with access restricted to locally-built applications. IIIF gives you and your audience freedom to work across barriers.
 
 {% include blocks/carousel.html items=page.iiif_basics_carousel %}
 
-{{ theme.block-end }}
+{{ theme.block-end }} -->
 
 
 
-
-{{ theme.block-center-start }}
+<!-- {{ theme.block-center-start }}
 
 ## Simplify and enhance your work
 {% include blocks/features.html items=page.features %}
 {% include misc/button.html button_label="Why IIIF" button_link="/get-started/why-iiif/" %}
 
-{{ theme.block-end }}
+{{ theme.block-end }} -->
 
 
 
 
-{{ theme.block-center-start }}
+<!-- {{ theme.block-center-start }}
 
 ## Start building
 The six IIIF APIs fit together to deliver endless possibilities.
@@ -133,7 +132,7 @@ The six IIIF APIs fit together to deliver endless possibilities.
 
 
 {% include blocks/hero.html hero=page.community_banner %}
-
+ -->
 
 
 {{ theme.block-center-start }}
