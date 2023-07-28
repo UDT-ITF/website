@@ -10,7 +10,9 @@ gem 'jekyll-datapage-generator'
 
 # gem 'udt-itf-theme', path: '../udt-itf-theme'
 
-gem 'udt-itf-theme', github: 'UDT-ITF/udt-itf-theme', branch: 'main'
+# gem 'udt-itf-theme', github: 'UDT-ITF/udt-itf-theme', branch: 'main'
+
+gem 'udt-itf-theme', '~> 0.1.0'
 
 # group :development, :test do
   # gem 'html-proofer', "3.19.0"
