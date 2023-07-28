@@ -14,7 +14,7 @@ group :development, :test do
   gem 'rake'
 end
 
-gem "webrick", "~> 1.7"
+# gem "webrick", "~> 1.7"
 
 # For open graph and Twitter Card elements
 gem 'jekyll-seo-tag'
