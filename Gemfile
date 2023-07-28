@@ -12,12 +12,14 @@ gem 'jekyll-datapage-generator'
 
 gem 'udt-itf-theme', github: 'UDT-ITF/udt-itf-theme', branch: 'main'
 
-group :development, :test do
-  gem 'html-proofer', "3.19.0"
-  gem 'rake'
-end
+# group :development, :test do
+#   gem 'html-proofer', "3.19.0"
+#   gem 'rake'
+# end
 
 gem "webrick", "~> 1.7"
 
 # For open graph and Twitter Card elements
 gem 'jekyll-seo-tag'
+
+# gem 'github-pages', group: :jekyll_plugins

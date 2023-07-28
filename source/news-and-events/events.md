@@ -13,8 +13,6 @@ hero:
 
 {{ theme.block-end }}
 
-
-
 {{ theme.block-center-start }}
 
 <h2>Past events</h2>
