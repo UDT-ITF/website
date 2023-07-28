@@ -1,5 +1,5 @@
 site_id:        root
-remote_theme:   UDT-ITF/udt-itf-theme
+theme:   udt-itf-theme
 source:         source
 permalink:      pretty
 
