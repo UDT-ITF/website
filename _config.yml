@@ -1,5 +1,5 @@
 site_id:        root
-remote_theme:   UDT-ITF/udt-itf-theme
+theme:          udt-itf-theme
 source:         source
 permalink:      pretty
 
@@ -63,16 +63,8 @@ tagline: "Here give a punchline for what UDT-ITF is."
 logo: /assets/favicon.ico
 image: /assets/images/zeplin/png/UDT-ITF-logo-withtext.png
 social:
-<<<<<<< HEAD
   name: UDT-ITF
   # links:
   #   - https://twitter.com/IIIF_io
   #   - https://www.linkedin.com/company/iiif-c/
   #   - https://github.com/IIIF/
-=======
-  name: IIIF
-  links:
-    - https://twitter.com/IIIF_io
-    - https://www.linkedin.com/company/iiif-c/
-    - https://github.com/IIIF/
->>>>>>> dd17a0e732360bd975b74f9fb0e17558780f3a46
