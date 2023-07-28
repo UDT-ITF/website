@@ -1,5 +1,5 @@
 site_id:        root
-theme:          udt-itf-theme
+remote_theme:   UDT-ITF/udt-itf-theme
 source:         source
 permalink:      pretty
 
@@ -20,6 +20,9 @@ plugins:
   - jekyll-liquify
   - jekyll-datapage-generator
   - jekyll-seo-tag
+  - jekyll-include-cache
+  - jekyll-feed
+  
 
 # page_gen-dirs: false
 # page_gen:
