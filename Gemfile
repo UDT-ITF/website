@@ -13,8 +13,13 @@ gem 'jekyll-datapage-generator'
 gem 'udt-itf-theme', github: 'UDT-ITF/udt-itf-theme', branch: 'main'
 
 # group :development, :test do
+<<<<<<< HEAD
 #   gem 'html-proofer', "3.19.0"
 #   gem 'rake'
+=======
+  # gem 'html-proofer', "3.19.0"
+  # gem 'rake'
+>>>>>>> dd17a0e732360bd975b74f9fb0e17558780f3a46
 # end
 
 gem "webrick", "~> 1.7"
