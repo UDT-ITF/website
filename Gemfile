@@ -23,3 +23,6 @@ gem "webrick", "~> 1.7"
 gem 'jekyll-seo-tag'
 
 # gem 'github-pages', group: :jekyll_plugins
+gem "jekyll-include-cache", "~> 0.2.1"
+
+gem "jekyll-feed", "~> 0.17.0"
