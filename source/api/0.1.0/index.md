@@ -1,17 +1,14 @@
 ---
-title: "Fragment API 0.1"
-title_override: "Fragment API 0.1"
-id: fragment-api
+title: "UDT-ITF API 0.1"
+title_override: "UDT-ITF API 0.1"
+id: text-api
 layout: spec
-tags: [specifications, fragment-api]
+tags: [specifications, text-api]
 major: 0
 minor: 1
 patch: 0
 pre: beta
 cssversion: 0
-redirect_from:
-  - /fragment/index.html
-  - /api/fragment
 editors:
   - name: Neil Jefferies
     ORCID: https://orcid.org/0000-0003-3311-3741
@@ -19,23 +16,18 @@ editors:
   - name: Nilo Pedrazzini
     ORCID: https://orcid.org/0000-0003-3757-2961
     institution: Digital Scholarship @ Oxford (University of Oxford) & The Alan Turing Institute
-hero:
-  image: ''
+  - name: Name Surname
+    ORCID: https://orcid.org/xxxx-xxxx-xxxx-xxxx
+    institution: Dept (Institute)
 ---
 
 ## Status of this Document
 {:.no_toc}
-
 __This Version:__ {{ page.major }}.{{ page.minor }}.{{ page.patch }}{% if page.pre != 'final' %}-{{ page.pre }}{% endif %}
 
-<!-- __Latest Stable Version:__ [{{ site.data.apis.fragment.latest.major }}.{{ site.data.apis.fragment.latest.minor }}.{{ site.data.apis.fragment.latest.patch }}][image-api] -->
-
-__Latest Stable Version:__ -
-
 __Previous Version:__ -
-<!-- __Previous Version:__ [2.1.1][image21] -->
 
-**Editors:**
+**Editors**
 
 {% include api/editors.md editors=page.editors %}
 
