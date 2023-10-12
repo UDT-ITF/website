@@ -25,7 +25,7 @@ hero:
 
 {% include blocks/logo-grid.html items=logos %}
 
-UDT-ITF is funded by the NEH/AHRC New Directions for Digital Scholarship in Cultural Institutions program, a joint initiative between the National Endowment for the Humanities and the UK Arts and Humanities Research Council (AHRC).
+UDT-ITF is an output of the Unlocking Digital Texts project. Unlocking Digital Texts is funded by the NEH/AHRC New Directions for Digital Scholarship in Cultural Institutions program, a joint initiative between the National Endowment for the Humanities and the UK Arts and Humanities Research Council (AHRC).
 
 ## Partners
 
