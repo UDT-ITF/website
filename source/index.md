@@ -30,7 +30,7 @@ UDT-ITF is an output of the Unlocking Digital Texts project. Unlocking Digital T
 ## Partners
 
 {% assign new = site.data.institutions | where_exp: "org", 'org.new == true' %}
-{% assign consortium = site.data.institutions | where_exp: "org", 'org.iiifc == 1 or org.iiifc == 2 or org.iiifc == 3' | where_exp: "org", 'org.logo and org.logo != nil and org.new != true' | sample: 3  %}
+{% assign consortium = site.data.institutions | where_exp: "org", 'org.iiifc == 1 or org.iiifc == 2 or org.iiifc == 3' | where_exp: "org", 'org.logo and org.logo != nil and org.new != true' | sample: 4  %}
 {% assign logos = new | concat: consortium %}
 
 {% include blocks/logo-grid.html items=logos %}
