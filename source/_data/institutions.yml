@@ -1,33 +1,30 @@
 # # - name: Full Name
 # #   uri: URL
 # #   iiifc: 1, 2, 3 (new full memmber) or 4 (associate member)
-# #   status: funder, partner, collaborator
+# #   status: 0=funder, 1=partner, 2=collaborator
 # #   new: true or false (adds logo to homepage if true)
 # #   logo: Path to logo image
 - name: Arts and Humanities Research Council (AHRC)
   uri: https://www.ukri.org/councils/ahrc/
-  status: funder
+  status: 0
   logo: assets/uploads/logos/1597px-UKRI_AHR_Council-Logo_Horiz-RGB.png
-  status: funder
 - name: Cambridge University
   uri: https://www.cam.ac.uk/
   logo: assets/uploads/logos/cambridge_university2.svg
-  status: partner
+  status: 1
 - name: National Endowment for the Humanities (NEH)
   uri: https://www.neh.gov/
-  status: funder
+  status: 0
   logo: assets/uploads/logos/NEH-Preferred-Seal820.jpg
 - name: University of Notre Dame
   uri: http://library.nd.edu
-  status: partner
+  status: 1
   logo: assets/uploads/logos/ndmark300.png
 - name: University of Oxford (Bodleian Library)
   uri: http://www.bodleian.ox.ac.uk
-  status: partner
-  logo: assets/uploads/logos/bodleian_Master-Logo-Centred-Black-cropped.png
-  original: true 
+  status: 1
+  logo: assets/uploads/logos/bodleian_Master-Logo-Centred-Black-cropped.png 
 - name: University of Oxford
   uri: http://www.ox.ac.uk
-  status: partner
-  logo: assets/uploads/logos/oxford-logo-464466886.png
-  original: true 
+  status: 1
+  logo: assets/uploads/logos/oxford-logo-464466886.png 
