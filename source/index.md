@@ -15,13 +15,8 @@ hero:
 
 ## Funders
 
-{% assign members = site.data.institutions | where_exp: "org", 'org.iiifc == 1 or org.iiifc == 2 or org.iiifc == 3 or org.iiifc == 4' %}
-
-{% assign funders = site.data.institutions | where_exp: "org", 'org.iiifc == 0' %}
-
-{% assign new_funders = site.data.institutions | where_exp: "org", 'org.new_funders == true' %}
-{% assign consortium = site.data.institutions | where_exp: "org", 'org.iiifc == 0' | where_exp: "org", 'org.logo and org.logo != nil and org.new_funders != true' | sample: 2   %}
-{% assign logos = new_funders | concat: consortium %}
+{% assign funders = site.data.institutions | where_exp: "org", 'org.status == 0' | where_exp: "org", 'org.logo and org.logo != nil' | sample: 2 %}
+{% assign logos = funders %}
 
 {% include blocks/logo-grid.html items=logos %}
 
