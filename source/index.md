@@ -13,6 +13,13 @@ hero:
 
 {{ theme.block-center-start }}
 
+## Partner Institutions
+
+{% assign partners = site.data.institutions | where_exp: "org", 'org.status == 1' | where_exp: "org", 'org.logo and org.logo != nil' | sample: 4  %}
+{% assign logos = partners %}
+
+{% include blocks/logo-grid.html items=logos %}
+
 ## Funders
 
 {% assign funders = site.data.institutions | where_exp: "org", 'org.status == 0' | where_exp: "org", 'org.logo and org.logo != nil' | sample: 2 %}
@@ -21,10 +28,3 @@ hero:
 {% include blocks/logo-grid.html items=logos %}
 
 UDT-ITF is an output of the Unlocking Digital Texts project. Unlocking Digital Texts is funded by the NEH/AHRC New Directions for Digital Scholarship in Cultural Institutions program, a joint initiative between the National Endowment for the Humanities and the UK Arts and Humanities Research Council (AHRC).
-
-## Partner Institutions
-
-{% assign partners = site.data.institutions | where_exp: "org", 'org.status == 1' | where_exp: "org", 'org.logo and org.logo != nil' | sample: 4  %}
-{% assign logos = partners %}
-
-{% include blocks/logo-grid.html items=logos %}

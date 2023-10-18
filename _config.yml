@@ -56,18 +56,15 @@ plugins:
 #   link_label: Learn more
 
 # Jekyll SEO plugin info
-#title: IIIF APIs and Community Site
-tagline: "Here give a punchline for what UDT-ITF is."
+title: ITF APIs and Community Site
+tagline: "Towards an Interoperable Text Framework"
 #description: IIIF is an open standard for delivering high-quality, attributed digital objects online at scale. It’s also an international community developing and implementing the IIIF APIs, backed by a consortium of leading academic and cultural institutions.
-#url: https://iiif.io/
-# twitter:
-#   username: iiif_io
-#   card: summary
+url: https://textframe.io/
+
 logo: /assets/favicon.ico
 image: /assets/images/zeplin/png/UDT-ITF-logo-withtext.png
 social:
   name: UDT-ITF
   # links:
-  #   - https://twitter.com/IIIF_io
-  #   - https://www.linkedin.com/company/iiif-c/
-  #   - https://github.com/IIIF/
+  #   - https://osf.io/r78gx/
+  #   - https://github.com/UDT-ITF/
