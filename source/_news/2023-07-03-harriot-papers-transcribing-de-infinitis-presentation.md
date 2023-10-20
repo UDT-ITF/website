@@ -1,5 +1,5 @@
 ---
-title: The Harriot Papers: Transcribing De Infinitis
+title: The Harriot Papers - Transcribing De Infinitis
 author: Robert Ralley
 date: 2023-07-03
 tags: [news, announcements]
