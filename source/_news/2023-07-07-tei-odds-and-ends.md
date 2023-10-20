@@ -4,8 +4,7 @@ author: Michael Hawkins
 date: 2023-07-07
 tags: [news, announcements]
 layout: post
-excerpt: >
-Michael Hawkins will lead a full-day workshop on the practical aspects of producing a TEI edition.
+excerpt: Michael Hawkins will lead a full-day workshop on the practical aspects of producing a TEI edition.
 ---
 
 Michael Hawkins will lead a full-day workshop on the practical aspects of producing a TEI edition. Topics covered include:
