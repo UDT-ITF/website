@@ -2,6 +2,7 @@
 title: Harriot De Infinitis Workshop
 author: Robert Ralley
 date: 2022-09-12
+location: University of Notre Dame, Indiana
 tags: [news, announcements]
 layout: post
 excerpt: A five-day workshop will be held on the Harriot Papers combining presentations with collaborative transcription.

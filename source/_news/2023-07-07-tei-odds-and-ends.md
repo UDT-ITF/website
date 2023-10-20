@@ -2,6 +2,7 @@
 title: TEI ODSS and Ends Workshop with Michael Hawkins
 author: Michael Hawkins
 date: 2023-07-07
+location: University of Oxford
 tags: [news, announcements]
 layout: post
 excerpt: Michael Hawkins will lead a full-day workshop on the practical aspects of producing a TEI edition.
