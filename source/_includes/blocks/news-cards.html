@@ -8,7 +8,7 @@
         <p class="news-details has-text-left sans-serif" style="margin-bottom:0">
           <i class="far fa-calendar-alt"></i>&nbsp;<time datetime="{{ news.date | date: '%Y-%m-%d' }}">{{ news.date | date: "%B %e, %Y" }}</time>&nbsp;&nbsp;|&nbsp;&nbsp;
           {% if news.location %}
-          (i class="far fa-map-pin"></i>&nbsp;{( news.location )}&nbsp;&nbsp;|&nbsp;&nbsp;
+          <i class="far fa-map-marked-alt"></i>&nbsp;{( news.location )}&nbsp;&nbsp;|&nbsp;&nbsp;
           {% endif %}
           <i class="far fa-user-circle"></i>&nbsp;{{ news.author }}
         </p>
