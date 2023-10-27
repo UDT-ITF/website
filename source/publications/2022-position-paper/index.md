@@ -11,7 +11,6 @@ hero:
 
 {% include blocks/tabs.html  tabs=page.top_tabs %}
 
-{{ theme.block-end }}
 
 # Project Approach
 
@@ -103,3 +102,5 @@ Natalie Meyers (Co-PI), Lucy Family Institute for Data & Society, University of 
 Dirk Van Hulle (Co-PI), Oxford Centre for Textual Editing and Theory (OCTET), University of Oxford
 Caterina Agostini, Navari Family Center for Digital Scholarship, John J. Reilly Center for Science, Technology and Values, University of Notre Dame
 Arnaud Zimmern, Navari Family Center for Digital Scholarship, University of Notre Dame
+
+{{ theme.block-end }}
