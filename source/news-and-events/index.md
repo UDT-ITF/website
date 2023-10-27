@@ -8,8 +8,7 @@ hero:
 
 ---
 
-{{ theme.block-center-start }}
-
+{{ theme.block-start }}
 
 {% include blocks/tabs.html  tabs=page.top_tabs %}
 
