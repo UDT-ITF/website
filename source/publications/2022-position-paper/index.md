@@ -5,6 +5,7 @@ subtitle: Digital texts are all around us - from the objects and outputs of scho
 permalink: /publications/2022-position-paper/
 hero:
   image: ""
+anchor_headings: true
 ---
 
 {{ theme.block-start }}
