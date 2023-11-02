@@ -1,5 +1,5 @@
 ---
-layout: default
+layout: page
 title: Unlocking Digital Texts Position Paper
 subtitle: Digital texts are all around us - from the objects and outputs of scholarly study, to the news, social media and other texts we interact with everyday online. But how long will these digital texts last? The problem with digital texts is that they come in a variety of formats that are hard to reuse because they require technical skills or infrastructure beyond most researchers’ capabilities and funding. This project aims to scope and define an Interoperable Text Format (ITF) as a means for accessing and delivering text that is stored in a variety of extant formats as well as referencing text fragments. Importantly, we are aiming for something that is both human- and computer-readable.
 permalink: /publications/2022-position-paper/
@@ -7,8 +7,8 @@ hero:
   image: ""
 anchor_headings: true
 ---
-{% include blocks/tabs.html  tabs=page.top_tabs %}
-{{ theme.block-start }}
+(% include blocks/tabs.html  tabs=page.top_tabs %})
+(( theme.block-start ))
 # Project Approach
 
 The project will take place in three phases.
@@ -138,5 +138,5 @@ Arnaud Zimmern, Navari Family Center for Digital Scholarship, University of Notr
 [^2]: Representational State transfer, see [https://en.wikipedia.org/wiki/Representational_state_transfer](https://en.wikipedia.org/wiki/Representational_state_transfer) 
 [^3]: One of the lighter TEI variants would be an obvious candidate here.
 [^4]: “Linked Data” rather than “Open Linked Data” is the term used here since textual content does not need to be Open for these methods to be applicable.
-[^5]: ndices of geospatial names,relating them to geospatial coordinates and, sometimes, epoch and/or context  
-{{ theme.block-end }}
+[^5]: Indices of geospatial names,relating them to geospatial coordinates and, sometimes, epoch and/or context  
+(( theme.block-end ))
