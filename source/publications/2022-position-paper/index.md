@@ -49,7 +49,7 @@ This bottom-up approach starts by considering the range of text file formats und
 - Complex formats, which can include embedded binary objects, requiring specialised software to display or otherwise interact with.  
   - Because of its ubiquity for digital publishing, PDF/A is favoured for archival copies of documents since it avoids some of the complexities of handling arbitrary PDF versions and feature sets.
   
-From these formats, it is definitely possible to introduce a “glyph-level”[[1]](#[1]) fragment addressing scheme, comprising an offset from the start of the file. This effectively reduces all text formats to plain-text by stripping away any additional tagging and non-textual components. This is not an entirely trivial exercise, since some additional complexities around Unicode normalisation rules and white-space handling will need to be dealt with, in order to ensure that plain-text conversions are carried out in a consistent manner.
+From these formats, it is definitely possible to introduce a “glyph-level”[^1] fragment addressing scheme, comprising an offset from the start of the file. This effectively reduces all text formats to plain-text by stripping away any additional tagging and non-textual components. This is not an entirely trivial exercise, since some additional complexities around Unicode normalisation rules and white-space handling will need to be dealt with, in order to ensure that plain-text conversions are carried out in a consistent manner.
 
 However, at this stage, it appears that it would be advantageous to also have a higher level scheme that operates in a more “human-friendly” way, with word (or token) granularity and some sense of semantic structure at a level similar to Markdown or a light-TEI schema. The extent to which this is technically possible, and whether there might need to be multiple such addressing modes based on common textual forms, needs further investigation. This could define a minimal structural TEI subset that we could deliver regardless of source format. This needs to be carefully thought out since digitised texts have an inherent dichotomy between physical (page/line) and semantic (chapter/paragraph) modes of reference. A notable peculiarity of text-referencing is that there is a need to target the spaces between words or characters, to identify where material may have been inserted and deleted.  
 
@@ -130,7 +130,6 @@ Caterina Agostini, Navari Family Center for Digital Scholarship, John J. Reilly 
 Arnaud Zimmern, Navari Family Center for Digital Scholarship, University of Notre Dame
 
 ## Footnotes
-### \[1\]
-A glyph is defined for our purposes as a distinct symbol or mark corresponding to a defined normalised Unicode code-point. Normalisation ensures that modifier and diacritic codes have been applied to the base characters to give a consistent Unicode representation. 
+[^1]: A glyph is defined for our purposes as a distinct symbol or mark corresponding to a defined normalised Unicode code-point. Normalisation ensures that modifier and diacritic codes have been applied to the base characters to give a consistent Unicode representation. 
 #### \[2\]
 {{ theme.block-end }}
