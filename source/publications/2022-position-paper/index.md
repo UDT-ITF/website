@@ -7,6 +7,7 @@ hero:
   image: ""
 anchor_headings: true
 ---
+To cite this paper, please use: [https://doi.org/10.17605/osf.io/ztbgp](https://doi.org/10.17605/osf.io/ztbgp)
 # Project Approach
 
 The project will take place in three phases.
