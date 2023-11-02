@@ -7,8 +7,6 @@ hero:
   image: ""
 anchor_headings: true
 ---
-(% include blocks/tabs.html  tabs=page.top_tabs %})
-(( theme.block-start ))
 # Project Approach
 
 The project will take place in three phases.
@@ -139,4 +137,3 @@ Arnaud Zimmern, Navari Family Center for Digital Scholarship, University of Notr
 [^3]: One of the lighter TEI variants would be an obvious candidate here.
 [^4]: “Linked Data” rather than “Open Linked Data” is the term used here since textual content does not need to be Open for these methods to be applicable.
 [^5]: Indices of geospatial names,relating them to geospatial coordinates and, sometimes, epoch and/or context  
-(( theme.block-end ))
