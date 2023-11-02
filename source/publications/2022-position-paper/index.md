@@ -130,7 +130,7 @@ Caterina Agostini, Navari Family Center for Digital Scholarship, John J. Reilly 
 Arnaud Zimmern, Navari Family Center for Digital Scholarship, University of Notre Dame
 
 ## Footnotes
-## [1]
+### \[1\]
 A glyph is defined for our purposes as a distinct symbol or mark corresponding to a defined normalised Unicode code-point. Normalisation ensures that modifier and diacritic codes have been applied to the base characters to give a consistent Unicode representation. 
-
+#### \[2\]
 {{ theme.block-end }}
