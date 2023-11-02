@@ -7,11 +7,8 @@ hero:
   image: ""
 anchor_headings: true
 ---
-
-{{ theme.block-start }}
-
 {% include blocks/tabs.html  tabs=page.top_tabs %}
-
+{{ theme.block-start }}
 # Project Approach
 
 The project will take place in three phases.
@@ -56,7 +53,7 @@ However, at this stage, it appears that it would be advantageous to also have a 
 Text-miners have produced tools for reducing specific formats to plain-text, but those that seek to retain some semantic structure are far less common.
 
 ## Content Negotiation  
-Given the ability to reference text fragments in a consistent manner that can be implemented as a RESTful API, we must consider what the results of invoking such an API should be. Taking inspiration from the way IIIF handles images, some form of content negotiation would enable text to be returned in a form suitable for subsequent processing. Plain-text, HTML and a suitably defined minimal XML would seem to be useful forms that can be readily generated from most sources (and Markdown perhaps?). The option to return “the original format” would seem to make sense only at a complete text level since formats such as PDF, TeX and general TEI-XML only really work at that level.     
+Given the ability to reference text fragments in a consistent manner that can be implemented as a RESTful[2] API, we must consider what the results of invoking such an API should be. Taking inspiration from the way IIIF handles images, some form of content negotiation would enable text to be returned in a form suitable for subsequent processing. Plain-text, HTML and a suitably defined minimal XML[^3] would seem to be useful forms that can be readily generated from most sources (and Markdown perhaps?). The option to return “the original format” would seem to make sense only at a complete text level since formats such as PDF, TeX and general TEI-XML only really work at that level.     
 
 # Top Down: Given that we have an actionable text version and fragment addressing mechanism, what higher level constructs are useful:
 
@@ -103,7 +100,7 @@ Editorial event streams can be readily mapped to our annotation model since anno
 Earlier sections alluded to the use of WADM annotation-lists to organise annotations in various ways. Implicit in each list is an additional dataset comprising the set of text fragments referenced by the annotations in that list. Depending on the manner in which the annotations were generated, these fragment collections may form useful pre-filtered Sources  suitable for further analysis. Thus, there may be a case for providing access to fragment lists in a more efficient manner than parsing the associated annotation lists.  
 
 ## Intertextual Narratives
-The previous sections have focussed on the use of WADM as a framework for close-reading or analysis of texts. Annotations are based on Linked Data., and thus allow, even encourage, linking to external entities. By using WADM, ITF will allow users to create richly contextualised materials. For example, linking textual fragments associated with named-entities in a text to the relevant entries in authority sources or gazetteers. The possibilities are almost endless since users can make links to a wide range of information, such as:
+The previous sections have focussed on the use of WADM as a framework for close-reading or analysis of texts. Annotations are based on Linked Data[^4], and thus allow, even encourage, linking to external entities. By using WADM, ITF will allow users to create richly contextualised materials. For example, linking textual fragments associated with named-entities in a text to the relevant entries in authority sources or gazetteers[^5]. The possibilities are almost endless since users can make links to a wide range of information, such as:
 - Historical, biographical or prosopographical events
 - Definitions or explanations
 - Expansions of references
@@ -120,16 +117,26 @@ Another key use case for ITF is in conjunction with images and other media made 
 ITF aims to greatly expand the scope for linking texts and IIIF resources, enriching them with the results of textual methods and taking advantage of the presentational strengths of IIIF. With this in mind, ITF aims to be compatible with, but not dependent on, IIIF. 
 
 Neil Jefferies (PI), Bodleian Libraries, University of Oxford
+
 Michael Hawkins (Co-PI), Digital Humanities, University of Cambridge
+
 Robert Ralley, Cambridge Digital Humanities, University of Cambridge
+
 Scott B. Weingart (Co-PI), Navari Family Center for Digital Scholarship, University of Notre Dame
+
 Robert Goulding (Co-PI), Reilly Center for Science, Technology, and Values, University of Notre Dame.
+
 Natalie Meyers (Co-PI), Lucy Family Institute for Data & Society, University of Notre Dame
+
 Dirk Van Hulle (Co-PI), Oxford Centre for Textual Editing and Theory (OCTET), University of Oxford
+
 Caterina Agostini, Navari Family Center for Digital Scholarship, John J. Reilly Center for Science, Technology and Values, University of Notre Dame
+
 Arnaud Zimmern, Navari Family Center for Digital Scholarship, University of Notre Dame
 
-## Footnotes
 [^1]: A glyph is defined for our purposes as a distinct symbol or mark corresponding to a defined normalised Unicode code-point. Normalisation ensures that modifier and diacritic codes have been applied to the base characters to give a consistent Unicode representation. 
-#### \[2\]
+[^2]: Representational State transfer, see [https://en.wikipedia.org/wiki/Representational_state_transfer](https://en.wikipedia.org/wiki/Representational_state_transfer) 
+[^3]: One of the lighter TEI variants would be an obvious candidate here.
+[^4]: “Linked Data” rather than “Open Linked Data” is the term used here since textual content does not need to be Open for these methods to be applicable.
+[^5]: ndices of geospatial names,relating them to geospatial coordinates and, sometimes, epoch and/or context  
 {{ theme.block-end }}
