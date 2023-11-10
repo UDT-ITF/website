@@ -1,11 +1,10 @@
 ---
 layout: page
-title: Workshop Report for ‘Towards an Interoperable Text Framework: Annotation and the use and reuse of digital texts’ (24 Feb 2023, Cambridge, UK)
+title: Report for ‘Towards an Interoperable Text Framework - Annotation and the use and reuse of digital texts’ (24 Feb 2023, Cambridge, UK)
 subtitle: Digital texts are all around us - as objects of study in scholarly work, to the news, social media and other texts we interact with everyday online. But how long will these digital texts last? The problem with digital texts is that they come in a variety of formats that are hard to reuse. Reusing and sustaining digital texts requires format and infrastructure updates beyond the skill and funding limits that most researchers can access. The Unlocking Digital Texts project aims to scope and define an Interoperable Text Format (ITF) as a means for accessing and delivering text that is stored in a variety of extant formats. Importantly, we are aiming for something that is both human- and computer-readable. If we are successful, this work will allow users to easily create, arrange, annotate, embed and share digital texts (either whole or in part) regardless of how or where they are stored.
 permalink: /publications/2023-02-24-cambridge/
 anchor_headings: true
 ---
-
 # Workshop Report for ‘Towards an Interoperable Text Framework: Annotation and the use and reuse of digital texts’ (24 Feb 2023, Cambridge, UK)
 
 ## Summary of Unlocking Digital Texts:
