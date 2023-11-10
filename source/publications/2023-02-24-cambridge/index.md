@@ -264,10 +264,10 @@ Samuel Beckett Digital Manuscript Project (University of Oxford/University of An
 The Casebooks of Simon Forman and Richard Napier, 1596–1634: A Digital Edition (History and Philosophy of Science, University of Cambridge): [https://casebooks.lib.cam.ac.uk/](https://casebooks.lib.cam.ac.uk/)
 
 
-[^1] https://www.beckettarchive.org/
+[^1]: https://www.beckettarchive.org/
 
-[^2] Darwin Correspondence Project, “Letter no. 993,” accessed on 24 March 2023, https://www.darwinproject.ac.uk/letter/?docId=letters/DCP-LETT-993.xml
+[^2]: Darwin Correspondence Project, “Letter no. 993,” accessed on 24 March 2023, https://www.darwinproject.ac.uk/letter/?docId=letters/DCP-LETT-993.xml
 
-[^3] This would serve as an excellent example for Use Case: 2.X *below*.
+[^3]: This would serve as an excellent example for Use Case: 2.X *below*.
 
-[^4] See Erik Kwakkel’s blog post ‘The Architecture of the Medieval Page’: [https://medievalbooks.nl/2018/09/07/the-architecture-of-the-medieval-page](https://medievalbooks.nl/2018/09/07/the-architecture-of-the-medieval-page) (accessed 28 April 2023).
+[^4]: See Erik Kwakkel’s blog post ‘The Architecture of the Medieval Page’: [https://medievalbooks.nl/2018/09/07/the-architecture-of-the-medieval-page](https://medievalbooks.nl/2018/09/07/the-architecture-of-the-medieval-page) (accessed 28 April 2023).
