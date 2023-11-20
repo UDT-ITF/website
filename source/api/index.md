@@ -40,7 +40,37 @@ __Previous Version:__
 ----
 
 ## 1. Introduction
-## 2. Another section
-### 2.1 A subsection
+This is a DRAFT proposal for a Interopeable Text Framework specification for discussion.
+
+## 2. Text API
+
+### Abstract
+This section describes an API for the delivery of texts and text fragments via a
+standard http request. The ITF Text API specifies a web service that returns textual
+data in response to a standard http or https request. The URL can specify:
+-  The version of the underlying source text to be accessed
+-  The method used to specify a text fragment 
+-  The text fragment to be returned
+-  The format in which to return the text data
+A URL can also be constructed to request basic technical information about the source
+text to support client applications. The ITF Text API is conceived to facilitate 
+systematic referencing and reuse of textual resources in repositories. 
+
+### 2.1 Audience
+This document is intended for developers building applications that
+either share textual resources or consume such resources for display, analytics or 
+other purposes. This includes:
+
+-   Developers building digital image repositories who would like to
+    offer services for easily sharing digital images with other
+    repositories, web applications, or other software that uses images
+    from the web.
+-   Developers building web applications or software that want to
+    retrieve images from compliant repositories.
+-   A specifically targeted audience are developers and managers of
+    digital image repositories, web applications and image tools at
+    cultural heritage institutions, like museums, libraries and
+    archives.
+
 ## 3. Another section
 ## 4. Changelog
