@@ -112,14 +112,9 @@ The sections of the Image Request URL include:
 | ------------------- | ------------ |
 |`http (or https)`   | Indicates the use of the http or https protocol in calling the service. |
 |`server` | The host server on which the ITF-compliant text service resides. |
-|`prefix` | The path on the host server to the ITF-compliant text service. This prefix is optional,
-but may be useful when the host server supports multiple services. (note: The prefix MAY 
-contain slashes or constructions that resemble service parameters.) |
-|`identifier` | A unique identifier of the requested source text, expressed as a string. This may be
-an ark, URN, filename, or other unique identifier but ideally SHOULD be a Persistent Identifier.
-Special characters MUST be URI encoded.
-|`version, mode, fragment, quality, format` | Parameters defining the characteristics of the returned text 
-fragment. These are described in detail below.|
+|`prefix` | The path on the host server to the ITF-compliant text service. This prefix is optional, but may be useful when the host server supports multiple services. (note: The prefix MAY contain slashes or constructions that resemble service parameters.) |
+|`identifier` | A unique identifier of the requested source text, expressed as a string. This may be an ark, URN, filename, or other unique identifier but ideally SHOULD be a Persistent Identifier. Special characters MUST be URI encoded. |
+|`version, mode, fragment, quality, format` | Parameters defining the characteristics of the returned text fragment. These are described in detail below.|
 
 > DISCUSSION POINT: Is this sufficient?
 
