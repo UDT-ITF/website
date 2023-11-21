@@ -110,11 +110,11 @@ The sections of the Image Request URL include:
 
 | Syntax | Description |
 | ------------------- | ------------ |
-|`http (or https)`   | Indicates the use of the http or https protocol in calling the service. |
+|`http (or https)` | Indicates the use of the http or https protocol in calling the service. |
 |`server` | The host server on which the ITF-compliant text service resides. |
 |`prefix` | The path on the host server to the ITF-compliant text service. This prefix is optional, but may be useful when the host server supports multiple services. (note: The prefix MAY contain slashes or constructions that resemble service parameters.) |
 |`identifier` | A unique identifier of the requested source text, expressed as a string. This may be an ark, URN, filename, or other unique identifier but ideally SHOULD be a Persistent Identifier. Special characters MUST be URI encoded. |
-|`version, mode, fragment, quality, format` | Parameters defining the characteristics of the returned text fragment. These are described in detail below.|
+|`version, mode, fragment, quality, format` | Parameters defining the characteristics of the returned text fragment. These are described in detail below. |
 
 > DISCUSSION POINT: Is this sufficient?
 
@@ -172,23 +172,20 @@ and finally conversion to the desired format. This resulting text frgament is re
 as the representation for the URL. 
 
 #### 2.4.1 Version
-An ITF text resource MAY contain multiple versions of a text which can be identified by a
-label (a string), a date/time or a number. The version parameter defines which version of text 
-a fragment is to be retrieved from. The special value "default", MUST be used with a resource 
-that contains no versions.
+An ITF text resource MAY contain multiple versions of a text which MUST be identified by a
+label (a string) and MAY also have an associated date/time. The version parameter defines 
+which version of text a fragment is to be retrieved from. The special value "default" MUST 
+be used with a resource that contains no versions.
 
 | Form of Version Parameter| Description |
 | ------------------- | ------------ |
-|`default` | Refers to the only text in an unversioned resource |
-|`vl:label` | The host server on which the ITF-compliant text service resides. |
-|`prefix` | The path on the host server to the ITF-compliant text service. This prefix is optional,
-but may be useful when the host server supports multiple services. (note: The prefix MAY 
-contain slashes or constructions that resemble service parameters.) |
-|`identifier` | A unique identifier of the requested source text, expressed as a string. This may be
-an ark, URN, filename, or other unique identifier but ideally SHOULD be a Persistent Identifier.
-Special characters MUST be URI encoded.
-|`version, mode, fragment, quality, format` | Parameters defining the characteristics of the returned text 
-fragment. These are described in detail below.|
+|`default` | Specifies the only text in an unversioned resource. MUST NOT be used with a versioned resource. |
+|`vl:label` | Specifies the version with a label "label". Labels MUST be URI encoded. |
+|`vd:yyyy-mm-dd`| Specifies the version current at a particular date in ISO 8601-1:2019 format. Negative (BCE) years are allowed. |
+|`vd:yyyy-mm-ddThh:mm:ss`| Specifies the version current at a particular date/time in ISO 8601-1:2019 format. Negative (BCE) years are allowed. |
+
+A server MUST return a 400 (bad request) code if 'default' is used with a versioned resource, or 
+a date is specified for a resource with no version dates. 
 
 #### 2.4.2 Mode
 
