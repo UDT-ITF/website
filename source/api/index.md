@@ -53,10 +53,10 @@ research organisations but the use of the API is not restricted to these domains
 An ITF text resource 
 
 > Needs considerable expansion
-> Explain /"editions/" of a resource - which are updates or changes
-> Explain /"versions/" of a text - which may be a linear sequence, a hierarchy, or a graph
->> Versions MUST have a label, MAY have a date (for a linear sequence) and or a number
->> (for a linear sequence or hierarchy). MUST have follows/precedes predicates if a Graph.
+> - Explain /"editions/" of a resource - which are updates or changes
+> - Explain /"versions/" of a text - which may be a linear sequence, a hierarchy, or a graph
+> -- Versions MUST have a label, MAY have a date (for a linear sequence) and or a number?
+> (for a linear sequence or hierarchy). MUST have follows/precedes predicates if a Graph.
 > Explain access /"modes/" - coordinate systems for texts - by character (Unicode codepoint),
 >> by physical structure (page, line, character), by semantic structure (chapter, paragraph,
 >> sentence, word, character)...and others     
@@ -106,37 +106,49 @@ For example:
 
     http://www.example.org/text-service/abcd1234/default/char/0,247/tei.xml
 
-The sections of the Image Request URL include:
+The sections of the Text Fragment Request URL include:
 
 | Syntax | Description |
 | ------------------- | ------------ |
-|`http (or https)` | Indicates the use of the http or https protocol in calling the service. |
-|`server` | The host server on which the ITF-compliant text service resides. |
-|`prefix` | The path on the host server to the ITF-compliant text service. This prefix is optional, but may be useful when the host server supports multiple services. (note: The prefix MAY contain slashes or constructions that resemble service parameters.) |
-|`identifier` | A unique identifier of the requested source text, expressed as a string. This may be an ark, URN, filename, or other unique identifier but ideally SHOULD be a Persistent Identifier. Special characters MUST be URI encoded. |
-|`version, mode, fragment, quality, format` | Parameters defining the characteristics of the returned text fragment. These are described in detail below. |
+|`http (or https)`| Indicates the use of the http or https protocol in calling the service. |
+|`server`| The host server on which the ITF-compliant text service resides. |
+|`prefix`| The path on the host server to the ITF-compliant text service. This prefix is optional, but may be useful when the host server supports multiple services. (note: The prefix MAY contain slashes or constructions that resemble service parameters.) |
+|`identifier`| A unique identifier of the requested text resource, expressed as a string. This may be an ark, URN, filename, or other unique identifier but ideally SHOULD be a Persistent Identifier. Special characters MUST be URI encoded. |
+|`version, mode, fragment, quality, format`| Parameters defining the characteristics of the returned text fragment. These are described in detail below. |
 
 > DISCUSSION POINT: Is this sufficient?
 
 See [Section 2.4 - Fragment Request Parameters](#parameters).
 
-#### 2.2.2 Text Information Request URL Syntax
+#### 2.2.2 Resource Information Request URL Syntax
 The ITF Text API URL for requesting information about a text resource MUST conform to
 the following format:
 
-    http[s]://server/[prefix/]identifier[/version]/info.ext
+    http[s]://server/[prefix/]identifier/info.format
 
-where \[ \] delimits the optional prefix component, \"info\" is a
-literal string, and ext is one of \"json\" or \"xml\".
+where \[ \] delimits the optional prefix component.
 
 The URI Template ([RFC6750](https://datatracker.ietf.org/doc/html/rfc6750)) form
 is:
 
-    http://{server}{/prefix}/{identifier}/[/version]info.{ext}
+    http://{server}{/prefix}/{identifier}/{info}.{format}
 
 For example:
 
     http://www.example.org/text-service/abcd1234/info.json
+
+The sections of the Text Information Request URL include:
+
+| Syntax | Description |
+| ------------------- | ------------ |
+|`http (or https)`| Indicates the use of the http or https protocol in calling the service. |
+|`server`| The host server on which the ITF-compliant text service resides. |
+|`prefix`| The path on the host server to the ITF-compliant text service. This prefix is optional, but may be useful when the host server supports multiple services. (note: The prefix MAY contain slashes or constructions that resemble service parameters.) |
+|`identifier`| A unique identifier of the requested text resource, expressed as a string. This may be an ark, URN, filename, or other unique identifier but ideally SHOULD be a Persistent Identifier. Special characters MUST be URI encoded. |
+|`info`| Specifies the information being requested. These are described in detail below. |
+|`format`| Specifies the format of the returned information, which can be "json" or "xml". |
+
+> DISCUSSION POINT: Is this sufficient?    
 
 #### 2.2.3 Accessing historical editions
 An ITF text resource MAY change over time, allowing updates, corrections or the addition 
@@ -162,7 +174,7 @@ client behaviors. The URL syntax relies upon slash (/) separators so any slashes
 in the identifier MUST be URI encoded (aka. percent-encoded, replace / with %2F ). 
 See discussion in [Section9 - URL Encoding and Decoding.](#url_encoding)
 
-### 2.4 Text Fragment Request Parameters {#parameters)
+### 2.4 Text Fragment Request Parameters (#parameters)
 All parameters described below are required for compliant construction of an ITF Text API
 URL. The sequence of parameters in the URL MUST be in the order described below. The 
 order of the parameters reflects the order of operation a text service is expected
@@ -179,17 +191,54 @@ be used with a resource that contains no versions.
 
 | Form of Version Parameter| Description |
 | ------------------- | ------------ |
-|`default` | Specifies the only text in an unversioned resource. MUST NOT be used with a versioned resource. |
-|`vl:label` | Specifies the version with a label "label". Labels MUST be URI encoded. |
-|`vd:yyyy-mm-dd`| Specifies the version current at a particular date in ISO 8601-1:2019 format. Negative (BCE) years are allowed. |
-|`vd:yyyy-mm-ddThh:mm:ss`| Specifies the version current at a particular date/time in ISO 8601-1:2019 format. Negative (BCE) years are allowed. |
+|`default`| Specifies the only text in an unversioned resource. MUST NOT be used with a versioned resource. |
+|`l:label`| Specifies the version with a label "label". Labels MUST be URI encoded. |
+|`d:yyyy-mm-dd`| Specifies the version current at a particular date in ISO 8601-1:2019 format. Negative (BCE) years are allowed. |
+|`dt:yyyy-mm-ddThh:mm:ss`| Specifies the version current at a particular date/time in ISO 8601-1:2019 format. Negative (BCE) years are allowed. |
+
+> DISCUSSION POINTS: Do we allow truncation to just yyyy-mm, for example? 
+> Can support for dt: be optional?
+> Do we need version numbers or are labels sufficient
 
 A server MUST return a 400 (bad request) code if 'default' is used with a versioned resource, or 
 a date is specified for a resource with no version dates. 
 
 #### 2.4.2 Mode
+The mode parameter specifies how a text fragment is specified in the subsequent fragment 
+parameter. This enables text fragments to be specified in terms of the higher level 
+structural elements of a text, rather than just using a character offset from the start 
+of the file. As well as being more friendly to human interpretation, this enables fragment 
+references to be more readily mapped between versions of a text, or to be updated 
+as a text is edited.  ITF defines a few common modes but new modes can be defined
+using the predefined modes as an illustration.
+
+| Form of Mode Parameter| Description |
+| ------------------- | ------------ |
+|`full`| The entirety of a text is to be retrieved rather than a text fragment. |
+|`char`| The fragment will be specified in terms of characters and character offsets. |
+|`book`| The fragment will be specified in terms of the physical structure of a book. |
+|`prose`| The fragment will be specifies in terms of the semantic structure of a prose work. |
+
+> DISCUSSION POINT: This is where it gets tricky! My preference would be to keep modes
+> as simple as possible and discuss mapping to real world examples in the Implementation Notes.
+> How many does it make sense to start with? Letter, Journal, Anthology, Play?  
 
 #### 2.4.3 Fragment
+
 ##### 2.4.3.1 Char Mode Fragments
+
 ##### 2.4.3.2 Book Mode Fragments
+
 ##### 2.4.3.3 Prose Mode Fragments 
+
+#### 2.4.4 Quality
+
+#### 2.4.5 Format
+
+### 2.5 Resource Information Request
+
+### 2.5.1 Text Information Request
+
+### 2.5.2 Version Information Request
+
+### 2.5.3 Mode Information Request
