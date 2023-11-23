@@ -142,7 +142,7 @@ The sections of the Text Fragment Request URL include:
 The ITF Text API URL for requesting information about a text resource _MUST_ conform to
 the following format:
 
-    http[s]://server/[prefix/]identifier/[version]info.format
+    http[s]://server/[prefix/]identifier/[version/]info.format
 
 where \[ \] delimits the optional prefix component.
 
@@ -166,7 +166,7 @@ The sections of the Text Information Request URL include:
 |`info`| Specifies the information being requested. These are described in detail below. |
 |`format`| Specifies the format of the returned information, which can be "json" or "xml". |
 
-> DISCUSSION POINT: Is this sufficient?    
+> DISCUSSION POINT: Is this sufficient? Do we need xml at all here, or is json sufficient? 
 
 #### 2.2.3 Accessing historical editions
 An ITF text resource MAY change over time, allowing updates, corrections or the addition 
@@ -232,7 +232,8 @@ using the predefined modes as an illustration.
 
 The modes represent a generalised version of a text format. A [mode information request](253-mode-information-request) 
 can be used to identify version-specific nomenclature (such as designating pages recto-verso)
-although this is purely for information for display. 
+although this is purely for information for display. The list of modes is extensible and
+any custom modes can be discovered via the aforementioned mode information request.
 
 | Form of Mode Parameter| Description |
 | ------------------- | ------------ |
@@ -338,28 +339,125 @@ few examples.
 |`S1`| The fragment is the whole of section S1. |
 |`S1;p1`| The fragment is the whole of paragraph p1 of section S1.|
 
-In the simplest case, section can be considered to equate broadly to chapters. Howver, in practice, documents often contain additional 
+In the simplest case, sections can be considered to equate broadly to chapters. Howver, in practice, documents often contain additional 
 elements such as forewards, appendices, chapter summaries etc. These are accomodated by allowing sections to be numbered hierarchically.
 Thus, a more complex document might have the following sections.
 
-1. (Preamble)
-  1.1. Title page
-  1.2. Contents List
-  1.3. Foreward
-2. (Main body)
-  2.1. Chapter 1
-   2.
-     
-For display purposes, how these sections are presented and labelled can be discovered by 
+| Section Number | Description |
+| ---------- | ---------- |
+|`1`| Place holder for elements that come before the main text |
+|`1.1`| Title Page |
+|`1.2`| Contents List |
+|`1.3`| Foreward |
+|`2`| Place holder for elements comprising the main text |
+|`2.1`| Chapter 1 |
+|`2.2`| Chapter 2 |
+|`2.N`| Chapter N |
+|`3`| Place holder for elements come after the main text |
+|`3.1`| Appendix 1 |
+|`3.2`| Appendix 2 |
+|`3.3`| Index |
+
+For display purposes, how these sections are presented and labelled can be discovered by making
+an appropriate [Mode Information Request](253-mode-information-request) 
 
 #### 2.4.4 Quality
 
+The quality parameter specifies . This allows an ITF server to 
+include additional enrichment (e.g. formatting or tagging information), if this is available.
+
+| Form of Quality Parameter | Description |
+| ------------------- | ------------ |
+|`raw`| The server will return the fragment in a form that most closely matches it's underlying storage format. This is entirely server dependent and the following format parameter is ignored. |
+|`compact`| The fragment will be returned as plaintext with sequences of whitespace characters reduced to a single space. | 
+|`plaintext`| The fragment will be returned as plaintext. |
+|`rich`| The fragment will be returned inclduing any available enrichment. |
+
 #### 2.4.5 Format
+
+The quality parameter specifies the requested text fragment is returned. This allows an ITF server to 
+include additional enrichment (e.g. formatting or tagging information), if this is available.
+
+| Form of Quality Parameter | Description |
+| ------------------- | ------------ |
+|`txt`| The fragment will be returned as a UTF-8 text file. Not valid for "rich" quality fragments |
+|`tei`| The fragment will be returned with any enrichment expressed using TEI XML tags. |
+|`html`| The fragment will be returned with any enrichment expressed as HTML 5 tags. |
+|`md`| The fragment will be returned with any enrichment expressed expressed via Markdown formatting. |
+
+> DISCUSSION POINT: This needs to be more nuanced since we are not necessarily returning complete TEI or HTML documents
 
 ### 2.5 Resource Information Request
 
+The ITF Text API URL for requesting information about a text resource _MUST_ conform to
+the following format:
+
+    http[s]://server/[prefix/]identifier/[version/]info.format
+
+| Form of Info Parameter | Applies to | Description |
+| ------------------- | ------------ | ------------ |
+|`textinfo`| Text Resources and Versions | Provides basic information about a textual object, or a version. |
+|`versions`| Text Resources | Provides information about all the versions held in a Text Resource. |
+|`modes`| Text Resources | Provides information about the modes supported by a Text Resource, and defines any custom modes. |
+|`modes`| Versions | Provides version specific information (bounds, nomenclature) about how modes relate to a specific version. |
+
 ### 2.5.1 Text Information Request
+
+The response will return the following information for an ITF Resource.
+
+| Element | Description|
+| ------- | ---------------|
+| `identifier` | The unique identifier of the Resource, expressed as a string. The identifier _MUST_ be supplied without URI encoding. |
+| `versioning` | Indicates of a Resource contain multiple versions. Possible values: _none, linear, date, graph_ 
+| `modes` | Indicates which standard modes are supported. A list of one or more of _char, token, book, prose_. |
+| `custom_modes` | _OPTIONAL_ List of custom modes that are supported. |
+| `qualities` | Indicates which qualities are supported. A list of one or more of _raw, compact, plaintext, rich_. |
+| `formats` | Indicates which formats are supported. A list of one or more of _txt, tei, html, md_. |
+| `DC-metadata` | _OPTIONAL_ URL of a DC metadata record |
+
+> DISCUSSION POINT: DC is rich enough metadata to be useful but not too onerous. Thoughts?
+
+Example JSON response for a Resource.
+
+`{
+  "identifier" : "1E34750D-38DB-4825-A38A-B60A345E591C",
+  "versioning" : "date",
+  "modes" : [ "char", "token", "book", "prose" ],
+  "qualities" : ["compact", "plaintext"],
+  "formats" : [ "txt" ] 
+}`
+
+`The response will return the following information for an ITF Version.
+
+| Element | Description |
+| ------- | ---------------|
+| `label` | The label used to identify the version. The label _MUST_ be unique within the containing Resource. Labels are used to sequence _linear_ versions|
+| 'date' | If a Resource has _date_ based versioning, all versions _MUST_ have a unique date. Otherwise this is _OPTIONAL_. |
+| 'succeeds' | Lists the label(s) of preceeding versions if a Resource has _graph_ based versioning. |
+| 'preceeds' | Lists the label(s) of succeeding versions if a Resource has _graph_ based versioning. |
+| `modes` | Indicates which standard modes are supported. A list of one or more of _char, token, book, prose_. |
+| `custom_modes` | _OPTIONAL_ List of custom modes that are supported. |
+| `qualities` | Indicates which qualities are supported. A list of one or more of _raw, compact, plaintext, rich_. |
+| `formats` | Indicates which formats are supported. A list of one or more of _txt, tei, html, md_. |
+| `DC-metadata` | _OPTIONAL_ URL of a DC metadata record |
+
+> DISCUSSION POINT: DC is rich enough metadata to be useful but not too onerous. Thoughts?
+
+Example JSON response for a Resource.
+
+`{
+  "identifier" : "1E34750D-38DB-4825-A38A-B60A345E591C",
+  "versioning" : "date",
+  "modes" : [ "char", "token", "book", "prose" ],
+  "qualities" : ["compact", "plaintext"],
+  "formats" : [ "txt" ] 
+} 
 
 ### 2.5.2 Version Information Request
 
-### 2.5.3 Mode Information Request
+ITF Versions 
+
+
+### 2.5.3 Resource Mode Information Request
+
+### 2.5.3 Version Mode Information Request
