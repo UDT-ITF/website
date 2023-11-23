@@ -198,7 +198,7 @@ URL. The sequence of parameters in the URL MUST be in the order described below.
 order of the parameters reflects the order of operation a text service is expected
 to use to process a request. Thus, the desired version of a text is located, the relevant 
 fragment is extracted using the mode specified, any formatting or tagging is applied,
-and finally conversion to the desired format. This resulting text frgament is returned 
+and finally conversion to the desired format. This resulting text fragment is returned 
 as the representation for the URL. 
 
 #### 2.4.1 Version
@@ -230,11 +230,14 @@ references to be more readily mapped between versions of a text, or to be update
 as a text is edited.  ITF defines a few common modes but new modes can be defined
 using the predefined modes as an illustration.
 
-The modes represent a generalised version of a text format. 
+The modes represent a generalised version of a text format. A [mode information request](253-mode-information-request) 
+can be used to identify version-specific nomenclature (such as designating pages recto-verso)
+although this is purely for information for display. 
 
 | Form of Mode Parameter| Description |
 | ------------------- | ------------ |
 |`char`| The fragment will be specified in terms of characters and character offsets. |
+|'token'| The fragment will be specified in terms of tokens (words inn Western languages). | 
 |`book`| The fragment will be specified in terms of the physical structure of a book. |
 |`prose`| The fragment will be specifies in terms of the semantic structure of a prose work. |
 
@@ -248,39 +251,55 @@ Text Fragment API. The format of the fragment parameter depends on the mode sele
 the special value "full" which returns the entirety of the text of the Version specified, 
 irrespective of the value of the mode parameter.
 
+Fragment specifiers operate on the plaintext of the version being accessed. Thus, regardless 
+of the format of the underlying source data, the server _MUST_ ignore any tagging and formatting
+when computing fragments. When counting characters, and sequence of contiguous whitespace 
+characters (codepoints of [Unicode class "Space Separator"](https://unicodeplus.com/category/Zs)) 
+_MUST_ be counted as a single character.   
+
 In ITF all counting _MUST_ be "1"-based, so the first page of a book is page 1. If a fragment parameter 
 is omitted then an ITF server _MUST_ treat it as having the value 1, which may result in an error.
 
 ##### 2.4.3.1 Char Mode Fragments
 
 Char(acter) mode fragment specifiers identify a block of text in a text file by counting individual
-characters (Unicode codepoints, as noted in [above](#13-the-itf-text-model). Char mode specifiers 
-operate on plaintext of the version being accessed. Thus, regardless of the format of the underlying
-source data, the server _MUST_ ignore any tagging and formatting when counting characters. 
+characters (Unicode codepoints, as noted in [above](#13-the-itf-text-model). 
 
 | Form of Fragment Parameter| Description |
 | ------------------- | ------------ |
-|`_x_,_y_`| The fragment starts just before codepoint number _x_, and extends until codepoint number _y_ (inclusive). |
-|`,_y_`| The fragment starts at the beginning of the text, and extends until codepoint number _y_ (inclusive). _x_ defaults to 1 |
-|`_x_+_l_`| The fragment starts just before codepoint number _x_, and extends for _l_ codepoints. |
-|`_x_+`| Returns the character at codepoint number _x_. _l_ defaults to 1|
+|`x,y`| The fragment starts just before charcater number _x_, and extends until character number _y_ (inclusive). |
+|`,y`| The fragment starts at the beginning of the text, and extends until character number _y_ (inclusive). _x_ defaults to 1 |
+|`x+n`| The fragment starts just before character number _x_, and extends for _n_ characters. |
+|`x+`| Returns the character number _x_. _n_ defaults to 1|
 
-##### 2.4.3.2 Book Mode Fragments
+##### 2.4.3.1 Token Mode Fragments
+
+Token mode fragment specifiers identify a block of text in a text file by counting tokens, usually 
+delimited by whitespace characters (spaces, tabs etc.). Fragments specified in this manner can only 
+include complete tokens.
+
+| Form of Fragment Parameter| Description |
+| ------------------- | ------------ |
+|`x,y`| The fragment starts just before token number _x_, and extends until token number _y_ (inclusive). |
+|`,y`| The fragment starts at the beginning of the text, and extends until token number _y_ (inclusive). _x_ defaults to 1 |
+|`x+n`| The fragment starts just before token number _x_, and extends for _n_ token. |
+|`x+`| Returns token number _x_. _n_ defaults to 1|
+
+##### 2.4.3.3 Book Mode Fragments
 
 Book mode fragment specifiers identify a block of text in terms of a generalised physical book structure. Books are 
-considered to be made up of pages, lines of text and characters. A [mode information request](253-mode-information-request) 
-can be used to identify version-specific nomenclautre (such as designating pages recto-verso) although this is
-purely for information for display. In book mode specifiers, pages are always numbered sequentially from 1. 
+considered to be made up of pages, lines of text and characters. Book mode coordinates are thus triplets of the form _p;l;c_ 
+corresponding to character number _c_ of line number _l_ on page number _p_. 
 
 | Form of Fragment Parameter| Description |
 | ------------------- | ------------ |
-|`pnl,y`| The fragment starts just before codepoint number x, and extends until codepoint number y (inclusive). |
-|`,y`| The fragment starts at the beginning of the text, and extends until codepoint number y (inclusive). x defaults to 1 |
-|`x+l`| The fragment starts just before codepoint number x, and extends for l codepoints. |
+|`p~1~;l~1~;c~1~,p~2~;l~2~;c~2~'| The fragment starts just before codepoint  page number , and extends until codepoint number y (inclusive). |
+|p~1~;l~1~;c~1~,p~2~;l~2~;c~2~| The fragment starts at the beginning of the text, and extends until codepoint number y (inclusive). x defaults to 1 |
+|`x+n`| The fragment starts just before codepoint number x, and extends for n codepoints. |
 |`x+`| Returns the character at codepoint number x. l defaults to 1|
 
 
-##### 2.4.3.3 Prose Mode Fragments 
+##### 2.4.3.4 Prose Mode Fragments 
 
 #### 2.4.4 Quality
 
