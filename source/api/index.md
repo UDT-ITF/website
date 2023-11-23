@@ -237,7 +237,7 @@ although this is purely for information for display.
 | Form of Mode Parameter| Description |
 | ------------------- | ------------ |
 |`char`| The fragment will be specified in terms of characters and character offsets. |
-|'token'| The fragment will be specified in terms of tokens (words inn Western languages). | 
+|`token`| The fragment will be specified in terms of tokens (words inn Western languages). | 
 |`book`| The fragment will be specified in terms of the physical structure of a book. |
 |`prose`| The fragment will be specifies in terms of the semantic structure of a prose work. |
 
@@ -268,10 +268,10 @@ characters (Unicode codepoints, as noted in [above](#13-the-itf-text-model).
 
 | Form of Fragment Parameter| Description |
 | ------------------- | ------------ |
-|`x,y`| The fragment starts just before charcater number _x_, and extends until character number _y_ (inclusive). |
-|`,y`| The fragment starts at the beginning of the text, and extends until character number _y_ (inclusive). _x_ defaults to 1 |
+|`x,y`| The fragment starts just before character number _x_, and extends until character number _y_ (inclusive). |
+|`,y`| The fragment starts at the beginning of the text, and extends until character number _y_ (inclusive). |
 |`x+n`| The fragment starts just before character number _x_, and extends for _n_ characters. |
-|`x+`| Returns the character number _x_. _n_ defaults to 1|
+|`x`| Returns character number _x_. |
 
 ##### 2.4.3.1 Token Mode Fragments
 
@@ -282,9 +282,9 @@ include complete tokens.
 | Form of Fragment Parameter| Description |
 | ------------------- | ------------ |
 |`x,y`| The fragment starts just before token number _x_, and extends until token number _y_ (inclusive). |
-|`,y`| The fragment starts at the beginning of the text, and extends until token number _y_ (inclusive). _x_ defaults to 1 |
-|`x+n`| The fragment starts just before token number _x_, and extends for _n_ token. |
-|`x+`| Returns token number _x_. _n_ defaults to 1|
+|`,y`| The fragment starts at the beginning of the text, and extends until token number _y_ (inclusive). |
+|`x+n`| The fragment starts just before token number _x_, and extends for _n_ tokens. |
+|`x`| Returns token number _x_. |
 
 > DISCUSSION POINT: _OPTIONAL_: If the parameters are enclosed in square brackets (\[\]) then the fragment will be extended to include any relevant 
 > leading and/or trailing punctuation according to the language rules relevant to the version.    
@@ -295,15 +295,36 @@ Book mode fragment specifiers identify a block of text in terms of a generalised
 considered to be made up of pages, lines of text and characters. Book mode coordinates are thus triplets of the form _p;l;c_ 
 corresponding to character number _c_ of line number _l_ on page number _p_. 
 
+This is an example of a hierachical text mode which follows some relatively simple rules, which are expanded in detail the table below:
+- Coordinates may be truncated from the right hand side (removing the most fine-grained divisions first)
+- - If a fragment starting point is truncated, missing values _MUST_ be assumed to be "1"
+- - If a fragment end point is truncated, missing values _MUST_ be assumed to be their maximum valid value
+- Length specifiers _MUST_ operate at the same granularity as the starting point
+- A single set of coordinates retuens a single item at the same level of granularity as the coordinates 
+
 | Form of Fragment Parameter| Description |
 | ------------------- | ------------ |
-|`p1;l1;c1,p2;l2;c2'| The fragment starts at character c1, line l1, on page p1 and ends just after character c2, on line l2, on page p2. |
-|`p~1~;l~1~;c~1~,p~2~;l~2~;c~2~| The fragment starts at the beginning of the text, and extends until codepoint number y (inclusive). x defaults to 1 |
-|`x+n`| The fragment starts just before codepoint number x, and extends for n codepoints. |
-|`x+`| Returns the character at codepoint number x. l defaults to 1|
-
+|`p1,p2`| The fragment extends from the first character on page p1 until just after the last character on page p2. |
+|`p1;l1,p2;l2`| The fragment extends from the start of line l1, on page p1 until the end of line l2, on page p2. |
+|`p1;l1;c1,p2;l2;c2`| The fragment starts from character c1, line l1, on page p1 and ends just after character c2, on line l2, on page p2. |
+|`,p2`| The fragment extends from the beginning of the text, to just after the last character on page p2. |
+|`,p2;l2`| The fragment extends from the beginning of the text, to the ends of line l2, on page p2. |
+|`,p2;l2;c2`| The fragment starts at the beginning of the text, and ends just after character c2, on line l2, on page p2. |
+|`,p2`| The fragment starts at the beginning of the text, and ends just after the last character on page p2. |
+|`p1+p2`| The fragment extends from the first character on page p1 until just after the last character on page p1+p2. |
+|`p1;l1+l2`| The fragment extends from the start of line l1, and includes the following l2 lines (regardless of pagination). |
+|`p1;l1;c1+c2`| The fragment starts from character c1, line l1, on page p1 and includes the following c2 characters. |
+|`p1`| The fragment is the whole of the page p1. |
+|`p1;l1`| The fragment is the whole of line l1 on page p1. |
+|`p1;l1;c1`| The fragment is character c1 of line l1 on page p1. |
 
 ##### 2.4.3.4 Prose Mode Fragments 
+
+Prose mode is another another hierarchical mode that identifies a block of text in terms of a 
+generalised semantic prose work structure. Prose works are considered to be made up of chapters, 
+paragraphs, sentences, words (tokens) and characters. Prose mode coordinates are thus of the form 
+_C;p;s;w;c_ corresponding to character number _c_ of word _w_ of sentence _s_ of paragraph _p_ of 
+chapter _C_. As a hierarchical mode, it follows the same basic rules   
 
 #### 2.4.4 Quality
 
