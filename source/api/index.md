@@ -257,8 +257,9 @@ when computing fragments. When counting characters, and sequence of contiguous w
 characters (codepoints of [Unicode class "Space Separator"](https://unicodeplus.com/category/Zs)) 
 _MUST_ be counted as a single character.   
 
-In ITF all counting _MUST_ be "1"-based, so the first page of a book is page 1. If a fragment parameter 
-is omitted then an ITF server _MUST_ treat it as having the value 1, which may result in an error.
+In ITF all counting _MUST_ be "1"-based, so the first page of a book is page 1. 
+
+> DISCUSSION POINT: Are these reasonable restrictions/simplifications?
 
 ##### 2.4.3.1 Char Mode Fragments
 
@@ -285,6 +286,9 @@ include complete tokens.
 |`x+n`| The fragment starts just before token number _x_, and extends for _n_ token. |
 |`x+`| Returns token number _x_. _n_ defaults to 1|
 
+> DISCUSSION POINT: _OPTIONAL_: If the parameters are enclosed in square brackets (\[\]) then the fragment will be extended to include any relevant 
+> leading and/or trailing punctuation according to the language rules relevant to the version.    
+
 ##### 2.4.3.3 Book Mode Fragments
 
 Book mode fragment specifiers identify a block of text in terms of a generalised physical book structure. Books are 
@@ -293,8 +297,8 @@ corresponding to character number _c_ of line number _l_ on page number _p_.
 
 | Form of Fragment Parameter| Description |
 | ------------------- | ------------ |
-|`p~1~;l~1~;c~1~,p~2~;l~2~;c~2~'| The fragment starts just before codepoint  page number , and extends until codepoint number y (inclusive). |
-|p~1~;l~1~;c~1~,p~2~;l~2~;c~2~| The fragment starts at the beginning of the text, and extends until codepoint number y (inclusive). x defaults to 1 |
+|`p1;l1;c1,p2;l2;c2'| The fragment starts at character c1, line l1, on page p1 and ends just after character c2, on line l2, on page p2. |
+|`p~1~;l~1~;c~1~,p~2~;l~2~;c~2~| The fragment starts at the beginning of the text, and extends until codepoint number y (inclusive). x defaults to 1 |
 |`x+n`| The fragment starts just before codepoint number x, and extends for n codepoints. |
 |`x+`| Returns the character at codepoint number x. l defaults to 1|
 
