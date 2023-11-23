@@ -142,14 +142,14 @@ The sections of the Text Fragment Request URL include:
 The ITF Text API URL for requesting information about a text resource _MUST_ conform to
 the following format:
 
-    http[s]://server/[prefix/]identifier/info.format
+    http[s]://server/[prefix/]identifier/[version]info.format
 
 where \[ \] delimits the optional prefix component.
 
 The URI Template ([RFC6750](https://datatracker.ietf.org/doc/html/rfc6750)) form
 is:
 
-    http://{server}{/prefix}/{identifier}/{info}.{format}
+    http://{server}{/prefix}/{identifier}{/version}/{info}.{format}
 
 For example:
 
@@ -297,10 +297,11 @@ corresponding to character number _c_ of line number _l_ on page number _p_.
 
 This is an example of a hierachical text mode which follows some relatively simple rules, which are expanded in detail the table below:
 - Coordinates may be truncated from the right hand side (removing the most fine-grained divisions first)
-- - If a fragment starting point is truncated, missing values _MUST_ be assumed to be "1"
-- - If a fragment end point is truncated, missing values _MUST_ be assumed to be their maximum valid value
+  - If a fragment starting point is truncated, missing values _MUST_ be assumed to be "1"
+  - If a fragment end point is truncated, missing values _MUST_ be assumed to be their maximum valid value
 - Length specifiers _MUST_ operate at the same granularity as the starting point
-- A single set of coordinates retuens a single item at the same level of granularity as the coordinates 
+  - Length specifiers can flow over. For example, requesting more lines than are on a page is valid, provided subsequent pages have sufficient lines.   
+- A single set of coordinates returns a single item at the same level of granularity as the coordinates 
 
 | Form of Fragment Parameter| Description |
 | ------------------- | ------------ |
@@ -310,7 +311,6 @@ This is an example of a hierachical text mode which follows some relatively simp
 |`,p2`| The fragment extends from the beginning of the text, to just after the last character on page p2. |
 |`,p2;l2`| The fragment extends from the beginning of the text, to the ends of line l2, on page p2. |
 |`,p2;l2;c2`| The fragment starts at the beginning of the text, and ends just after character c2, on line l2, on page p2. |
-|`,p2`| The fragment starts at the beginning of the text, and ends just after the last character on page p2. |
 |`p1+p2`| The fragment extends from the first character on page p1 until just after the last character on page p1+p2. |
 |`p1;l1+l2`| The fragment extends from the start of line l1, and includes the following l2 lines (regardless of pagination). |
 |`p1;l1;c1+c2`| The fragment starts from character c1, line l1, on page p1 and includes the following c2 characters. |
@@ -321,10 +321,36 @@ This is an example of a hierachical text mode which follows some relatively simp
 ##### 2.4.3.4 Prose Mode Fragments 
 
 Prose mode is another another hierarchical mode that identifies a block of text in terms of a 
-generalised semantic prose work structure. Prose works are considered to be made up of chapters, 
+generalised semantic prose work structure. Prose works are considered to be made up of sections, 
 paragraphs, sentences, words (tokens) and characters. Prose mode coordinates are thus of the form 
-_C;p;s;w;c_ corresponding to character number _c_ of word _w_ of sentence _s_ of paragraph _p_ of 
-chapter _C_. As a hierarchical mode, it follows the same basic rules   
+_S;p;s;w;c_ corresponding to character number _c_ of word _w_ of sentence _s_ of paragraph _p_ of 
+section _S_. As a hierarchical mode, it follows the same basic rules so the table below just shows a
+few examples.
+
+| Form of Fragment Parameter| Description |
+| ------------------- | ------------ |
+|`S1,S2`| The fragment extends from the first character of section S1 until just after the last character of section S2. |
+|`S1;p1;s1;w1;c1;,S2;p2;s2;w2;c2`| The fragment starts from character c1, word w1, of sentence s1, of paragraph p1 of section S1 and ends just after character c2, of word w2, of sentence s2 of paragraph p2, of section S2. |
+|`,S2`| The fragment extends from the beginning of the text, to just after the last character of section S2. |
+|`,S2;p2;s2`| The fragment starts at the beginning of the text, and ends just after the last character of sentence s2, of paragraph p2. of section S2. |
+|`S1;p1+p2`| The fragment extends from the start of paragraph p1 of section S1, and includes the following p2 paragraphs. |
+|`S1;p1;s1+s2`| The fragment starts from the start of sentence s1, of paragpah p1, of section S1, and includes the following s2 sentences. |
+|`S1`| The fragment is the whole of section S1. |
+|`S1;p1`| The fragment is the whole of paragraph p1 of section S1.|
+
+In the simplest case, section can be considered to equate broadly to chapters. Howver, in practice, documents often contain additional 
+elements such as forewards, appendices, chapter summaries etc. These are accomodated by allowing sections to be numbered hierarchically.
+Thus, a more complex document might have the following sections.
+
+1. (Preamble)
+  1.1. Title page
+  1.2. Contents List
+  1.3. Foreward
+2. (Main body)
+  2.1. Chapter 1
+   2.
+     
+For display purposes, how these sections are presented and labelled can be discovered by 
 
 #### 2.4.4 Quality
 
