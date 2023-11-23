@@ -56,16 +56,26 @@ _RECOMMENDED_, and _OPTIONAL_ in this document are to be interpreted as describe
 
 ### 1.3 The ITF Text Model
 
-Regardless of how underlying texts are stored and managed, ITF-compliant servers _MUST_ behave as if they were NFC normalised UTF-8 Unicde. Character counts and offsets _MUST_ computed in terms of Unicode codepoints, and the texts returned as a result of invoking ITF API's _MUST_ be in that form, unless the _OPTIONAL_ "raw" quality specifier is invoked.   
+Regardless of how underlying texts are stored and managed, ITF-compliant servers _MUST_ behave 
+as if they were NFC normalised UTF-8 Unicode. Character counts and offsets _MUST_ computed in 
+terms of Unicode codepoints, and the texts returned as a result of invoking ITF API's _MUST_ 
+be in that form, unless the _OPTIONAL_ "raw" quality specifier is invoked.   
 
-ITF Text Resource 
-: An abstract textual work, identified by a unique identifier on an ITF-complaint server. An Text Resource may contain just a single text or multiple versions of a work as it has evolved. ITF makes no assumtpions about the type or level of document thata Text Resource contains.  
-ITF Edition
+> DISCUSSION POINT: Is "raw" quality useful in the context of ITF? It may only make
+> sense to allow it for full text retreival. 
+
+*ITF Text Resource* 
+: An abstract textual work, identified by a unique identifier on an ITF-complaint server. An Text Resource may contain just a single text or multiple versions of a work as it has evolved. ITF makes no assumtpions about the type or level of document thata Text Resource contains.
+
+*ITF Edition*
 : An ITF Edition is created when an Text Resource is made avalible for access. If the Text Resource is subsequently updated, then it is considered a new Edition. In order to maintain the integrity of references and citations, ITF-compliant servers provide a way of accessing previous Editions of a Text Resource.
-ITF Version
+
+*ITF Version*
 : Texts evolve over time through the actions of one or more contributors. Text Resources can represent this history by making multiple versions of a text available. Versions are identified by labels and, optionally, dates. When multiple contributors are active, there may be more than one Version considered active on a particular date. 
-ITF Mode
+
+*ITF Mode*
 : It is useful to be able to specify or reference text fragments in terms of the structure of a document rather than just as character offsets from the start of a file. Modes describe the different ways that this can be achieved. Some modes reflect the physical structure of the source material (e.g. a volume, broken down by page, line and word) while others might reflect semantic structure (e.g. a novel, broken down by chapter, paragraph, sentence and word). Such approaches are more human friendly, map readily to many analytical tools, and are also easier to map between versions of a text.     
+
 > Probably needs considerable expansion   
 
 ## 2 Text API
@@ -220,6 +230,8 @@ references to be more readily mapped between versions of a text, or to be update
 as a text is edited.  ITF defines a few common modes but new modes can be defined
 using the predefined modes as an illustration.
 
+The modes represent a generalised version of a text format. 
+
 | Form of Mode Parameter| Description |
 | ------------------- | ------------ |
 |`char`| The fragment will be specified in terms of characters and character offsets. |
@@ -234,19 +246,39 @@ using the predefined modes as an illustration.
 The fragment parameter specifies the text fragment to be returned as a result of invoking the 
 Text Fragment API. The format of the fragment parameter depends on the mode selected except for
 the special value "full" which returns the entirety of the text of the Version specified, 
-irrespective of the value of the mode parameter. 
+irrespective of the value of the mode parameter.
+
+In ITF all counting _MUST_ be "1"-based, so the first page of a book is page 1. If a fragment parameter 
+is omitted then an ITF server _MUST_ treat it as having the value 1, which may result in an error.
 
 ##### 2.4.3.1 Char Mode Fragments
 
-Character mode fragment specifiers are the most basic 
+Char(acter) mode fragment specifiers identify a block of text in a text file by counting individual
+characters (Unicode codepoints, as noted in [above](#13-the-itf-text-model). Char mode specifiers 
+operate on plaintext of the version being accessed. Thus, regardless of the format of the underlying
+source data, the server _MUST_ ignore any tagging and formatting when counting characters. 
 
-| Form of Frgament Parameter| Description |
+| Form of Fragment Parameter| Description |
 | ------------------- | ------------ |
-|`x,y`| The fragment just before  |
-|`book`| The fragment will be specified in terms of the physical structure of a book. |
-|`prose`| The fragment will be specifies in terms of the semantic structure of a prose work. |
+|`_x_,_y_`| The fragment starts just before codepoint number _x_, and extends until codepoint number _y_ (inclusive). |
+|`,_y_`| The fragment starts at the beginning of the text, and extends until codepoint number _y_ (inclusive). _x_ defaults to 1 |
+|`_x_+_l_`| The fragment starts just before codepoint number _x_, and extends for _l_ codepoints. |
+|`_x_+`| Returns the character at codepoint number _x_. _l_ defaults to 1|
 
 ##### 2.4.3.2 Book Mode Fragments
+
+Book mode fragment specifiers identify a block of text in terms of a generalised physical book structure. Books are 
+considered to be made up of pages, lines of text and characters. A [mode information request](253-mode-information-request) 
+can be used to identify version-specific nomenclautre (such as designating pages recto-verso) although this is
+purely for information for display. In book mode specifiers, pages are always numbered sequentially from 1. 
+
+| Form of Fragment Parameter| Description |
+| ------------------- | ------------ |
+|`pnl,y`| The fragment starts just before codepoint number x, and extends until codepoint number y (inclusive). |
+|`,y`| The fragment starts at the beginning of the text, and extends until codepoint number y (inclusive). x defaults to 1 |
+|`x+l`| The fragment starts just before codepoint number x, and extends for l codepoints. |
+|`x+`| Returns the character at codepoint number x. l defaults to 1|
+
 
 ##### 2.4.3.3 Prose Mode Fragments 
 
