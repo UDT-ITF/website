@@ -408,33 +408,46 @@ The response will return the following information for an ITF Resource.
 | Element | Description|
 | ------- | ---------------|
 | `identifier` | The unique identifier of the Resource, expressed as a string. The identifier _MUST_ be supplied without URI encoding. |
-| `versioning` | Indicates of a Resource contain multiple versions. Possible values: _none, linear, date, graph_ 
+| `date` | The date of the most recent edition of the resource in ISO 8601 format |
+| `versioning` | Indicates of a Resource contain multiple versions. Possible values: _none, linear, date, graph_ |
 | `modes` | Indicates which standard modes are supported. A list of one or more of _char, token, book, prose_. |
 | `custom_modes` | _OPTIONAL_ List of custom modes that are supported. |
 | `qualities` | Indicates which qualities are supported. A list of one or more of _raw, compact, plaintext, rich_. |
 | `formats` | Indicates which formats are supported. A list of one or more of _txt, tei, html, md_. |
 | `DC-metadata` | _OPTIONAL_ URL of a DC metadata record |
+| `editions` | _OPTIONAL_ If the server supports editions they should be detailed here. |
+| `  first_ed` | Date of the first edition of the Resource |
+| `  ed_list` | _OPTIONAL_ List of the dates of all the editions of the resource. If there are many editions this may be omitted. |
 
 > DISCUSSION POINT: DC is rich enough metadata to be useful but not too onerous. Thoughts?
 
 Example JSON response for a Resource.
 
-`{
-  "identifier" : "1E34750D-38DB-4825-A38A-B60A345E591C",
-  "versioning" : "date",
-  "modes" : [ "char", "token", "book", "prose" ],
-  "qualities" : ["compact", "plaintext"],
-  "formats" : [ "txt" ] 
-}`
+    {
+      "identifier" : "1E34750D-38DB-4825-A38A-B60A345E591C",
+      "versioning" : "date",
+      "date" : "2023-11-24"
+      "modes" : [ "char", "token", "book", "prose" ],
+      "qualities" : ["compact", "plaintext"],
+      "formats" : [ "txt" ],
+      "editions" : {
+        "first_ed" : "2022-05-07",
+        "ed_list" : [
+          "2022-05-07",
+          "2023-01-06",
+          "2023-11-24"
+        ]
+      } 
+    }
 
 `The response will return the following information for an ITF Version.
 
 | Element | Description |
 | ------- | ---------------|
 | `label` | The label used to identify the version. The label _MUST_ be unique within the containing Resource. Labels are used to sequence _linear_ versions|
-| 'date' | If a Resource has _date_ based versioning, all versions _MUST_ have a unique date. Otherwise this is _OPTIONAL_. |
-| 'succeeds' | Lists the label(s) of preceeding versions if a Resource has _graph_ based versioning. |
-| 'preceeds' | Lists the label(s) of succeeding versions if a Resource has _graph_ based versioning. |
+| `date` | If a Resource has _date_ based versioning, all versions _MUST_ have a unique date. Otherwise this is _OPTIONAL_. |
+| `succeeds` | Lists the label(s) of preceeding versions if a Resource has _graph_ based versioning. |
+| `preceeds` | Lists the label(s) of succeeding versions if a Resource has _graph_ based versioning. |
 | `modes` | Indicates which standard modes are supported. A list of one or more of _char, token, book, prose_. |
 | `custom_modes` | _OPTIONAL_ List of custom modes that are supported. |
 | `qualities` | Indicates which qualities are supported. A list of one or more of _raw, compact, plaintext, rich_. |
