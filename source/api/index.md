@@ -18,9 +18,9 @@ editors:
   - name: Nilo Pedrazzini
     ORCID: https://orcid.org/0000-0003-3757-2961
     institution: Digital Scholarship @ Oxford (University of Oxford) & The Alan Turing Institute
-  - name: Name Surname
-    ORCID: https://orcid.org/xxxx-xxxx-xxxx-xxxx
-    institution: Dept (Institute)
+  - name: Michael Hawkins
+    ORCID: https://orcid.org/my-orcid?orcid=0000-0003-4306-7515
+    institution: Cambridge Digital Humanities (University of Cambridge)
 ---
 
 ## Status of this Document
@@ -45,7 +45,7 @@ discussion.
 
 ### 1.1 Audience
 This document is intended for developers building applications that either share 
-textual resources or consume such resources for display, analytics or other purposes. 
+textual resources for display, computational analysis or any other purpose. 
 The background use-cases for developing the API are drawn from cultural heritage and 
 research organisations but the use of the API is not restricted to these domains. 
 
@@ -58,23 +58,24 @@ _RECOMMENDED_, and _OPTIONAL_ in this document are to be interpreted as describe
 
 Regardless of how underlying texts are stored and managed, ITF-compliant servers _MUST_ behave 
 as if they were NFC normalised UTF-8 Unicode. Character counts and offsets _MUST_ computed in 
-terms of Unicode codepoints, and the texts returned as a result of invoking ITF API's _MUST_ 
+terms of Unicode codepoints, and the texts returned as a result of invoking ITF APIs _MUST_ 
 be in that form, unless the _OPTIONAL_ "raw" quality specifier is invoked.   
 
 > DISCUSSION POINT: Is "raw" quality useful in the context of ITF? It may only make
-> sense to allow it for full text retreival. 
+> sense to allow it for full text retrieval.
+> > MH: I assume that by 'full text retrieval' you are referring to the raw original underlying file and not the entire text returned by setting fragment to full.
 
 *ITF Text Resource* 
-: An abstract textual work, identified by a unique identifier on an ITF-complaint server. An Text Resource may contain just a single text or multiple versions of a work as it has evolved. ITF makes no assumptions about the type or level of document that a Text Resource contains.
+: An abstract textual work, identified by a unique identifier on an ITF-complaint server. An Text Resource may contain one or more single texts or multiple versions of a work as it has evolved. ITF makes no assumptions about the type or level of document that a Text Resource contains.
 
 *ITF Edition*
 : An ITF Edition is created when an Text Resource is made available for access. If the Text Resource is subsequently updated, then it is considered a new Edition. In order to maintain the integrity of references and citations, ITF-compliant servers provide a way of accessing previous Editions of a Text Resource.
 
 *ITF Version*
-: Texts evolve over time through the actions of one or more contributors. Text Resources can represent this history by making multiple versions of a text available. Versions are identified by labels and, optionally, dates. When multiple contributors are active, there may be more than one Version considered active on a particular date. 
+: Texts evolve over time through the actions of one or more contributors. Text Resources can represent this history by making multiple versions of a text available. Versions are identified by labels and, optionally, dates. When multiple contributors are active, there may be more than one version considered active on a particular date. 
 
 *ITF Mode*
-: It is useful to be able to specify or reference text fragments in terms of the structure of a document rather than just as character offsets from the start of a file. Modes describe the different ways that this can be achieved. Some modes reflect the physical structure of the source material (e.g. a volume, broken down by page, line and word) while others might reflect semantic structure (e.g. a novel, broken down by chapter, paragraph, sentence and word). Such approaches are more human friendly, map readily to many analytical tools, and are also easier to map between versions of a text.     
+: It is useful to be able to specify or reference text fragments in terms of the structure of a document rather than just as character offsets from the start of a file. Modes describe the different ways that this can be achieved. Some modes reflect the physical structure of the source material (e.g. a volume, broken down by page, line and word) while others might reflect semantic structure (e.g. a novel, broken down by chapter, headers, paragraph, sentence and word). Such approaches are more human friendly, map readily to many analytical tools, and are also easier to map between versions of a text.
 
 > Probably needs considerable expansion   
 
@@ -82,8 +83,8 @@ be in that form, unless the _OPTIONAL_ "raw" quality specifier is invoked.
 
 ### 2.1 Abstract
 This section describes an API for the delivery of texts and text fragments via a
-standard http request. The ITF Text API specifies a web service that returns textual
-data in response to a standard http or https request. The URL can specify:
+standard HTTP request. The ITF Text API specifies a web service that returns textual
+data in response to a standard HTTP or HTTPS request. The URL can specify:
 
 -  The version of the underlying source text to be accessed
 -  The mode used to specify a text fragment 
@@ -103,8 +104,8 @@ just how it must respond to ITF-compliant requests.
 The ITF Text API can be called in two forms: one to request a text fragment,
 and a second to request technical information about the underlying source text.
 Both forms convey the request's information in the path segment of the URL,
-rather than as query parameters. This makes responses more easily able
-to be cached, either at the server or by standard web-caching infrastructure. 
+rather than as query parameters. This makes responses more easily cacheable, 
+either by the server or standard web-caching infrastructure. 
 
 To allow for extension, this specification does not define the behaviour
 of an implementing server when it receives requests that do not match
@@ -124,15 +125,19 @@ is:
 
 For example:
 
-    http://www.example.org/text-service/abcd1234/default/char/0,247/tei.xml
+    http://www.example.org/text-service/abcd1234/default/char/0,247/teilite.xml
+
+> To avoid ambiguity, I think it's useful to make it clear that the files are presented using the minimalistic
+> TEI Lite rather than TEI (in general). There will be considerable difference in many projects between their
+> original TEI and the TEI Lite version.
 
 The sections of the Text Fragment Request URL include:
 
 | Syntax | Description |
 | ------------------- | ------------ |
-|`http (or https)`| Indicates the use of the http or https protocol in calling the service. |
+|`http (or https)`| Indicates the use of the HTTP or HTTPS protocol in calling the service. |
 |`server`| The host server on which the ITF-compliant text service resides. |
-|`prefix`| The path on the host server to the ITF-compliant text service. This prefix is <br>optional, but may be useful when the host server supports multiple services. (note: The prefix MAY contain slashes or constructions that resemble service parameters.) |
+|`prefix`| The path on the host server to the ITF-compliant text service. This prefix is optional, but may be useful when the host server supports multiple services. **Note:** The prefix may contain slashes or constructions that resemble service parameters. |
 |`identifier`| A unique identifier of the requested text resource, expressed as a string. This may be an ark, URN, filename, or other unique identifier but ideally SHOULD be a Persistent Identifier. Special characters MUST be URI encoded. |
 |`version, mode, fragment, quality, format`| Parameters defining the characteristics of the returned text fragment. These are described in detail in [Section 2.4 - Fragment Request Parameters](#24-text-fragment-request-parameters). |
 
@@ -159,9 +164,9 @@ The sections of the Text Information Request URL include:
 
 | Syntax | Description |
 | ------------------- | ------------ |
-|`http (or https)`| Indicates the use of the http or https protocol in calling the service. |
+|`http (or https)`| Indicates the use of the HTTP or HTTPS protocol in calling the service. |
 |`server`| The host server on which the ITF-compliant text service resides. |
-|`prefix`| The path on the host server to the ITF-compliant text service. This prefix is optional, but may be useful when the host server supports multiple services. (note: The prefix MAY contain slashes or constructions that resemble service parameters.) |
+|`prefix`| The path on the host server to the ITF-compliant text service. This prefix is optional, but may be useful when the host server supports multiple services. **Note:** The prefix may contain slashes or constructions that resemble service parameters |
 |`identifier`| A unique identifier of the requested text resource, expressed as a string. This may be an ark, URN, filename, or other unique identifier but ideally SHOULD be a Persistent Identifier. Special characters MUST be URI encoded. |
 |`info`| Specifies the information being requested. These are described in detail below. |
 |`format`| Specifies the format of the returned information, which can be "json" or "xml". |
@@ -186,6 +191,8 @@ underlying resources.
 
 > DISCUSSION POINT: How much do we want or need to go into persistence/preservation?
 > Should a "friable" resource have to indicate this via the Info API? 
+> > MH: I'd say that we should elaborate on persistence/preservation/friable as it would be useful 
+> > for less technical audiences.
 
 All special characters (e.g. ? or \#) MUST be URI encoded to avoid unpredictable
 client behaviors. The URL syntax relies upon slash (/) separators so any slashes 
@@ -196,30 +203,44 @@ See discussion in [Section9 - URL Encoding and Decoding.](#url_encoding)
 All parameters described below are required for compliant construction of an ITF Text API
 URL. The sequence of parameters in the URL MUST be in the order described below. The 
 order of the parameters reflects the order of operation a text service is expected
-to use to process a request. Thus, the desired version of a text is located, the relevant 
+to use when processing a request. Thus, the desired version of a text is located, the relevant 
 fragment is extracted using the mode specified, any formatting or tagging is applied,
 and finally conversion to the desired format. This resulting text fragment is returned 
 as the representation for the URL. 
 
 #### 2.4.1 Version
 An ITF text resource MAY contain multiple versions of a text which MUST be identified by a
-label (a string) and MAY also have an associated date/time. The version parameter defines 
+label (a string) and MAY also have an associated date/dateTime. The version parameter defines 
 which version of text a fragment is to be retrieved from. The special value "default" MUST 
 be used with a resource that contains no versions.
 
 | Form of Version Parameter| Description |
 | ------------------- | ------------ |
-|`default`| Specifies the only text in an unversioned resource. MUST NOT be used with a versioned resource. |
-|`l:label`| Specifies the version with a label "label". Labels MUST be URI encoded. |
+|`default`| Specifies the only text in an unversioned resource. It MUST NOT be used with a versioned resource. |
+|`l:label`| Specifies the version with the label "label". Labels MUST be URI encoded. |
 |`d:yyyy-mm-dd`| Specifies the version current at a particular date in ISO 8601-1:2019 format. Negative (BCE) years are allowed. |
-|`d:yyyy-mm-ddThh:mm:ss`| Specifies the version current at a particular date/time in ISO 8601-1:2019 format. Negative (BCE) years are allowed. |
+|`d:yyyy-mm-ddThh:mm:ss`| Specifies the version current at a particular dateTime in ISO 8601-1:2019 format. Negative (BCE) years are allowed. |
 
 > DISCUSSION POINTS: Do we allow truncation to just yyyy-mm, for example? 
 > Can support for times be optional?
+> > MH: I think the question of optional times, optional days and, perhaps even months and days are all related.
+> > The minimalist side of me wants to say that they are optional -- a project might simply have a 2023 release of the text 
+> > that will be superseded by the 2024 release. The pragmatic side of me, however, leans towards the view that 
+> > they MUST be dateTime values. Any other version state could be indicated with labels/version numbers, just as 
+> > tags are used in Git.
 > Do we need version numbers or are labels sufficient
+> > MH: It depends on whether we can foresee a need for a text collection to use both labels and versions
+> > to identify specific incarnations of the resource in conjunction. That is, l:main/v:1.0.0 - for the primary release version
+> > and l:crowdsourced/v:1.0.0 - for a different version of the text (say with some crowdsourced additions that
+> > the provider doesn't want to include within the main release but does want to make available in an explicit
+> > crowdsourced release). If that specific scenario isn't to be supported, there's no reason that the label couldn't
+> > be a version number. If we were to adopt the latter approach, should we call it a 'tag' just as Git does?
 
 A server MUST return a 400 (bad request) code if 'default' is used with a versioned resource, or 
 a date is specified for a resource with no version dates. 
+
+> Is there a mechanism for retrieving the latest version of a versioned resource? If not, couldn't 'default' be used to
+> retrieve it? Or, do I need more coffee?
 
 #### 2.4.2 Mode
 The mode parameter specifies how a text fragment is specified in the subsequent fragment 
@@ -238,13 +259,14 @@ any custom modes can be discovered via the aforementioned mode information reque
 | Form of Mode Parameter| Description |
 | ------------------- | ------------ |
 |`char`| The fragment will be specified in terms of characters and character offsets. |
-|`token`| The fragment will be specified in terms of tokens (words inn Western languages). | 
+|`token`| The fragment will be specified in terms of tokens (words in Western languages). | 
 |`book`| The fragment will be specified in terms of the physical structure of a book. |
 |`prose`| The fragment will be specifies in terms of the semantic structure of a prose work. |
 
 > DISCUSSION POINT: This is where it gets tricky! My preference would be to keep modes
 > as simple as possible and discuss mapping to real world examples in the Implementation Notes.
 > How many does it make sense to start with? Letter, Journal, Anthology, Play?  
+> > MH: Char and token seem fine. Things get problematic after that. The physical features of the text are ultimately dependant on the physical nature of the artefact (books, scroll, funerary marker, clay tablets, woven strands of thread, etc). Using a book-based model is imposing a very particular type of cultural product onto texts that it doesn't apply to. Would 'surface' perhaps be a slightly better term? It certainly would avoid the problems mentioned in my next comment further down.
 
 #### 2.4.3 Fragment
 The fragment parameter specifies the text fragment to be returned as a result of invoking the 
@@ -261,16 +283,17 @@ _MUST_ be counted as a single character.
 In ITF all counting _MUST_ be "1"-based, so the first page of a book is page 1. 
 
 > DISCUSSION POINT: Are these reasonable restrictions/simplifications?
+> > MH: Everything apart from 'the first page of a book is page 1' seems fine. What do you mean by page? Page 1 in the book might actually be the 20th page. If we were to use 'surface' this would differentiate surface 1 from 'page 1' as it appears in the text.
 
 ##### 2.4.3.1 Char Mode Fragments
 
 Char(acter) mode fragment specifiers identify a block of text in a text file by counting individual
-characters (Unicode codepoints, as noted in [above](#13-the-itf-text-model). 
+characters (Unicode codepoints, as noted in [above](#13-the-itf-text-model). All counting _MUST_ be "1"-based.
 
 | Form of Fragment Parameter| Description |
 | ------------------- | ------------ |
 |`x,y`| The fragment starts just before character number _x_, and extends until character number _y_ (inclusive). |
-|`,y`| The fragment starts at the beginning of the text, and extends until character number _y_ (inclusive). |
+|`,y`| The fragment starts at the beginning of the text, and extends until character number _y_ (inclusive). Equivalent to `1,y`|
 |`x+n`| The fragment starts just before character number _x_, and extends for _n_ characters. |
 |`x`| Returns character number _x_. |
 
