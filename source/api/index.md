@@ -65,10 +65,10 @@ be in that form, unless the _OPTIONAL_ "raw" quality specifier is invoked.
 > sense to allow it for full text retreival. 
 
 *ITF Text Resource* 
-: An abstract textual work, identified by a unique identifier on an ITF-complaint server. An Text Resource may contain just a single text or multiple versions of a work as it has evolved. ITF makes no assumtpions about the type or level of document thata Text Resource contains.
+: An abstract textual work, identified by a unique identifier on an ITF-complaint server. An Text Resource may contain just a single text or multiple versions of a work as it has evolved. ITF makes no assumptions about the type or level of document that a Text Resource contains.
 
 *ITF Edition*
-: An ITF Edition is created when an Text Resource is made avalible for access. If the Text Resource is subsequently updated, then it is considered a new Edition. In order to maintain the integrity of references and citations, ITF-compliant servers provide a way of accessing previous Editions of a Text Resource.
+: An ITF Edition is created when an Text Resource is made available for access. If the Text Resource is subsequently updated, then it is considered a new Edition. In order to maintain the integrity of references and citations, ITF-compliant servers provide a way of accessing previous Editions of a Text Resource.
 
 *ITF Version*
 : Texts evolve over time through the actions of one or more contributors. Text Resources can represent this history by making multiple versions of a text available. Versions are identified by labels and, optionally, dates. When multiple contributors are active, there may be more than one Version considered active on a particular date. 
@@ -296,7 +296,7 @@ Book mode fragment specifiers identify a block of text in terms of a generalised
 considered to be made up of pages, lines of text and characters. Book mode coordinates are thus triplets of the form _p;l;c_ 
 corresponding to character number _c_ of line number _l_ on page number _p_. 
 
-This is an example of a hierachical text mode which follows some relatively simple rules, which are expanded in detail the table below:
+This is an example of a hierarchical text mode which follows some relatively simple rules, which are expanded in detail the table below:
 - Coordinates may be truncated from the right hand side (removing the most fine-grained divisions first)
   - If a fragment starting point is truncated, missing values _MUST_ be assumed to be "1"
   - If a fragment end point is truncated, missing values _MUST_ be assumed to be their maximum valid value
@@ -321,7 +321,7 @@ This is an example of a hierachical text mode which follows some relatively simp
 
 ##### 2.4.3.4 Prose Mode Fragments 
 
-Prose mode is another another hierarchical mode that identifies a block of text in terms of a 
+Prose mode is another hierarchical mode that identifies a block of text in terms of a 
 generalised semantic prose work structure. Prose works are considered to be made up of sections, 
 paragraphs, sentences, words (tokens) and characters. Prose mode coordinates are thus of the form 
 _S;p;s;w;c_ corresponding to character number _c_ of word _w_ of sentence _s_ of paragraph _p_ of 
@@ -335,12 +335,12 @@ few examples.
 |`,S2`| The fragment extends from the beginning of the text, to just after the last character of section S2. |
 |`,S2;p2;s2`| The fragment starts at the beginning of the text, and ends just after the last character of sentence s2, of paragraph p2. of section S2. |
 |`S1;p1+p2`| The fragment extends from the start of paragraph p1 of section S1, and includes the following p2 paragraphs. |
-|`S1;p1;s1+s2`| The fragment starts from the start of sentence s1, of paragpah p1, of section S1, and includes the following s2 sentences. |
+|`S1;p1;s1+s2`| The fragment starts from the start of sentence s1, of paragraph p1, of section S1, and includes the following s2 sentences. |
 |`S1`| The fragment is the whole of section S1. |
 |`S1;p1`| The fragment is the whole of paragraph p1 of section S1.|
 
-In the simplest case, sections can be considered to equate broadly to chapters. Howver, in practice, documents often contain additional 
-elements such as forewards, appendices, chapter summaries etc. These are accomodated by allowing sections to be numbered hierarchically.
+In the simplest case, sections can be considered to equate broadly to chapters. However, in practice, documents often contain additional 
+elements such as forewards, appendices, chapter summaries etc. These are accommodated by allowing sections to be numbered hierarchically.
 Thus, a more complex document might have the following sections.
 
 | Section Number | Description |
@@ -371,7 +371,7 @@ include additional enrichment (e.g. formatting or tagging information), if this 
 |`raw`| The server will return the fragment in a form that most closely matches it's underlying storage format. This is entirely server dependent and the following format parameter is ignored. |
 |`compact`| The fragment will be returned as plaintext with sequences of whitespace characters reduced to a single space. | 
 |`plaintext`| The fragment will be returned as plaintext. |
-|`rich`| The fragment will be returned inclduing any available enrichment. |
+|`rich`| The fragment will be returned including any available enrichment. |
 
 #### 2.4.5 Format
 
@@ -383,7 +383,7 @@ include additional enrichment (e.g. formatting or tagging information), if this 
 |`txt`| The fragment will be returned as a UTF-8 text file. Not valid for "rich" quality fragments |
 |`tei`| The fragment will be returned with any enrichment expressed using TEI XML tags. |
 |`html`| The fragment will be returned with any enrichment expressed as HTML 5 tags. |
-|`md`| The fragment will be returned with any enrichment expressed expressed via Markdown formatting. |
+|`md`| The fragment will be returned with any enrichment expressed via Markdown formatting. |
 
 > DISCUSSION POINT: This needs to be more nuanced since we are not necessarily returning complete TEI or HTML documents
 
