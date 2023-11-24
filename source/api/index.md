@@ -423,6 +423,7 @@ The response will return the following information for an ITF Resource.
 
 Example JSON response for a Resource.
 
+```
     {
       "identifier" : "1E34750D-38DB-4825-A38A-B60A345E591C",
       "versioning" : "date",
@@ -439,6 +440,7 @@ Example JSON response for a Resource.
         ]
       } 
     }
+```
 
 `The response will return the following information for an ITF Version.
 
@@ -458,13 +460,15 @@ Example JSON response for a Resource.
 
 Example JSON response for a Resource.
 
-`{
+```
+{
   "identifier" : "1E34750D-38DB-4825-A38A-B60A345E591C",
   "versioning" : "date",
   "modes" : [ "char", "token", "book", "prose" ],
   "qualities" : ["compact", "plaintext"],
   "formats" : [ "txt" ] 
-} 
+}
+```
 
 ### 2.5.2 Version Information Request
 
