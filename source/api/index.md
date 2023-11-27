@@ -274,6 +274,9 @@ characters (Unicode codepoints, as noted in [above](#13-the-itf-text-model).
 |`x+n`| The fragment starts just before character number _x_, and extends for _n_ characters. |
 |`x`| Returns character number _x_. |
 
+> DISCUSSION POINT: do we need to be able to specify zero-length fragments? E.g. for the purpose of being able later to specify via annotation 
+> that a character string present in one version of a text is absent from that location in another version.
+
 ##### 2.4.3.1 Token Mode Fragments
 
 Token mode fragment specifiers identify a block of text in a text file by counting tokens, usually 
