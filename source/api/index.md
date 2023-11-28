@@ -243,16 +243,19 @@ a date is specified for a resource with no version dates.
 
 #### 2.4.2 Mode
 The mode parameter specifies how a text fragment is specified in the subsequent fragment 
-parameter. This enables text fragments to be specified in terms of the higher level 
-structural elements of a text, rather than just using a character offset from the start 
-of the file. As well as being more friendly to human interpretation, this enables fragment 
-references to be more readily mapped between versions of a text, or to be updated 
-as a text is edited.  ITF defines a few common modes but new modes can be defined
-using the predefined modes as an illustration.
+parameter by providing a system of "text coordinates". This provides the option for text 
+fragments to be specified in terms of the higher level structural elements of a text, 
+rather than just using a character offset from the start of the file. As well as being more 
+friendly to human interpretation, mode allow fragment references to be more readily mapped between 
+versions of a text, or to be updated as a text is edited. However, since modes reflect some aspects
+of the structure of the underlying texts, most will only be applicable to particular types of 
+Resources. Complex texts which have parts with different structures may not be fully 
+addressible using just a single higher level mode. ITF defines a few basic modes but new modes 
+can be defined using the predefined modes as an basis. 
 
 The modes represent a generalised version of a text format. A [mode information request](253-mode-information-request) 
-can be used to identify version-specific nomenclature (such as designating pages recto-verso)
-although this is purely for information for display. The list of modes is extensible and
+can be used to identify version-specific nomenclature (such as actual page numbering)
+although this is primarily for information or display. The list of modes is extensible and
 any custom modes can be discovered via the aforementioned mode information request.
 
 | Form of Mode Parameter| Description |
@@ -260,7 +263,6 @@ any custom modes can be discovered via the aforementioned mode information reque
 |`char`| The fragment will be specified in terms of characters and character offsets. |
 |`token`| The fragment will be specified in terms of tokens (words in Western languages). | 
 |`book`| The fragment will be specified in terms of the physical structure of a book. |
-|`prose`| The fragment will be specifies in terms of the semantic structure of a prose work. |
 
 > DISCUSSION POINT: This is where it gets tricky! My preference would be to keep modes
 > as simple as possible and discuss mapping to real world examples in the Implementation Notes.
@@ -339,6 +341,7 @@ corresponding to character number _c_ of line number _l_ on page number _p_.
 ##### 2.4.3.4 Hierarchical Modes
 
 The physical Book mode is an example of a hierarchical text mode which follows some relatively simple rules:
+
 - A text location is expressed in a hierarchical mode as a series of postive integer numerical coordinates separated by semicolons
   - A numerical coordinate may be expressed as a dotted multiplet (e.g. 1.2.3) to represent a hierarchical structure in the document (e.g. the sections and subsections in a document such as this).
   - Coordinates _MUST_ end with a digit
@@ -352,8 +355,9 @@ The physical Book mode is an example of a hierarchical text mode which follows s
   - Length specifiers can flow over. For example, requesting more lines than are on a page is valid, provided subsequent pages have sufficient lines.   
 - A single set of coordinates returns a single item at the same level of granularity as the coordinates 
 
-For display purposes, how these sections are presented and labelled can be discovered by making
-an appropriate [Mode Information Request](253-mode-information-request) 
+
+
+##### 2.4.3.5 Graph Modes
 
 #### 2.4.4 Quality
 
@@ -402,19 +406,15 @@ The response will return the following information for an ITF Resource.
 | Resource Textinfo Element | Description|
 | ------- | ---------------|
 | `identifier` | The unique identifier of the Resource, expressed as a string. The identifier _MUST_ be supplied without URI encoding. |
-| `date` | The date of the most recent edition of the resource in ISO 8601 format |
+| `date` | The date of the most recent edition of the Resource in ISO 8601 format. |
 | `versioning` | Indicates of a Resource contain multiple versions, and, if so, how they are ordered. Possible values: _none, linear, date, graph_ |
 | `modes` | Indicates which standard modes are supported. A list of one or more of _char, token, book, prose_. |
 | `custom_modes` | _OPTIONAL_ List of custom modes that are supported. |
 | `qualities` | Indicates which qualities are supported. A list of one or moreinternatinal date format of _raw, compact, plaintext, rich_. |
 | `formats` | Indicates which formats are supported. A list of one or more of _txt, tei, html, md_. |
 | `DC-metadata` | _OPTIONAL_ URL of a DC metadata record |
-| `editions` | _OPTIONAL_ If the server supports editions this section _MUST_ exist. The edtions section can contain two items detailed below. 
-
-| Editions Element | Description|
-| ------- | ---------------|
-| `first_ed` | Date of the first edition of the Resource. This element _MUST_ be present.  |
-| `ed_list` | _OPTIONAL_ List of the dates of all the editions of the resource in ISO 8601 format. If there are many editions this may be omitted. |
+| 'first_edition' | Date of the first edition of the Resource in ISO 8601 format. _MUST_ be the same as "date" if the Resource does not support editiuons.| 
+| `editions` | _OPTIONAL_ If the server supports editions this section _MUST_ exist. The edtions section can contains a list of dates of all the editions in ISO 8601 format. 
 
 Example JSON response for a Resource.
 
@@ -427,14 +427,12 @@ Example JSON response for a Resource.
   "custom_modes" : [ "prose" ],
   "qualities" : ["compact", "plaintext"],
   "formats" : [ "txt" ],
-  "editions" : {
-    "first_ed" : "2022-05-07",
-    "ed_list" : [
-      "2022-05-07",
-      "2023-01-06",
-      "2023-11-24"
-    ]
-  } 
+  "first_edition" : "2022-05-07",
+  "editions" : [
+    "2022-05-07",
+    "2023-01-06",
+    "2023-11-24"
+  ] 
 }
 ```
 
@@ -488,8 +486,8 @@ version but merely enumerates the version structure of the resource.
 | `identifier` | The unique identifier of the Resource, expressed as a string. The identifier _MUST_ be supplied without URI encoding. |
 | `date` | The date of the edition of the resource in ISO 8601 format |
 | `versioning` | Indicates of a Resource contain multiple versions, and, if so, how they are ordered. Possible values: _none, linear, date, graph_ |
-| 'first_version' | Indicates the label of the earliest (or only) version of the text in the Resource. |
-| `versions` | A list of all the versions in this edition of this resource, if more the one version is present. Each version is described by a single version element in the list, keyed by the version label.|
+| `first_version` | Indicates the label of the earliest (or only) version of the text in the Resource. |
+| `versions` | A keyed list of all the versions in this edition of this resource, if more the one version is present. Each version is described by a single version element in the list, keyed by the version label. This element _MUST NOT_ appear if there is only one text in the resource.|
 
 DISCUSSION POINT: Is a very large number of versions a case we need to consider?
 
@@ -562,14 +560,42 @@ Example JSON response for graph versioning.
 }
 ```
 
-#### 2.5.3 Resource Mode Information Request
+#### 2.5.3 Resource Modes Request
+
+A Resource Modes Request provides information about the modes supported by a particular Resource. 
+In particular, it describes, at a high level, any custom modes that that are used in the Resource. How a 
+particular mode relates in detail to a particular version will require a [Version Mode Request](#254-version-mode-request). 
+
+The response will return the following information.
+
+| Resource Modes Element | Description|
+| ------- | ---------------|
+| `identifier` | The unique identifier of the Resource, expressed as a string. The identifier _MUST_ be supplied without URI encoding. |
+| `date` | The date of the most recent edition of the Resource in ISO 8601 format. |
+
+| `modes` | Indicates which standard modes are supported. A list of one or more of _char, token, book, prose_. |
+| `custom_modes` | _OPTIONAL_ List of custom modes that are supported. |
+| `custom_mode_definitions` | Keyed list of all the custom modes idetified by their label appearing in the _cistom_modes_ list. |
+
+Example JSON response for a Resource.
+
+```
+{
+  "identifier" : "1E34750D-38DB-4825-A38A-B60A345E591C",
+  "versioning" : "date",
+  "date" : "2023-11-24"
+  "modes" : [ "char", "token", "book"],
+  "custom_modes" : [ "prose" ],
+  
+}
+```
+
 
 Prose mode is another hierarchical mode that identifies a block of text in terms of a 
 generalised semantic prose work structure. Prose works are considered to be made up of sections, 
 paragraphs, sentences, words (tokens) and characters. Prose mode coordinates are thus of the form 
 _S;p;s;w;c_ corresponding to character number _c_ of word _w_ of sentence _s_ of paragraph _p_ of 
-section _S_. As a hierarchical mode, it follows the same basic rules so the table below just shows a
-few examples.
+section _S_. 
 
 | Form of Fragment Parameter| Description |
 | ------------------- | ------------ |
@@ -601,4 +627,5 @@ Thus, a more complex document might have the following sections.
 |`3.2`| Appendix 2 |
 |`3.3`| Index |
 
-#### 2.5.3 Version Mode Information Request
+#### 2.5.4 Version Modes Request
+
