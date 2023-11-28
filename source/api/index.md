@@ -154,7 +154,7 @@ where \[ \] delimits the optional prefix component.
 The URI Template ([RFC6750](https://datatracker.ietf.org/doc/html/rfc6750)) form
 is:
 
-    http://{server}{/prefix}/{identifier}{/version}/{info}.{format}
+    http://{server}{/prefix}/{identifier}{/version}/{info}.json
 
 For example:
 
@@ -168,10 +168,9 @@ The sections of the Text Information Request URL include:
 |`server`| The host server on which the ITF-compliant text service resides. |
 |`prefix`| The path on the host server to the ITF-compliant text service. This prefix is optional, but may be useful when the host server supports multiple services. **Note:** The prefix may contain slashes or constructions that resemble service parameters |
 |`identifier`| A unique identifier of the requested text resource, expressed as a string. This may be an ark, URN, filename, or other unique identifier but ideally SHOULD be a Persistent Identifier. Special characters MUST be URI encoded. |
-|`info`| Specifies the information being requested. These are described in detail below. |
-|`format`| Specifies the format of the returned information, which can be "json" or "xml". |
+|`info`| Specifies the information being requested. These are described in detail [below](#25-resource-information-request). |
 
-> DISCUSSION POINT: Is this sufficient? Do we need xml at all here, or is json sufficient? 
+> DISCUSSION POINT: Is this sufficient? Is json OK as the only return format? 
 
 #### 2.2.3 Accessing historical editions
 An ITF text resource MAY change over time, allowing updates, corrections or the addition 
@@ -322,14 +321,6 @@ Book mode fragment specifiers identify a block of text in terms of a generalised
 considered to be made up of pages, lines of text and characters. Book mode coordinates are thus triplets of the form _p;l;c_ 
 corresponding to character number _c_ of line number _l_ on page number _p_. 
 
-This is an example of a hierarchical text mode which follows some relatively simple rules, which are expanded in detail the table below:
-- Coordinates may be truncated from the right hand side (removing the most fine-grained divisions first)
-  - If a fragment starting point is truncated, missing values _MUST_ be assumed to be "1"
-  - If a fragment end point is truncated, missing values _MUST_ be assumed to be their maximum valid value
-- Length specifiers _MUST_ operate at the same granularity as the starting point
-  - Length specifiers can flow over. For example, requesting more lines than are on a page is valid, provided subsequent pages have sufficient lines.   
-- A single set of coordinates returns a single item at the same level of granularity as the coordinates 
-
 | Form of Fragment Parameter| Description |
 | ------------------- | ------------ |
 |`p1,p2`| The fragment extends from the first character on page p1 until just after the last character on page p2. |
@@ -345,44 +336,21 @@ This is an example of a hierarchical text mode which follows some relatively sim
 |`p1;l1`| The fragment is the whole of line l1 on page p1. |
 |`p1;l1;c1`| The fragment is character c1 of line l1 on page p1. |
 
-##### 2.4.3.4 Prose Mode Fragments 
+##### 2.4.3.4 Hierarchical Modes
 
-Prose mode is another hierarchical mode that identifies a block of text in terms of a 
-generalised semantic prose work structure. Prose works are considered to be made up of sections, 
-paragraphs, sentences, words (tokens) and characters. Prose mode coordinates are thus of the form 
-_S;p;s;w;c_ corresponding to character number _c_ of word _w_ of sentence _s_ of paragraph _p_ of 
-section _S_. As a hierarchical mode, it follows the same basic rules so the table below just shows a
-few examples.
-
-| Form of Fragment Parameter| Description |
-| ------------------- | ------------ |
-|`S1,S2`| The fragment extends from the first character of section S1 until just after the last character of section S2. |
-|`S1;p1;s1;w1;c1;,S2;p2;s2;w2;c2`| The fragment starts from character c1, word w1, of sentence s1, of paragraph p1 of section S1 and ends just after character c2, of word w2, of sentence s2 of paragraph p2, of section S2. |
-|`,S2`| The fragment extends from the beginning of the text, to just after the last character of section S2. |
-|`,S2;p2;s2`| The fragment starts at the beginning of the text, and ends just after the last character of sentence s2, of paragraph p2. of section S2. |
-|`S1;p1+p2`| The fragment extends from the start of paragraph p1 of section S1, and includes the following p2 paragraphs. |
-|`S1;p1;s1+s2`| The fragment starts from the start of sentence s1, of paragraph p1, of section S1, and includes the following s2 sentences. |
-|`S1`| The fragment is the whole of section S1. |
-|`S1;p1`| The fragment is the whole of paragraph p1 of section S1.|
-
-In the simplest case, sections can be considered to equate broadly to chapters. However, in practice, documents often contain additional 
-elements such as forewards, appendices, chapter summaries etc. These are accommodated by allowing sections to be numbered hierarchically.
-Thus, a more complex document might have the following sections.
-
-| Section Number | Description |
-| ---------- | ---------- |
-|`1`| Place holder for elements that come before the main text |
-|`1.1`| Title Page |
-|`1.2`| Contents List |
-|`1.3`| Foreward |
-|`2`| Place holder for elements comprising the main text |
-|`2.1`| Chapter 1 |
-|`2.2`| Chapter 2 |
-|`2.N`| Chapter N |
-|`3`| Place holder for elements come after the main text |
-|`3.1`| Appendix 1 |
-|`3.2`| Appendix 2 |
-|`3.3`| Index |
+The physical Book mode is an example of a hierarchical text mode which follows some relatively simple rules:
+- A text location is expressed in a hierarchical mode as a series of postive integer numerical coordinates separated by semicolons
+  - A numerical coordinate may be expressed as a dotted multiplet (e.g. 1.2.3) to represent a hierarchical structure in the document (e.g. the sections and subsections in a document such as this).
+  - Coordinates _MUST_ end with a digit
+  - Numerical coordinates always start with "1". How these sections are presented and labelled with respect to an actual document can be discovered by making an appropriate [Mode Information Request](253-mode-information-request)  
+  - Coordinates are read from left-to-right with the leftmost corresponding to the largest scale structures in the source text (pages in the example above).   
+- Coordinates may be truncated from the right hand side (removing the most fine-grained divisions first)
+  - If a fragment starting point is truncated, missing values _MUST_ be assumed to be "1"
+  - If a fragment end point is truncated, missing values _MUST_ be assumed to be their maximum valid value
+  - A coordinate that comprises a dotted multiplet _MUST_ be truncated in its entirety (1.2.3 cannot be truncated to 1.2) 
+- Length specifiers _MUST_ operate at the same granularity as the starting point
+  - Length specifiers can flow over. For example, requesting more lines than are on a page is valid, provided subsequent pages have sufficient lines.   
+- A single set of coordinates returns a single item at the same level of granularity as the coordinates 
 
 For display purposes, how these sections are presented and labelled can be discovered by making
 an appropriate [Mode Information Request](253-mode-information-request) 
@@ -413,12 +381,12 @@ include additional enrichment (e.g. formatting or tagging information), if this 
 
 > DISCUSSION POINT: This needs to be more nuanced since we are not necessarily returning complete TEI or HTML documents
 
-### 2.5 Resource Information Request
+### 2.5 Resource Information Requests
 
 The ITF Text API URL for requesting information about a text resource _MUST_ conform to
 the following format:
 
-    http[s]://server/[prefix/]identifier/[version/]info.format
+    http[s]://server/[prefix/]identifier/[version/]info.json
 
 | Form of Info Parameter | Applies to | Description |
 | ------------------- | ------------ | ------------ |
@@ -427,62 +395,26 @@ the following format:
 |`modes`| Text Resources | Provides information about the modes supported by a Text Resource, and defines any custom modes. |
 |`modes`| Versions | Provides version specific information (bounds, nomenclature) about how modes relate to a specific version. |
 
-### 2.5.1 Text Information Request
+#### 2.5.1 Textinfo Request
 
 The response will return the following information for an ITF Resource.
 
-| Element | Description|
+| Resource Textinfo Element | Description|
 | ------- | ---------------|
 | `identifier` | The unique identifier of the Resource, expressed as a string. The identifier _MUST_ be supplied without URI encoding. |
 | `date` | The date of the most recent edition of the resource in ISO 8601 format |
-| `versioning` | Indicates of a Resource contain multiple versions. Possible values: _none, linear, date, graph_ |
+| `versioning` | Indicates of a Resource contain multiple versions, and, if so, how they are ordered. Possible values: _none, linear, date, graph_ |
 | `modes` | Indicates which standard modes are supported. A list of one or more of _char, token, book, prose_. |
 | `custom_modes` | _OPTIONAL_ List of custom modes that are supported. |
-| `qualities` | Indicates which qualities are supported. A list of one or more of _raw, compact, plaintext, rich_. |
+| `qualities` | Indicates which qualities are supported. A list of one or moreinternatinal date format of _raw, compact, plaintext, rich_. |
 | `formats` | Indicates which formats are supported. A list of one or more of _txt, tei, html, md_. |
 | `DC-metadata` | _OPTIONAL_ URL of a DC metadata record |
-| `editions` | _OPTIONAL_ If the server supports editions they should be detailed here. |
-| `  first_ed` | Date of the first edition of the Resource |
-| `  ed_list` | _OPTIONAL_ List of the dates of all the editions of the resource. If there are many editions this may be omitted. |
+| `editions` | _OPTIONAL_ If the server supports editions this section _MUST_ exist. The edtions section can contain two items detailed below. 
 
-> DISCUSSION POINT: DC is rich enough metadata to be useful but not too onerous. Thoughts?
-
-Example JSON response for a Resource.
-
-```
-    {
-      "identifier" : "1E34750D-38DB-4825-A38A-B60A345E591C",
-      "versioning" : "date",
-      "date" : "2023-11-24"
-      "modes" : [ "char", "token", "book", "prose" ],
-      "qualities" : ["compact", "plaintext"],
-      "formats" : [ "txt" ],
-      "editions" : {
-        "first_ed" : "2022-05-07",
-        "ed_list" : [
-          "2022-05-07",
-          "2023-01-06",
-          "2023-11-24"
-        ]
-      } 
-    }
-```
-
-`The response will return the following information for an ITF Version.
-
-| Element | Description |
+| Editions Element | Description|
 | ------- | ---------------|
-| `label` | The label used to identify the version. The label _MUST_ be unique within the containing Resource. Labels are used to sequence _linear_ versions|
-| `date` | If a Resource has _date_ based versioning, all versions _MUST_ have a unique date. Otherwise this is _OPTIONAL_. |
-| `succeeds` | Lists the label(s) of preceeding versions if a Resource has _graph_ based versioning. |
-| `preceeds` | Lists the label(s) of succeeding versions if a Resource has _graph_ based versioning. |
-| `modes` | Indicates which standard modes are supported. A list of one or more of _char, token, book, prose_. |
-| `custom_modes` | _OPTIONAL_ List of custom modes that are supported. |
-| `qualities` | Indicates which qualities are supported. A list of one or more of _raw, compact, plaintext, rich_. |
-| `formats` | Indicates which formats are supported. A list of one or more of _txt, tei, html, md_. |
-| `DC-metadata` | _OPTIONAL_ URL of a DC metadata record |
-
-> DISCUSSION POINT: DC is rich enough metadata to be useful but not too onerous. Thoughts?
+| `first_ed` | Date of the first edition of the Resource. This element _MUST_ be present.  |
+| `ed_list` | _OPTIONAL_ List of the dates of all the editions of the resource in ISO 8601 format. If there are many editions this may be omitted. |
 
 Example JSON response for a Resource.
 
@@ -490,17 +422,183 @@ Example JSON response for a Resource.
 {
   "identifier" : "1E34750D-38DB-4825-A38A-B60A345E591C",
   "versioning" : "date",
+  "date" : "2023-11-24"
   "modes" : [ "char", "token", "book", "prose" ],
+  "custom_modes" : [ "prose" ],
   "qualities" : ["compact", "plaintext"],
-  "formats" : [ "txt" ] 
+  "formats" : [ "txt" ],
+  "editions" : {
+    "first_ed" : "2022-05-07",
+    "ed_list" : [
+      "2022-05-07",
+      "2023-01-06",
+      "2023-11-24"
+    ]
+  } 
 }
 ```
 
-### 2.5.2 Version Information Request
+`The response will return the following information for an ITF Version.
 
-ITF Versions 
+| Version Textinfo Element | Description |
+| ------- | ---------------|
+| `label` | The label used to identify the version. The label _MUST_ be unique within the containing Resource.|
+| `date` | If a Resource has _date_ versioning, all versions _MUST_ have a unique date. Otherwise this is _OPTIONAL_. |
+| `sequence` | If a Resource has _linear_ versioning, all versions _MUST_ have a unique sequnece number. Otherwise this is _OPTIONAL_. |
+| `succeeds` | Lists the label(s) of preceeding versions if a Resource has _graph_ versioning. |
+| `preceeds` | Lists the label(s) of succeeding versions if a Resource has _graph_ versioning. |
+| `modes` | Indicates which standard modes are supported. A list of one or more of _char, token, book, prose_. |
+| `custom_modes` | _OPTIONAL_ List of custom modes that are supported. |
+| `qualities` | Indicates which qualities are supported. A list of one or more of _raw, compact, plaintext, rich_. |
+| `formats` | Indicates which formats are supported. A list of one or more of _txt, tei, html, md_. |
+| `DC-metadata` | _OPTIONAL_ URL of a DC metadata record |
 
+If a resource has _graph_ versioning, every version _MUST_ have a value  for at least one of the "succeeds", "precedes" keys.
+If a "sequence" key exists, it _MUST_ contain a dotted numeric version number, for example: "1", "1.1", "1.1.12" which are 
+collated in numerical order with prioirt to the right (_i.e_ 1.1.12 comes after 1.1.9 comes after 1.1). A "sequence" key _MUST NOT_ 
+have a trailing dot.
 
-### 2.5.3 Resource Mode Information Request
+IMPLEMENTATION NOTE: If a Resource does not have _date_ versioning, resources may still have a "date" key but it does
+not have to be unqiue or ISO 8601 ordered. Versions with non-Gregorian or vague dating can be ordered 
+by using _linear_ or _graph_ versioning. 
 
-### 2.5.3 Version Mode Information Request
+DISCUSSION POINT: Do we need to return details of non-standard dating somewhere? Would support for ISO 8601 extensions for 
+vague dates/date intervals be useful, albeit at the expense of rather more complex ordering and validation?
+
+Example JSON response for a _graph_ ordered version.
+```
+{
+  "label" : "Second Version",
+  "date" : "ca. 35 BCE",
+  "succeeds" : "First Version",
+  "precedes" : "Third Version",
+  "modes" : [ "char", "token", "book" ],
+  "qualities" : ["compact", "plaintext"],
+  "formats" : [ "txt" ] 
+} 
+```
+#### 2.5.2 Versions Request
+
+A versions request for a resource enumerates all the versions contained within a resource, and their relationships to each other. 
+The "versioning" parameter determines how versions are ordered. For compactness, it does not return all the information about each
+version but merely enumerates the version structure of the resource.
+
+| Versions Element | Description|
+| ------- | ---------------|
+| `identifier` | The unique identifier of the Resource, expressed as a string. The identifier _MUST_ be supplied without URI encoding. |
+| `date` | The date of the edition of the resource in ISO 8601 format |
+| `versioning` | Indicates of a Resource contain multiple versions, and, if so, how they are ordered. Possible values: _none, linear, date, graph_ |
+| 'first_version' | Indicates the label of the earliest (or only) version of the text in the Resource. |
+| `versions` | A list of all the versions in this edition of this resource, if more the one version is present. Each version is described by a single version element in the list, keyed by the version label.|
+
+DISCUSSION POINT: Is a very large number of versions a case we need to consider?
+
+| Version Element | Description|
+| ------- | ---------------|
+| `date` | If a Resource has _date_ versioning, all versions _MUST_ have a unique date. Otherwise this is _MUST_ be omitted. |
+| `sequence` | If a Resource has _linear_ versioning, all versions _MUST_ have a unique sequence number. Otherwise this _MUST_ be omitted. |
+| `succeeds` | If a Resource has _graph_ versioning, lists the label(s) of preceeding versions. Otherwise this _MUST_be omitted.|
+| `preceeds` | If a Resource has _graph_ versioning, lists the label(s) of succeeding versions. Otherwise this _MUST_be omitted.|
+
+Example JSON response for _linear_ versioning.
+```
+{
+  "identifier" : "1E34750D-38DB-4825-A38A-B60A345E591C",
+  "date" : "2023-11-24"
+  "versioning" : "linear",
+  "first_version" : "First Version",
+  "versions" : {
+    "First Version" : {
+      "sequence" : "1"
+    },
+    "Second Version" : {
+      "sequence" : "3"
+    },
+    "Third Version" : {
+      "sequence" : "3"
+    }
+  }
+}
+```
+Example JSON response for _date_ versioning.
+```
+{
+  "identifier" : "1E34750D-38DB-4825-A38A-B60A345E591C",
+  "date" : "2023-11-24"
+  "versioning" : "date",
+  "first_version" : "First Version",
+  "versions" : {
+    "First Version" : {
+      "date" : "2022-05-07"
+    },
+    "Second Version" : {
+      "date" : "2023-01-06"
+    },
+    "Third Version" : {
+      "date" : "2023-11-24"
+    }
+  }
+}
+```
+Example JSON response for graph versioning.
+```
+{
+  "identifier" : "1E34750D-38DB-4825-A38A-B60A345E591C",
+  "date" : "2023-11-24"
+  "versioning" : "graph",
+  "first_version" : "First Version",
+  "versions" : {
+    "First Version" : {
+      "precedes" : "Second Version"
+    },
+    "Second Version" : {
+      "succeeds" : "First Version",
+      "precedes" : "Third Version"
+    },
+    "Third Version" : {
+      "succeeds" : "Second Version",
+    }
+  }
+}
+```
+
+#### 2.5.3 Resource Mode Information Request
+
+Prose mode is another hierarchical mode that identifies a block of text in terms of a 
+generalised semantic prose work structure. Prose works are considered to be made up of sections, 
+paragraphs, sentences, words (tokens) and characters. Prose mode coordinates are thus of the form 
+_S;p;s;w;c_ corresponding to character number _c_ of word _w_ of sentence _s_ of paragraph _p_ of 
+section _S_. As a hierarchical mode, it follows the same basic rules so the table below just shows a
+few examples.
+
+| Form of Fragment Parameter| Description |
+| ------------------- | ------------ |
+|`S1,S2`| The fragment extends from the first character of section S1 until just after the last character of section S2. |
+|`S1;p1;s1;w1;c1;,S2;p2;s2;w2;c2`| The fragment starts from character c1, word w1, of sentence s1, of paragraph p1 of section S1 and ends just after character c2, of word w2, of sentence s2 of paragraph p2, of section S2. |
+|`,S2`| The fragment extends from the beginning of the text, to just after the last character of section S2. |
+|`,S2;p2;s2`| The fragment starts at the beginning of the text, and ends just after the last character of sentence s2, of paragraph p2. of section S2. |
+|`S1;p1+p2`| The fragment extends from the start of paragraph p1 of section S1, and includes the following p2 paragraphs. |
+|`S1;p1;s1+s2`| The fragment starts from the start of sentence s1, of paragraph p1, of section S1, and includes the following s2 sentences. |
+|`S1`| The fragment is the whole of section S1. |
+|`S1;p1`| The fragment is the whole of paragraph p1 of section S1.|
+
+In the simplest case, sections can be considered to equate broadly to chapters. However, in practice, documents often contain additional 
+elements such as forewards, appendices, chapter summaries etc. These are accommodated by allowing sections to be numbered hierarchically.
+Thus, a more complex document might have the following sections.
+
+| Section Number | Description |
+| ---------- | ---------- |
+|`1`| Place holder for elements that come before the main text |
+|`1.1`| Title Page |
+|`1.2`| Contents List |
+|`1.3`| Foreward || ------- | ---------------|
+|`2`| Place holder for elements comprising the main text |
+|`2.1`| Chapter 1 |
+|`2.2`| Chapter 2 |
+|`2.N`| Chapter N |
+|`3`| Place holder for elements come after the main text |
+|`3.1`| Appendix 1 |
+|`3.2`| Appendix 2 |
+|`3.3`| Index |
+
+#### 2.5.3 Version Mode Information Request
