@@ -567,33 +567,32 @@ The response will return the following information.
 
 | Coordinate Element | Description|
 | ------- | ---------------|
-| `label` | A short lebel for the coordinate used for display purposes. Labels _MUST_ be unique within a mode. |
-| `description` | An _OgrainedPTIONAL_ description of what the coordinate represents. |
+| `label` | A short label for the coordinate used for display purposes. Labels _MUST_ be unique within a mode. |
+| `description` | An _OPTIONAL_ description of what the coordinate represents. |
 | `levels` | Indicates the number of levels the coordinate allows for dotted multiplet values. If it is "1" then only a single numerical value is permitted. |
 
 For example, a Resource containign a long form prose work might define a "prose" mode 
-comprising sections, blocks, sentences and words as follows.
+comprising sections, blocks, sentences and tokens as follows.
 ```
 {
   "identifier" : "1E34750D-38DB-4825-A38A-B60A345E591C",
-  "versioning" : "date",
   "date" : "2023-11-24"
   "modes" : [ "char", "token", "book"],
   "custom_modes" : [ "prose" ],
   "custom_mode_definitions" : {
     "prose" : {
       "description" : "A simple semantic structure for a long form prose work",
-      "base_mode" : "char",
+      "base_mode" : "token",
       "num_coordinates" : "5",
       coordinates : {
         "1" : {
           "label" : "section",
-          "description: : "Chapter level structural elements (includes forwards, appendices etc.)",
+          "description: : "Chapter-like elements (inc. forwards, appendices etc.)",
           "levels" : "1"
         },
         "2" : {
           "label" : "block",
-          "description: : "Paragraph and sub-paragraph level elmennts within a chapter",
+          "description: : "Paragraph and sub-paragraph elmenets",
           "levels" : "2"
         },
         "3" : {
@@ -602,13 +601,8 @@ comprising sections, blocks, sentences and words as follows.
           "levels" : "1"
         },
         "4" : {
-          "label" : "word",
-          "description: : "",
-          "levels" : "1"
-        },
-        "5" : {
-          "label" : "char",
-          "description: : "This the the same as the base_mode",
+          "label" : "token",
+          "description: : "This is the same as the _base_mode_",
           "levels" : "1"
         }
       }
@@ -616,14 +610,13 @@ comprising sections, blocks, sentences and words as follows.
   }
 }
 ```
-Coordinates for this mode are thus of the form _S;b;s;w;c_ corresponding to character 
-number _c_ of word _w_ of sentence _s_ of block _b_ of section _S_. Following the rules for 
-hierarchical modes, we can define the following (non-exhaustive) list of fragments using thsi mode:
+Coordinates for this mode are thus of the form _S;b;s;t_ corresponding to token _t_ of sentence _s_ of block _b_ of section _S_. Following 
+the rules for hierarchical modes, we can define the following (non-exhaustive) list of fragments using this mode:
 
 | Form of Prose Fragment Parameter | Description |
 | ------------------- | ------------ |
 |`S1,S2`| The fragment extends from the first character of section S1 until just after the last character of section S2. |
-|`S1;b1;s1;w1;c1;,S2;b2;s2;w2;c2`| The fragment starts from character c1, word w1, of sentence s1, of block b1 of section S1 and ends just after character c2, of word w2, of sentence s2 of block b2, of section S2. |
+|`S1;b1;s1;t1,S2;b2;s2;t2`| The fragment starts from the start of token t1, of sentence s1, of block b1 of section S1 and ends after token2, of sentence s2 of block b2, of section S2. |
 |`,S2`| The fragment extends from the beginning of the text, to just after the last character of section S2. |
 |`,S2;b2;s2`| The fragment starts at the beginning of the text, and ends just after the last character of sentence s2, of block b2. of section S2. |
 |`S1;b1+b2`| The fragment extends from the start of block b1 of section S1, and includes the following p2 blocks. |
@@ -631,17 +624,20 @@ hierarchical modes, we can define the following (non-exhaustive) list of fragmen
 |`S1`| The fragment is the whole of section S1. |
 |`S1;b1`| The fragment is the whole of block b1 of section S1.|
 
-### 3.7 Version Modes Request
+Custom mode definitions are limited in scope to a single resource, however, it is _RECOMMENDED_ that custom mode definitions
+are deigned to be reusable across a wide range of resources if possible.  
 
-In the simplest case, sections can be considered to equate broadly to chapters. However, in practice, documents often contain additional 
-elements such as forewards, appendices, chapter summaries etc. These are accommodated by allowing sections to be numbered hierarchically.
-Thus, a more complex document might have the following sections.
+### 3.7 Version Modes Request
+A Version Modes Request describes in detail how the mode coordinates map to the underlying text. This can be described at two levels of detail:
+- Basic level: assigns labels to the higher levels of a mode to provide a navigational or structural map of the text
+- Detailed level: describe all the levels of a mode in terms of _base_mode_ coordinates  
+ 
 
 | Section Number | Description |
 | ---------- | ---------- |
 |`1`| Place holder for elements that come before the main text |
 |`1.1`| Title Page |
-|`1.2`| Contents List |
+|`1.2`| Contents List | 
 |`1.3`| Foreward || ------- | ---------------|
 |`2`| Place holder for elements comprising the main text |
 |`2.1`| Chapter 1 |
