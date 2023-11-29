@@ -571,8 +571,8 @@ The response will return the following information.
 | `description` | An _OgrainedPTIONAL_ description of what the coordinate represents. |
 | `levels` | Indicates the number of levels the coordinate allows for dotted multiplet values. If it is "1" then only a single numerical value is permitted. |
 
-For example, a Resource containign a long form prose work might define a "prose" mode as follows.
-
+For example, a Resource containign a long form prose work might define a "prose" mode 
+comprising sections, blocks, sentences and words as follows.
 ```
 {
   "identifier" : "1E34750D-38DB-4825-A38A-B60A345E591C",
@@ -585,31 +585,53 @@ For example, a Resource containign a long form prose work might define a "prose"
       "description" : "A simple semantic structure for a long form prose work",
       "base_mode" : "char",
       "num_coordinates" : "5",
-        "1" :
       coordinates : {
+        "1" : {
+          "label" : "section",
+          "description: : "Chapter level structural elements (includes forwards, appendices etc.)",
+          "levels" : "1"
+        },
+        "2" : {
+          "label" : "block",
+          "description: : "Paragraph and sub-paragraph level elmennts within a chapter",
+          "levels" : "2"
+        },
+        "3" : {
+          "label" : "sentence",
+          "description: : "Sentences, glossary items etc.",
+          "levels" : "1"
+        },
+        "4" : {
+          "label" : "word",
+          "description: : "",
+          "levels" : "1"
+        },
+        "5" : {
+          "label" : "char",
+          "description: : "This the the same as the base_mode",
+          "levels" : "1"
+        }
       }
     }
   }
 }
 ```
+Coordinates for this mode are thus of the form _S;b;s;w;c_ corresponding to character 
+number _c_ of word _w_ of sentence _s_ of block _b_ of section _S_. Following the rules for 
+hierarchical modes, we can define the following (non-exhaustive) list of fragments using thsi mode:
 
-
-Prose mode is another hierarchical mode that identifies a block of text in terms of a 
-generalised semantic prose work structure. Prose works are considered to be made up of sections, 
-paragraphs, sentences, words (tokens) and characters. Prose mode coordinates are thus of the form 
-_S;p;s;w;c_ corresponding to character number _c_ of word _w_ of sentence _s_ of paragraph _p_ of 
-section _S_. 
-
-| Form of Fragment Parameter| Description |
+| Form of Prose Fragment Parameter | Description |
 | ------------------- | ------------ |
 |`S1,S2`| The fragment extends from the first character of section S1 until just after the last character of section S2. |
-|`S1;p1;s1;w1;c1;,S2;p2;s2;w2;c2`| The fragment starts from character c1, word w1, of sentence s1, of paragraph p1 of section S1 and ends just after character c2, of word w2, of sentence s2 of paragraph p2, of section S2. |
+|`S1;b1;s1;w1;c1;,S2;b2;s2;w2;c2`| The fragment starts from character c1, word w1, of sentence s1, of block b1 of section S1 and ends just after character c2, of word w2, of sentence s2 of block b2, of section S2. |
 |`,S2`| The fragment extends from the beginning of the text, to just after the last character of section S2. |
-|`,S2;p2;s2`| The fragment starts at the beginning of the text, and ends just after the last character of sentence s2, of paragraph p2. of section S2. |
-|`S1;p1+p2`| The fragment extends from the start of paragraph p1 of section S1, and includes the following p2 paragraphs. |
-|`S1;p1;s1+s2`| The fragment starts from the start of sentence s1, of paragraph p1, of section S1, and includes the following s2 sentences. |
+|`,S2;b2;s2`| The fragment starts at the beginning of the text, and ends just after the last character of sentence s2, of block b2. of section S2. |
+|`S1;b1+b2`| The fragment extends from the start of block b1 of section S1, and includes the following p2 blocks. |
+|`S1;b1;s1+s2`| The fragment starts from the start of sentence s1, of block b1, of section S1, and includes the following s2 sentences. |
 |`S1`| The fragment is the whole of section S1. |
-|`S1;p1`| The fragment is the whole of paragraph p1 of section S1.|
+|`S1;b1`| The fragment is the whole of block b1 of section S1.|
+
+### 3.7 Version Modes Request
 
 In the simplest case, sections can be considered to equate broadly to chapters. However, in practice, documents often contain additional 
 elements such as forewards, appendices, chapter summaries etc. These are accommodated by allowing sections to be numbered hierarchically.
@@ -630,7 +652,6 @@ Thus, a more complex document might have the following sections.
 |`3.2`| Appendix 2 |
 |`3.3`| Index |
 
-### 3.7 Version Modes Request
 
 ## 4 Accessing Previous Editions
 An ITF text resource MAY change over time, allowing updates, corrections or the addition 
