@@ -77,13 +77,28 @@ be in that form, unless the _OPTIONAL_ "raw" quality specifier is invoked.
 *ITF Mode*
 : It is useful to be able to specify or reference text fragments in terms of the structure of a document rather than just as character offsets from the start of a file. Modes describe the different ways that this can be achieved. Some modes reflect the physical structure of the source material (e.g. a volume, broken down by page, line and word) while others might reflect semantic structure (e.g. a novel, broken down by chapter, headers, paragraph, sentence and word). Such approaches are more human friendly, map readily to many analytical tools, and are also easier to map between versions of a text.
 
-> Probably needs considerable expansion   
+> Probably needs considerable expansion
 
-## 2 Text API
+### 1.4 Overview of the ITF Specification
+The ITF specification is conceived to facilitate systematic referencing and reuse of 
+textual resources in repositories in a manner that is both user- and machine-friendly.
+
+The specifications defines two API forms: one to request a text fragment,
+and a second to request technical information about the underlying source text.
+Both forms convey the request's information in the path segment of the URL,
+rather than as query parameters. This makes responses more easily cacheable, 
+either by the server or standard web-caching infrastructure.
+
+To allow for extension, this specification does not define the behaviour
+of an implementing server when it receives requests that do not match the 
+forms below. Similarly, it does not describe how a server manages or stores
+textual resources, just how it must respond to ITF-compliant requests. 
+
+## 2 Text Fragment API
 
 ### 2.1 Abstract
 This section describes an API for the delivery of texts and text fragments via a
-standard HTTP request. The ITF Text API specifies a web service that returns textual
+standard HTTP request. The ITF Text Fragment API specifies a web service that returns textual
 data in response to a standard HTTP or HTTPS request. The URL can specify:
 
 -  The version of the underlying source text to be accessed
@@ -92,26 +107,7 @@ data in response to a standard HTTP or HTTPS request. The URL can specify:
 -  Whether to include any enrichments, such as formatting 
 -  The format in which to return the text data
 
-A URL can also be constructed to request basic technical information about the source
-text to support client applications. The ITF Text API is conceived to facilitate 
-systematic referencing and reuse of textual resources in repositories in a manner
-that is both user- and machine-friendly. 
-
-This specification does not describe how a server manages or stores textual resources,
-just how it must respond to ITF-compliant requests. 
-
-### 2.2 URL Syntax
-The ITF Text API can be called in two forms: one to request a text fragment,
-and a second to request technical information about the underlying source text.
-Both forms convey the request's information in the path segment of the URL,
-rather than as query parameters. This makes responses more easily cacheable, 
-either by the server or standard web-caching infrastructure. 
-
-To allow for extension, this specification does not define the behaviour
-of an implementing server when it receives requests that do not match
-one of the two request syntaxes below.
-
-#### 2.2.1 Text Fragment Request URL Syntax
+### 2.2 Text Fragment Request URL Syntax
 The ITF Text API URL for requesting a text fragment _MUST_ conform to the following format:
 
     http[s]://server/[prefix/]identifier/version/mode/fragment/quality[.format]
@@ -131,7 +127,7 @@ For example:
 > TEI Lite rather than TEI (in general). There will be considerable difference in many projects between their
 > original TEI and the TEI Lite version.
 
-The sections of the Text Fragment Request URL include:
+The sections of the Text Fragment Request URL are:
 
 | Syntax | Description |
 | ------------------- | ------------ |
@@ -143,44 +139,13 @@ The sections of the Text Fragment Request URL include:
 
 > DISCUSSION POINT: Is this sufficient?
 
-#### 2.2.2 Resource Information Request URL Syntax
-The ITF Text API URL for requesting information about a text resource _MUST_ conform to
-the following format:
-
-    http[s]://server/[prefix/]identifier/[version/]info.format
-
-where \[ \] delimits the optional prefix component.
-
-The URI Template ([RFC6750](https://datatracker.ietf.org/doc/html/rfc6750)) form
-is:
-
-    http://{server}{/prefix}/{identifier}{/version}/{info}.json
-
-For example:
-
-    http://www.example.org/text-service/abcd1234/info.json
-
-The sections of the Text Information Request URL include:
-
-| Syntax | Description |
-| ------------------- | ------------ |
-|`http (or https)`| Indicates the use of the HTTP or HTTPS protocol in calling the service. |
-|`server`| The host server on which the ITF-compliant text service resides. |
-|`prefix`| The path on the host server to the ITF-compliant text service. This prefix is optional, but may be useful when the host server supports multiple services. **Note:** The prefix may contain slashes or constructions that resemble service parameters |
-|`identifier`| A unique identifier of the requested text resource, expressed as a string. This may be an ark, URN, filename, or other unique identifier but ideally SHOULD be a Persistent Identifier. Special characters MUST be URI encoded. |
-|`info`| Specifies the information being requested. These are described in detail [below](#25-resource-information-request). |
-
-> DISCUSSION POINT: Is this sufficient? Is json OK as the only return format? 
-
-#### 2.2.3 Accessing historical editions
-An ITF text resource MAY change over time, allowing updates, corrections or the addition 
-of new versions of a text. In ITF terminology, each change constitutes a new "edition" 
-of the text resource. In order to resolve text references correctly, an ITF-compliant text
-service that supports multiple editions MUST provide a mechanism for accessing these earlier 
-editions.
-
-> DISCUSSION POINT: The proposed mechanism for doing this would be to implement at least some of
-> [RFC7089](https://datatracker.ietf.org/doc/html/rfc7089)
+All parameters are required for compliant construction of an ITF Text Fragment API
+URL. The sequence of parameters in the URL MUST be in the order described above. The 
+order of the parameters reflects the order of operation a text service is expected
+to use when processing a request. Thus, the desired version of a text is located, the relevant 
+fragment is extracted using the mode specified, any formatting or tagging is applied,
+and finally conversion to the desired format. This resulting text fragment is returned 
+as the representation for the URL. 
 
 ### 2.3 Identifier
 The API places no restrictions on the form of the identifiers that a server may use or 
@@ -198,16 +163,7 @@ client behaviors. The URL syntax relies upon slash (/) separators so any slashes
 in the identifier MUST be URI encoded (aka. percent-encoded, replace / with %2F ). 
 See discussion in [Section9 - URL Encoding and Decoding.](#url_encoding)
 
-### 2.4 Text Fragment Request Parameters
-All parameters described below are required for compliant construction of an ITF Text API
-URL. The sequence of parameters in the URL MUST be in the order described below. The 
-order of the parameters reflects the order of operation a text service is expected
-to use when processing a request. Thus, the desired version of a text is located, the relevant 
-fragment is extracted using the mode specified, any formatting or tagging is applied,
-and finally conversion to the desired format. This resulting text fragment is returned 
-as the representation for the URL. 
-
-#### 2.4.1 Version
+### 2.4 Version
 An ITF text resource MAY contain multiple versions of a text which MUST be identified by a
 label (a string) and MAY also have an associated date/dateTime. The version parameter defines 
 which version of text a fragment is to be retrieved from. The special value "default" MUST 
@@ -241,7 +197,7 @@ a date is specified for a resource with no version dates.
 > Is there a mechanism for retrieving the latest version of a versioned resource? If not, couldn't 'default' be used to
 > retrieve it? Or, do I need more coffee?
 
-#### 2.4.2 Mode
+### 2.5 Mode
 The mode parameter specifies how a text fragment is specified in the subsequent fragment 
 parameter by providing a system of "text coordinates". This provides the option for text 
 fragments to be specified in terms of the higher level structural elements of a text, 
@@ -269,7 +225,7 @@ any custom modes can be discovered via the aforementioned mode information reque
 > How many does it make sense to start with? Letter, Journal, Anthology, Play?  
 > > MH: Char and token seem fine. Things get problematic after that. The physical features of the text are ultimately dependant on the physical nature of the artefact (books, scroll, funerary marker, clay tablets, woven strands of thread, etc). Using a book-based model is imposing a very particular type of cultural product onto texts that it doesn't apply to. Would 'surface' perhaps be a slightly better term? It certainly would avoid the problems mentioned in my next comment further down.
 
-#### 2.4.3 Fragment
+### 2.6 Fragment
 The fragment parameter specifies the text fragment to be returned as a result of invoking the 
 Text Fragment API. The format of the fragment parameter depends on the mode selected except for
 the special value "full" which returns the entirety of the text of the Version specified, 
@@ -286,7 +242,7 @@ In ITF all counting _MUST_ be "1"-based, so the first page of a book is page 1.
 > DISCUSSION POINT: Are these reasonable restrictions/simplifications?
 > > MH: Everything apart from 'the first page of a book is page 1' seems fine. What do you mean by page? Page 1 in the book might actually be the 20th page. If we were to use 'surface' this would differentiate surface 1 from 'page 1' as it appears in the text.
 
-##### 2.4.3.1 Char Mode Fragments
+#### 2.6.1 Char Mode Fragments
 
 Char(acter) mode fragment specifiers identify a block of text in a text file by counting individual
 characters (Unicode codepoints, as noted in [above](#13-the-itf-text-model). All counting _MUST_ be "1"-based.
@@ -301,7 +257,7 @@ characters (Unicode codepoints, as noted in [above](#13-the-itf-text-model). All
 > DISCUSSION POINT: do we need to be able to specify zero-length fragments? E.g. for the purpose of being able later to specify via annotation 
 > that a character string present in one version of a text is absent from that location in another version.
 
-##### 2.4.3.1 Token Mode Fragments
+#### 2.6.1 Token Mode Fragments
 
 Token mode fragment specifiers identify a block of text in a text file by counting tokens, usually 
 delimited by whitespace characters (spaces, tabs etc.). Fragments specified in this manner can only 
@@ -317,7 +273,7 @@ include complete tokens.
 > DISCUSSION POINT: _OPTIONAL_: If the parameters are enclosed in square brackets (\[\]) then the fragment will be extended to include any relevant 
 > leading and/or trailing punctuation according to the language rules relevant to the version.    
 
-##### 2.4.3.3 Book Mode Fragments
+#### 2.6.3 Book Mode Fragments
 
 Book mode fragment specifiers identify a block of text in terms of a generalised physical book structure. Books are 
 considered to be made up of pages, lines of text and characters. Book mode coordinates are thus triplets of the form _p;l;c_ 
@@ -338,8 +294,7 @@ corresponding to character number _c_ of line number _l_ on page number _p_.
 |`p1;l1`| The fragment is the whole of line l1 on page p1. |
 |`p1;l1;c1`| The fragment is character c1 of line l1 on page p1. |
 
-##### 2.4.3.4 Hierarchical Modes
-
+#### 2.6.4 Hierarchical Modes
 The physical Book mode is an example of a hierarchical text mode which follows some relatively simple rules:
 
 - A text location is expressed in a hierarchical mode as a series of postive integer numerical coordinates separated by semicolons
@@ -355,12 +310,9 @@ The physical Book mode is an example of a hierarchical text mode which follows s
   - Length specifiers can flow over. For example, requesting more lines than are on a page is valid, provided subsequent pages have sufficient lines.   
 - A single set of coordinates returns a single item at the same level of granularity as the coordinates 
 
+#### 2.6.5 Graph Modes
 
-
-##### 2.4.3.5 Graph Modes
-
-#### 2.4.4 Quality
-
+### 2.7 Quality
 The quality parameter specifies . This allows an ITF server to 
 include additional enrichment (e.g. formatting or tagging information), if this is available.
 
@@ -371,7 +323,7 @@ include additional enrichment (e.g. formatting or tagging information), if this 
 |`plaintext`| The fragment will be returned as plaintext. |
 |`rich`| The fragment will be returned including any available enrichment. |
 
-#### 2.4.5 Format
+### 2.8 Format
 
 The quality parameter specifies the requested text fragment is returned. This allows an ITF server to 
 include additional enrichment (e.g. formatting or tagging information), if this is available.
@@ -385,12 +337,44 @@ include additional enrichment (e.g. formatting or tagging information), if this 
 
 > DISCUSSION POINT: This needs to be more nuanced since we are not necessarily returning complete TEI or HTML documents
 
-### 2.5 Resource Information Requests
+## 3 Text Information API 
 
-The ITF Text API URL for requesting information about a text resource _MUST_ conform to
+### 3.1 Abstract
+This section describes an API to request technical information about text REsources and Versions via a
+standard HTTP request. The ITF Text Infoirmation API specifies a web service that returns JSON
+data in response to a standard HTTP or HTTPS request. The URL can specify:
+- The Resource or Version that is the target of the request
+- The type of information that is requested 
+
+### 3.2 URL Syntax
+
+The ITF API URL for requesting information about a text resource _MUST_ conform to
 the following format:
 
     http[s]://server/[prefix/]identifier/[version/]info.json
+
+where \[ \] delimits the optional prefix component.
+
+The URI Template ([RFC6750](https://datatracker.ietf.org/doc/html/rfc6750)) form
+is:
+
+    http://{server}{/prefix}/{identifier}{/version}/{info}.json
+
+For example:
+
+    http://www.example.org/text-service/abcd1234/info.json
+
+The sections of the Text Information Request URL include:
+
+| Syntax | Description |
+| ------------------- | ------------ |
+|`http (or https)`| Indicates the use of the HTTP or HTTPS protocol in calling the service. |
+|`server`| The host server on which the ITF-compliant text service resides. |
+|`prefix`| The path on the host server to the ITF-compliant text service. This prefix is optional, but may be useful when the host server supports multiple services. **Note:** The prefix may contain slashes or constructions that resemble service parameters |
+|`identifier`| A unique identifier of the requested text resource, expressed as a string. This may be an ark, URN, filename, or other unique identifier but ideally SHOULD be a Persistent Identifier. Special characters MUST be URI encoded. |
+|`info`| Specifies the information being requested. These are described in detail below. |
+
+> DISCUSSION POINT: Is this sufficient? Is json OK as the only return format? 
 
 | Form of Info Parameter | Applies to | Description |
 | ------------------- | ------------ | ------------ |
@@ -399,7 +383,7 @@ the following format:
 |`modes`| Text Resources | Provides information about the modes supported by a Text Resource, and defines any custom modes. |
 |`modes`| Versions | Provides version specific information (bounds, nomenclature) about how modes relate to a specific version. |
 
-#### 2.5.1 Textinfo Request
+### 3.3 Resource Textinfo Request
 
 The response will return the following information for an ITF Resource.
 
@@ -435,7 +419,7 @@ Example JSON response for a Resource.
   ] 
 }
 ```
-
+### 3.4 Version TextInfo Request
 `The response will return the following information for an ITF Version.
 
 | Version Textinfo Element | Description |
@@ -475,8 +459,7 @@ Example JSON response for a _graph_ ordered version.
   "formats" : [ "txt" ] 
 } 
 ```
-#### 2.5.2 Versions Request
-
+### 3.5 Versions Request
 A versions request for a resource enumerates all the versions contained within a resource, and their relationships to each other. 
 The "versioning" parameter determines how versions are ordered. For compactness, it does not return all the information about each
 version but merely enumerates the version structure of the resource.
@@ -560,8 +543,7 @@ Example JSON response for graph versioning.
 }
 ```
 
-#### 2.5.3 Resource Modes Request
-
+### 3.6 Resource Modes Request
 A Resource Modes Request provides information about the modes supported by a particular Resource. 
 In particular, it describes, at a high level, any custom modes that that are used in the Resource. How a 
 particular mode relates in detail to a particular version will require a [Version Mode Request](#254-version-mode-request). 
@@ -627,5 +609,15 @@ Thus, a more complex document might have the following sections.
 |`3.2`| Appendix 2 |
 |`3.3`| Index |
 
-#### 2.5.4 Version Modes Request
+### 3.7 Version Modes Request
+
+## 4 Accessing Previous Editions
+An ITF text resource MAY change over time, allowing updates, corrections or the addition 
+of new versions of a text. In ITF terminology, each change constitutes a new "edition" 
+of the text resource. In order to resolve text references correctly, an ITF-compliant text
+service that supports multiple editions MUST provide a mechanism for accessing these earlier 
+editions.
+
+> DISCUSSION POINT: The proposed mechanism for doing this would be to implement at least some of
+> [RFC7089](https://datatracker.ietf.org/doc/html/rfc7089)
 
