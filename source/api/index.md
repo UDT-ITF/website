@@ -300,7 +300,7 @@ The physical Book mode is an example of a hierarchical text mode which follows s
 - A text location is expressed in a hierarchical mode as a series of postive integer numerical coordinates separated by semicolons
   - A numerical coordinate may be expressed as a dotted multiplet (e.g. 1.2.3) to represent a hierarchical structure in the document (e.g. the sections and subsections in a document such as this).
   - Coordinates _MUST_ end with a digit
-  - Numerical coordinates always start with "1". How these sections are presented and labelled with respect to an actual document can be discovered by making an appropriate [Mode Information Request](253-mode-information-request)  
+  - Numerical coordinates always start coutning with "1". How these sections are presented and labelled with respect to an actual document can be discovered by making an appropriate [Mode Information Request](253-mode-information-request)  
   - Coordinates are read from left-to-right with the leftmost corresponding to the largest scale structures in the source text (pages in the example above).   
 - Coordinates may be truncated from the right hand side (removing the most fine-grained divisions first)
   - If a fragment starting point is truncated, missing values _MUST_ be assumed to be "1"
@@ -310,11 +310,13 @@ The physical Book mode is an example of a hierarchical text mode which follows s
   - Length specifiers can flow over. For example, requesting more lines than are on a page is valid, provided subsequent pages have sufficient lines.   
 - A single set of coordinates returns a single item at the same level of granularity as the coordinates 
 
-#### 2.6.5 Graph Modes
+IMPLMENTATION NOTE: A mode has only one coordinate is non-hierarchical and behaves in a similar manner to _char_ or _token_ modes.       
+
+#### 2.6.5 Custom Modes
 
 ### 2.7 Quality
-The quality parameter specifies . This allows an ITF server to 
-include additional enrichment (e.g. formatting or tagging information), if this is available.
+The quality parameter allows an ITF server to include additional enrichment (e.g. formatting or 
+tagging information) in the returned text, if this is available.
 
 | Form of Quality Parameter | Description |
 | ------------------- | ------------ |
@@ -324,11 +326,9 @@ include additional enrichment (e.g. formatting or tagging information), if this 
 |`rich`| The fragment will be returned including any available enrichment. |
 
 ### 2.8 Format
+The format parameter specifies the file format used to return the requested text fragment is returned.
 
-The quality parameter specifies the requested text fragment is returned. This allows an ITF server to 
-include additional enrichment (e.g. formatting or tagging information), if this is available.
-
-| Form of Quality Parameter | Description |
+| Form of Format Parameter | Description |
 | ------------------- | ------------ |
 |`txt`| The fragment will be returned as a UTF-8 text file. Not valid for "rich" quality fragments |
 |`tei`| The fragment will be returned with any enrichment expressed using TEI XML tags. |
@@ -470,11 +470,11 @@ version but merely enumerates the version structure of the resource.
 | `date` | The date of the edition of the resource in ISO 8601 format |
 | `versioning` | Indicates of a Resource contain multiple versions, and, if so, how they are ordered. Possible values: _none, linear, date, graph_ |
 | `first_version` | Indicates the label of the earliest (or only) version of the text in the Resource. |
-| `versions` | A keyed list of all the versions in this edition of this resource, if more the one version is present. Each version is described by a single version element in the list, keyed by the version label. This element _MUST NOT_ appear if there is only one text in the resource.|
+| `versions` | A keyed list of all the versions in this edition of this resource, if more the one version is present. This element _MUST NOT_ appear if there is only one text in the resource. Each version is described by a single version node in the list, keyed by the version label. |
 
 DISCUSSION POINT: Is a very large number of versions a case we need to consider?
 
-| Version Element | Description|
+| Version Node Element | Description|
 | ------- | ---------------|
 | `date` | If a Resource has _date_ versioning, all versions _MUST_ have a unique date. Otherwise this is _MUST_ be omitted. |
 | `sequence` | If a Resource has _linear_ versioning, all versions _MUST_ have a unique sequence number. Otherwise this _MUST_ be omitted. |
@@ -521,7 +521,7 @@ Example JSON response for _date_ versioning.
   }
 }
 ```
-Example JSON response for graph versioning.
+Example JSON response for _graph_ versioning.
 ```
 {
   "identifier" : "1E34750D-38DB-4825-A38A-B60A345E591C",
@@ -554,13 +554,25 @@ The response will return the following information.
 | ------- | ---------------|
 | `identifier` | The unique identifier of the Resource, expressed as a string. The identifier _MUST_ be supplied without URI encoding. |
 | `date` | The date of the most recent edition of the Resource in ISO 8601 format. |
-
 | `modes` | Indicates which standard modes are supported. A list of one or more of _char, token, book, prose_. |
 | `custom_modes` | _OPTIONAL_ List of custom modes that are supported. |
-| `custom_mode_definitions` | Keyed list of all the custom modes idetified by their label appearing in the _cistom_modes_ list. |
+| `custom_mode_definitions` | A keyed list of all the custom modes in this edition of this resource. This element _MUST NOT_ appear if there are no custom modes in the resource. Each custom mode is described by a set of custom mode elements detailed below. |
 
-Example JSON response for a Resource.
+| Custom Mode Element | Description|
+| ------- | ---------------|
+| `description` | A description of what the mode represents |
+| `base_mode` | Indicates the underlying mode used to define fragments in the custom mode, usually one of _char, token_. The most fine grained coordinate in the custom mode should be the same as the base mode. |
+| `num_coordinates` | An integer that represents the number of coordinates used by the mode |
+| `coordinates` | A list of each of the coordinates in the custom mode, keyed by the ordinal number of the coordinate counting from the left. Each coordinate is described by a set of coordinate elements detailed below. |
 
+| Coordinate Element | Description|
+| ------- | ---------------|
+| `label` | A short lebel for the coordinate used for display purposes. Labels _MUST_ be unique within a mode. |
+| `description` | An _OgrainedPTIONAL_ description of what the coordinate represents. |
+| `levels` | Indicates the number of levels the coordinate allows for dotted multiplet values. If it is "1" then only a single numerical value is permitted. |
+
+For example, a Resource containign a long form prose work might define a "prose" mode 
+comprising sections, blocks, sentences and words as follows.
 ```
 {
   "identifier" : "1E34750D-38DB-4825-A38A-B60A345E591C",
@@ -568,27 +580,58 @@ Example JSON response for a Resource.
   "date" : "2023-11-24"
   "modes" : [ "char", "token", "book"],
   "custom_modes" : [ "prose" ],
-  
+  "custom_mode_definitions" : {
+    "prose" : {
+      "description" : "A simple semantic structure for a long form prose work",
+      "base_mode" : "char",
+      "num_coordinates" : "5",
+      coordinates : {
+        "1" : {
+          "label" : "section",
+          "description: : "Chapter level structural elements (includes forwards, appendices etc.)",
+          "levels" : "1"
+        },
+        "2" : {
+          "label" : "block",
+          "description: : "Paragraph and sub-paragraph level elmennts within a chapter",
+          "levels" : "2"
+        },
+        "3" : {
+          "label" : "sentence",
+          "description: : "Sentences, glossary items etc.",
+          "levels" : "1"
+        },
+        "4" : {
+          "label" : "word",
+          "description: : "",
+          "levels" : "1"
+        },
+        "5" : {
+          "label" : "char",
+          "description: : "This the the same as the base_mode",
+          "levels" : "1"
+        }
+      }
+    }
+  }
 }
 ```
+Coordinates for this mode are thus of the form _S;b;s;w;c_ corresponding to character 
+number _c_ of word _w_ of sentence _s_ of block _b_ of section _S_. Following the rules for 
+hierarchical modes, we can define the following (non-exhaustive) list of fragments using thsi mode:
 
-
-Prose mode is another hierarchical mode that identifies a block of text in terms of a 
-generalised semantic prose work structure. Prose works are considered to be made up of sections, 
-paragraphs, sentences, words (tokens) and characters. Prose mode coordinates are thus of the form 
-_S;p;s;w;c_ corresponding to character number _c_ of word _w_ of sentence _s_ of paragraph _p_ of 
-section _S_. 
-
-| Form of Fragment Parameter| Description |
+| Form of Prose Fragment Parameter | Description |
 | ------------------- | ------------ |
 |`S1,S2`| The fragment extends from the first character of section S1 until just after the last character of section S2. |
-|`S1;p1;s1;w1;c1;,S2;p2;s2;w2;c2`| The fragment starts from character c1, word w1, of sentence s1, of paragraph p1 of section S1 and ends just after character c2, of word w2, of sentence s2 of paragraph p2, of section S2. |
+|`S1;b1;s1;w1;c1;,S2;b2;s2;w2;c2`| The fragment starts from character c1, word w1, of sentence s1, of block b1 of section S1 and ends just after character c2, of word w2, of sentence s2 of block b2, of section S2. |
 |`,S2`| The fragment extends from the beginning of the text, to just after the last character of section S2. |
-|`,S2;p2;s2`| The fragment starts at the beginning of the text, and ends just after the last character of sentence s2, of paragraph p2. of section S2. |
-|`S1;p1+p2`| The fragment extends from the start of paragraph p1 of section S1, and includes the following p2 paragraphs. |
-|`S1;p1;s1+s2`| The fragment starts from the start of sentence s1, of paragraph p1, of section S1, and includes the following s2 sentences. |
+|`,S2;b2;s2`| The fragment starts at the beginning of the text, and ends just after the last character of sentence s2, of block b2. of section S2. |
+|`S1;b1+b2`| The fragment extends from the start of block b1 of section S1, and includes the following p2 blocks. |
+|`S1;b1;s1+s2`| The fragment starts from the start of sentence s1, of block b1, of section S1, and includes the following s2 sentences. |
 |`S1`| The fragment is the whole of section S1. |
-|`S1;p1`| The fragment is the whole of paragraph p1 of section S1.|
+|`S1;b1`| The fragment is the whole of block b1 of section S1.|
+
+### 3.7 Version Modes Request
 
 In the simplest case, sections can be considered to equate broadly to chapters. However, in practice, documents often contain additional 
 elements such as forewards, appendices, chapter summaries etc. These are accommodated by allowing sections to be numbered hierarchically.
@@ -609,7 +652,6 @@ Thus, a more complex document might have the following sections.
 |`3.2`| Appendix 2 |
 |`3.3`| Index |
 
-### 3.7 Version Modes Request
 
 ## 4 Accessing Previous Editions
 An ITF text resource MAY change over time, allowing updates, corrections or the addition 
