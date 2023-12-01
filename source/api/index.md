@@ -633,20 +633,6 @@ A Version Modes Request describes in detail how the mode coordinates map to the 
 - Detailed level: describe all the levels of a mode in terms of _base_mode_ coordinates  
  
 
-| Section Number | Description |
-| ---------- | ---------- |
-|`1`| Place holder for elements that come before the main text |
-|`1.1`| Title Page |
-|`1.2`| Contents List | 
-|`1.3`| Foreward || ------- | ---------------|
-|`2`| Place holder for elements comprising the main text |
-|`2.1`| Chapter 1 |
-|`2.2`| Chapter 2 |
-|`2.N`| Chapter N |
-|`3`| Place holder for elements come after the main text |
-|`3.1`| Appendix 1 |
-|`3.2`| Appendix 2 |
-|`3.3`| Index |
 
 
 ## 4 Accessing Previous Editions
