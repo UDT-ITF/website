@@ -66,10 +66,10 @@ be in that form, unless the _OPTIONAL_ "raw" quality specifier is invoked.
 > > MH: I assume that by 'full text retrieval' you are referring to the raw original underlying file and not the entire text returned by setting fragment to full.
 
 *ITF Text Resource* 
-: An abstract textual work, identified by a unique identifier on an ITF-complaint server. An Text Resource may contain one or more single texts or multiple versions of a work as it has evolved. ITF makes no assumptions about the type or level of document that a Text Resource contains.
+: An abstract textual work, identified by a unique identifier on an ITF-compliant server. A Text Resource may contain one or more single texts or multiple versions of a work as it has evolved. ITF makes no assumptions about the type or level of document that a Text Resource contains.
 
 *ITF Edition*
-: An ITF Edition is created when an Text Resource is made available for access. If the Text Resource is subsequently updated, then it is considered a new Edition. In order to maintain the integrity of references and citations, ITF-compliant servers provide a way of accessing previous Editions of a Text Resource.
+: An ITF Edition is created when a Text Resource is made available for access. If the Text Resource is subsequently updated, then it is considered a new Edition. In order to maintain the integrity of references and citations, ITF-compliant servers provide a way of accessing previous Editions of a Text Resource.
 
 *ITF Version*
 : Texts evolve over time through the actions of one or more contributors. Text Resources can represent this history by making multiple versions of a text available. Versions are identified by labels and, optionally, dates. When multiple contributors are active, there may be more than one version considered active on a particular date. 
@@ -300,7 +300,7 @@ The physical Book mode is an example of a hierarchical text mode which follows s
 - A text location is expressed in a hierarchical mode as a series of postive integer numerical coordinates separated by semicolons
   - A numerical coordinate may be expressed as a dotted multiplet (e.g. 1.2.3) to represent a hierarchical structure in the document (e.g. the sections and subsections in a document such as this).
   - Coordinates _MUST_ end with a digit
-  - Numerical coordinates always start coutning with "1". How these sections are presented and labelled with respect to an actual document can be discovered by making an appropriate [Mode Information Request](253-mode-information-request)  
+  - Numerical coordinates always start counting with "1". How these sections are presented and labelled with respect to an actual document can be discovered by making an appropriate [Mode Information Request](253-mode-information-request)  
   - Coordinates are read from left-to-right with the leftmost corresponding to the largest scale structures in the source text (pages in the example above).   
 - Coordinates may be truncated from the right hand side (removing the most fine-grained divisions first)
   - If a fragment starting point is truncated, missing values _MUST_ be assumed to be "1"
@@ -310,7 +310,7 @@ The physical Book mode is an example of a hierarchical text mode which follows s
   - Length specifiers can flow over. For example, requesting more lines than are on a page is valid, provided subsequent pages have sufficient lines.   
 - A single set of coordinates returns a single item at the same level of granularity as the coordinates 
 
-IMPLMENTATION NOTE: A mode has only one coordinate is non-hierarchical and behaves in a similar manner to _char_ or _token_ modes.       
+IMPLEMENTATION NOTE: A mode has only one coordinate is non-hierarchical and behaves in a similar manner to _char_ or _token_ modes.       
 
 #### 2.6.5 Custom Modes
 
@@ -320,7 +320,7 @@ tagging information) in the returned text, if this is available.
 
 | Form of Quality Parameter | Description |
 | ------------------- | ------------ |
-|`raw`| The server will return the fragment in a form that most closely matches it's underlying storage format. This is entirely server dependent and the following format parameter is ignored. |
+|`raw`| The server will return the fragment in a form that most closely matches its underlying storage format. This is entirely server dependent and the following format parameter is ignored. |
 |`compact`| The fragment will be returned as plaintext with sequences of whitespace characters reduced to a single space. | 
 |`plaintext`| The fragment will be returned as plaintext. |
 |`rich`| The fragment will be returned including any available enrichment. |
@@ -340,8 +340,8 @@ The format parameter specifies the file format used to return the requested text
 ## 3 Text Information API 
 
 ### 3.1 Abstract
-This section describes an API to request technical information about text REsources and Versions via a
-standard HTTP request. The ITF Text Infoirmation API specifies a web service that returns JSON
+This section describes an API to request technical information about text Resources and Versions via a
+standard HTTP request. The ITF Text Information API specifies a web service that returns JSON
 data in response to a standard HTTP or HTTPS request. The URL can specify:
 - The Resource or Version that is the target of the request
 - The type of information that is requested 
@@ -394,10 +394,10 @@ The response will return the following information for an ITF Resource.
 | `versioning` | Indicates of a Resource contain multiple versions, and, if so, how they are ordered. Possible values: _none, linear, date, graph_ |
 | `modes` | Indicates which standard modes are supported. A list of one or more of _char, token, book, prose_. |
 | `custom_modes` | _OPTIONAL_ List of custom modes that are supported. |
-| `qualities` | Indicates which qualities are supported. A list of one or moreinternatinal date format of _raw, compact, plaintext, rich_. |
+| `qualities` | Indicates which qualities are supported. A list of one or more international date format of _raw, compact, plaintext, rich_. |
 | `formats` | Indicates which formats are supported. A list of one or more of _txt, tei, html, md_. |
 | `DC-metadata` | _OPTIONAL_ URL of a DC metadata record |
-| 'first_edition' | Date of the first edition of the Resource in ISO 8601 format. _MUST_ be the same as "date" if the Resource does not support editiuons.| 
+| 'first_edition' | Date of the first edition of the Resource in ISO 8601 format. _MUST_ be the same as "date" if the Resource does not support editions.| 
 | `editions` | _OPTIONAL_ If the server supports editions this section _MUST_ exist. The edtions section can contains a list of dates of all the editions in ISO 8601 format. 
 
 Example JSON response for a Resource.
@@ -441,7 +441,7 @@ collated in numerical order with prioirt to the right (_i.e_ 1.1.12 comes after 
 have a trailing dot.
 
 IMPLEMENTATION NOTE: If a Resource does not have _date_ versioning, resources may still have a "date" key but it does
-not have to be unqiue or ISO 8601 ordered. Versions with non-Gregorian or vague dating can be ordered 
+not have to be unique or ISO 8601 ordered. Versions with non-Gregorian or vague dating can be ordered 
 by using _linear_ or _graph_ versioning. 
 
 DISCUSSION POINT: Do we need to return details of non-standard dating somewhere? Would support for ISO 8601 extensions for 
@@ -478,8 +478,8 @@ DISCUSSION POINT: Is a very large number of versions a case we need to consider?
 | ------- | ---------------|
 | `date` | If a Resource has _date_ versioning, all versions _MUST_ have a unique date. Otherwise this is _MUST_ be omitted. |
 | `sequence` | If a Resource has _linear_ versioning, all versions _MUST_ have a unique sequence number. Otherwise this _MUST_ be omitted. |
-| `succeeds` | If a Resource has _graph_ versioning, lists the label(s) of preceeding versions. Otherwise this _MUST_be omitted.|
-| `preceeds` | If a Resource has _graph_ versioning, lists the label(s) of succeeding versions. Otherwise this _MUST_be omitted.|
+| `succeeds` | If a Resource has _graph_ versioning, lists the label(s) of preceeding versions. Otherwise this _MUST_ be omitted.|
+| `precedes` | If a Resource has _graph_ versioning, lists the label(s) of succeeding versions. Otherwise this _MUST_ be omitted.|
 
 Example JSON response for _linear_ versioning.
 ```
@@ -567,8 +567,8 @@ The response will return the following information.
 
 | Coordinate Element | Description|
 | ------- | ---------------|
-| `label` | A short lebel for the coordinate used for display purposes. Labels _MUST_ be unique within a mode. |
-| `description` | An _OgrainedPTIONAL_ description of what the coordinate represents. |
+| `label` | A short label for the coordinate used for display purposes. Labels _MUST_ be unique within a mode. |
+| `description` | An _OPTIONAL_ description of what the coordinate represents. |
 | `levels` | Indicates the number of levels the coordinate allows for dotted multiplet values. If it is "1" then only a single numerical value is permitted. |
 
 For example, a Resource containign a long form prose work might define a "prose" mode 
@@ -618,7 +618,7 @@ comprising sections, blocks, sentences and words as follows.
 ```
 Coordinates for this mode are thus of the form _S;b;s;w;c_ corresponding to character 
 number _c_ of word _w_ of sentence _s_ of block _b_ of section _S_. Following the rules for 
-hierarchical modes, we can define the following (non-exhaustive) list of fragments using thsi mode:
+hierarchical modes, we can define the following (non-exhaustive) list of fragments using this mode:
 
 | Form of Prose Fragment Parameter | Description |
 | ------------------- | ------------ |
