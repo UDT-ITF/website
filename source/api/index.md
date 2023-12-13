@@ -57,7 +57,7 @@ _RECOMMENDED_, and _OPTIONAL_ in this document are to be interpreted as describe
 ### 1.3 The ITF Text Model
 
 Regardless of how underlying texts are stored and managed, ITF-compliant servers _MUST_ behave 
-as if they were NFC normalised UTF-8 Unicode. Character counts and offsets _MUST_ computed in 
+as if they were NFC normalised UTF-8 Unicode. Character counts and offsets _MUST_ be computed in 
 terms of Unicode codepoints, and the texts returned as a result of invoking ITF APIs _MUST_ 
 be in that form, unless the _OPTIONAL_ "raw" quality specifier is invoked.   
 
@@ -66,7 +66,7 @@ be in that form, unless the _OPTIONAL_ "raw" quality specifier is invoked.
 > > MH: I assume that by 'full text retrieval' you are referring to the raw original underlying file and not the entire text returned by setting fragment to full.
 
 *ITF Text Resource* 
-: An abstract textual work, identified by a unique identifier on an ITF-complaint server. An Text Resource may contain one or more single texts or multiple versions of a work as it has evolved. ITF makes no assumptions about the type or level of document that a Text Resource contains.
+: An abstract textual work, identified by a unique identifier on an ITF-compliant server. A Text Resource may contain one or more single texts or multiple versions of a work as it has evolved. ITF makes no assumptions about the type or level of document that a Text Resource contains.
 
 *ITF Edition*
 : An ITF Edition is created when an Text Resource is made available for access. If the Text Resource is subsequently updated, then it is considered a new Edition. In order to maintain the integrity of references and citations, ITF-compliant servers provide a way of accessing previous Editions of a Text Resource.
@@ -310,7 +310,7 @@ The physical Book mode is an example of a hierarchical text mode which follows s
   - Length specifiers can flow over. For example, requesting more lines than are on a page is valid, provided subsequent pages have sufficient lines.   
 - A single set of coordinates returns a single item at the same level of granularity as the coordinates 
 
-IMPLMENTATION NOTE: A mode has only one coordinate is non-hierarchical and behaves in a similar manner to _char_ or _token_ modes.       
+IMPLEMENTATION NOTE: A mode has only one coordinate is non-hierarchical and behaves in a similar manner to _char_ or _token_ modes.       
 
 #### 2.6.5 Custom Modes
 
@@ -320,7 +320,7 @@ tagging information) in the returned text, if this is available.
 
 | Form of Quality Parameter | Description |
 | ------------------- | ------------ |
-|`raw`| The server will return the fragment in a form that most closely matches it's underlying storage format. This is entirely server dependent and the following format parameter is ignored. |
+|`raw`| The server will return the fragment in a form that most closely matches its underlying storage format. This is entirely server dependent and the following format parameter is ignored. |
 |`compact`| The fragment will be returned as plaintext with sequences of whitespace characters reduced to a single space. | 
 |`plaintext`| The fragment will be returned as plaintext. |
 |`rich`| The fragment will be returned including any available enrichment. |
@@ -340,8 +340,8 @@ The format parameter specifies the file format used to return the requested text
 ## 3 Text Information API 
 
 ### 3.1 Abstract
-This section describes an API to request technical information about text REsources and Versions via a
-standard HTTP request. The ITF Text Infoirmation API specifies a web service that returns JSON
+This section describes an API to request technical information about text Resources and Versions via a
+standard HTTP request. The ITF Text Information API specifies a web service that returns JSON
 data in response to a standard HTTP or HTTPS request. The URL can specify:
 - The Resource or Version that is the target of the request
 - The type of information that is requested 
@@ -397,7 +397,7 @@ The response will return the following information for an ITF Resource.
 | `qualities` | Indicates which qualities are supported. A list of one or moreinternatinal date format of _raw, compact, plaintext, rich_. |
 | `formats` | Indicates which formats are supported. A list of one or more of _txt, tei, html, md_. |
 | `DC-metadata` | _OPTIONAL_ URL of a DC metadata record |
-| 'first_edition' | Date of the first edition of the Resource in ISO 8601 format. _MUST_ be the same as "date" if the Resource does not support editiuons.| 
+| 'first_edition' | Date of the first edition of the Resource in ISO 8601 format. _MUST_ be the same as "date" if the Resource does not support editions.| 
 | `editions` | _OPTIONAL_ If the server supports editions this section _MUST_ exist. The edtions section can contains a list of dates of all the editions in ISO 8601 format. 
 
 Example JSON response for a Resource.
@@ -426,9 +426,9 @@ Example JSON response for a Resource.
 | ------- | ---------------|
 | `label` | The label used to identify the version. The label _MUST_ be unique within the containing Resource.|
 | `date` | If a Resource has _date_ versioning, all versions _MUST_ have a unique date. Otherwise this is _OPTIONAL_. |
-| `sequence` | If a Resource has _linear_ versioning, all versions _MUST_ have a unique sequnece number. Otherwise this is _OPTIONAL_. |
-| `succeeds` | Lists the label(s) of preceeding versions if a Resource has _graph_ versioning. |
-| `preceeds` | Lists the label(s) of succeeding versions if a Resource has _graph_ versioning. |
+| `sequence` | If a Resource has _linear_ versioning, all versions _MUST_ have a unique sequence number. Otherwise this is _OPTIONAL_. |
+| `succeeds` | Lists the label(s) of preceding versions if a Resource has _graph_ versioning. |
+| `precedes` | Lists the label(s) of succeeding versions if a Resource has _graph_ versioning. |
 | `modes` | Indicates which standard modes are supported. A list of one or more of _char, token, book, prose_. |
 | `custom_modes` | _OPTIONAL_ List of custom modes that are supported. |
 | `qualities` | Indicates which qualities are supported. A list of one or more of _raw, compact, plaintext, rich_. |
@@ -444,8 +444,8 @@ IMPLEMENTATION NOTE: If a Resource does not have _date_ versioning, resources ma
 not have to be unqiue or ISO 8601 ordered. Versions with non-Gregorian or vague dating can be ordered 
 by using _linear_ or _graph_ versioning. 
 
-DISCUSSION POINT: Do we need to return details of non-standard dating somewhere? Would support for ISO 8601 extensions for 
-vague dates/date intervals be useful, albeit at the expense of rather more complex ordering and validation?
+> DISCUSSION POINT: Do we need to return details of non-standard dating somewhere? Would support for ISO 8601 extensions for 
+> vague dates/date intervals be useful, albeit at the expense of rather more complex ordering and validation?
 
 Example JSON response for a _graph_ ordered version.
 ```
@@ -478,8 +478,8 @@ DISCUSSION POINT: Is a very large number of versions a case we need to consider?
 | ------- | ---------------|
 | `date` | If a Resource has _date_ versioning, all versions _MUST_ have a unique date. Otherwise this is _MUST_ be omitted. |
 | `sequence` | If a Resource has _linear_ versioning, all versions _MUST_ have a unique sequence number. Otherwise this _MUST_ be omitted. |
-| `succeeds` | If a Resource has _graph_ versioning, lists the label(s) of preceeding versions. Otherwise this _MUST_be omitted.|
-| `preceeds` | If a Resource has _graph_ versioning, lists the label(s) of succeeding versions. Otherwise this _MUST_be omitted.|
+| `succeeds` | If a Resource has _graph_ versioning, lists the label(s) of preceding versions. Otherwise this _MUST_ be omitted.|
+| `precedes` | If a Resource has _graph_ versioning, lists the label(s) of succeeding versions. Otherwise this _MUST_ be omitted.|
 
 Example JSON response for _linear_ versioning.
 ```
@@ -625,7 +625,7 @@ the rules for hierarchical modes, we can define the following (non-exhaustive) l
 |`S1;b1`| The fragment is the whole of block b1 of section S1.|
 
 Custom mode definitions are limited in scope to a single resource, however, it is _RECOMMENDED_ that custom mode definitions
-are deigned to be reusable across a wide range of resources if possible.  
+are designed to be reusable across a wide range of resources if possible.  
 
 ### 3.7 Version Modes Request
 A Version Modes Request describes in detail how the mode coordinates map to the underlying text. This can be described at two levels of detail:
