@@ -72,7 +72,7 @@ be in that form, unless the _OPTIONAL_ "raw" quality specifier is invoked.
 : An ITF Edition is created when a Text Resource is made available for access. If the Text Resource is subsequently updated, then it is considered a new Edition. In order to maintain the integrity of references and citations, ITF-compliant servers provide a way of accessing previous Editions of a Text Resource.
 
 *ITF Version*
-: Texts evolve over time through the actions of one or more contributors. Text Resources can represent this history by making multiple versions of a text available. Versions are identified by labels and, optionally, dates. When multiple contributors are active, there may be more than one version considered active on a particular date. 
+: Texts change over time through the actions of one or more contributors. Text Resources can represent this history by making multiple versions of a text available. Versions are identified by labels and, optionally, dates. When multiple contributors are active, there may be more than one version considered active on a particular date. 
 
 *ITF Mode*
 : It is useful to be able to specify or reference text fragments in terms of the structure of a document rather than just as character offsets from the start of a file. Modes describe the different ways that this can be achieved. Some modes reflect the physical structure of the source material (e.g. a volume, broken down by page, line and word) while others might reflect semantic structure (e.g. a novel, broken down by chapter, headers, paragraph, sentence and word). Such approaches are more human friendly, map readily to many analytical tools, and are also easier to map between versions of a text.
