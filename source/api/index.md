@@ -69,7 +69,7 @@ be in that form, unless the _OPTIONAL_ "raw" quality specifier is invoked.
 : An abstract textual work, identified by a unique identifier on an ITF-compliant server. A Text Resource may contain one or more single texts or multiple versions of a work as it has evolved. ITF makes no assumptions about the type or level of document that a Text Resource contains.
 
 *ITF Edition*
-: An ITF Edition is created when an Text Resource is made available for access. If the Text Resource is subsequently updated, then it is considered a new Edition. In order to maintain the integrity of references and citations, ITF-compliant servers provide a way of accessing previous Editions of a Text Resource.
+: An ITF Edition is created when a Text Resource is made available for access. If the Text Resource is subsequently updated, then it is considered a new Edition. In order to maintain the integrity of references and citations, ITF-compliant servers provide a way of accessing previous Editions of a Text Resource.
 
 *ITF Version*
 : Texts evolve over time through the actions of one or more contributors. Text Resources can represent this history by making multiple versions of a text available. Versions are identified by labels and, optionally, dates. When multiple contributors are active, there may be more than one version considered active on a particular date. 
@@ -159,7 +159,7 @@ underlying resources.
 > > for less technical audiences.
 
 All special characters (e.g. ? or \#) MUST be URI encoded to avoid unpredictable
-client behaviors. The URL syntax relies upon slash (/) separators so any slashes 
+client behaviours. The URL syntax relies upon slash (/) separators so any slashes 
 in the identifier MUST be URI encoded (aka. percent-encoded, replace / with %2F ). 
 See discussion in [Section9 - URL Encoding and Decoding.](#url_encoding)
 
@@ -206,7 +206,7 @@ friendly to human interpretation, mode allow fragment references to be more read
 versions of a text, or to be updated as a text is edited. However, since modes reflect some aspects
 of the structure of the underlying texts, most will only be applicable to particular types of 
 Resources. Complex texts which have parts with different structures may not be fully 
-addressible using just a single higher level mode. ITF defines a few basic modes but new modes 
+addressable using just a single higher level mode. ITF defines a few basic modes but new modes 
 can be defined using the predefined modes as an basis. 
 
 The modes represent a generalised version of a text format. A [mode information request](253-mode-information-request) 
@@ -297,10 +297,10 @@ corresponding to character number _c_ of line number _l_ on page number _p_.
 #### 2.6.4 Hierarchical Modes
 The physical Book mode is an example of a hierarchical text mode which follows some relatively simple rules:
 
-- A text location is expressed in a hierarchical mode as a series of postive integer numerical coordinates separated by semicolons
+- A text location is expressed in a hierarchical mode as a series of positive integer numerical coordinates separated by semicolons
   - A numerical coordinate may be expressed as a dotted multiplet (e.g. 1.2.3) to represent a hierarchical structure in the document (e.g. the sections and subsections in a document such as this).
   - Coordinates _MUST_ end with a digit
-  - Numerical coordinates always start coutning with "1". How these sections are presented and labelled with respect to an actual document can be discovered by making an appropriate [Mode Information Request](253-mode-information-request)  
+  - Numerical coordinates always start counting with "1". How these sections are presented and labelled with respect to an actual document can be discovered by making an appropriate [Mode Information Request](253-mode-information-request)  
   - Coordinates are read from left-to-right with the leftmost corresponding to the largest scale structures in the source text (pages in the example above).   
 - Coordinates may be truncated from the right hand side (removing the most fine-grained divisions first)
   - If a fragment starting point is truncated, missing values _MUST_ be assumed to be "1"
@@ -394,11 +394,11 @@ The response will return the following information for an ITF Resource.
 | `versioning` | Indicates of a Resource contain multiple versions, and, if so, how they are ordered. Possible values: _none, linear, date, graph_ |
 | `modes` | Indicates which standard modes are supported. A list of one or more of _char, token, book, prose_. |
 | `custom_modes` | _OPTIONAL_ List of custom modes that are supported. |
-| `qualities` | Indicates which qualities are supported. A list of one or moreinternatinal date format of _raw, compact, plaintext, rich_. |
+| `qualities` | Indicates which qualities are supported. A list of one or more international date format of _raw, compact, plaintext, rich_. |
 | `formats` | Indicates which formats are supported. A list of one or more of _txt, tei, html, md_. |
 | `DC-metadata` | _OPTIONAL_ URL of a DC metadata record |
 | 'first_edition' | Date of the first edition of the Resource in ISO 8601 format. _MUST_ be the same as "date" if the Resource does not support editions.| 
-| `editions` | _OPTIONAL_ If the server supports editions this section _MUST_ exist. The edtions section can contains a list of dates of all the editions in ISO 8601 format. 
+| `editions` | _OPTIONAL_ If the server supports editions this section _MUST_ exist. The editions section can contains a list of dates of all the editions in ISO 8601 format. 
 
 Example JSON response for a Resource.
 
@@ -437,11 +437,11 @@ Example JSON response for a Resource.
 
 If a resource has _graph_ versioning, every version _MUST_ have a value  for at least one of the "succeeds", "precedes" keys.
 If a "sequence" key exists, it _MUST_ contain a dotted numeric version number, for example: "1", "1.1", "1.1.12" which are 
-collated in numerical order with prioirt to the right (_i.e_ 1.1.12 comes after 1.1.9 comes after 1.1). A "sequence" key _MUST NOT_ 
+collated in numerical order with priority to the right (_i.e_ 1.1.12 comes after 1.1.9 comes after 1.1). A "sequence" key _MUST NOT_ 
 have a trailing dot.
 
 IMPLEMENTATION NOTE: If a Resource does not have _date_ versioning, resources may still have a "date" key but it does
-not have to be unqiue or ISO 8601 ordered. Versions with non-Gregorian or vague dating can be ordered 
+not have to be unique or ISO 8601 ordered. Versions with non-Gregorian or vague dating can be ordered 
 by using _linear_ or _graph_ versioning. 
 
 > DISCUSSION POINT: Do we need to return details of non-standard dating somewhere? Would support for ISO 8601 extensions for 
@@ -571,7 +571,7 @@ The response will return the following information.
 | `description` | An _OPTIONAL_ description of what the coordinate represents. |
 | `levels` | Indicates the number of levels the coordinate allows for dotted multiplet values. If it is "1" then only a single numerical value is permitted. |
 
-For example, a Resource containign a long form prose work might define a "prose" mode 
+For example, a Resource containing a long form prose work might define a "prose" mode 
 comprising sections, blocks, sentences and tokens as follows.
 ```
 {
