@@ -64,8 +64,8 @@ be in that form, unless the _OPTIONAL_ "raw" quality specifier is invoked.
 *ITF Text Resource* 
 : An abstract textual work, identified by a unique identifier on an ITF-compliant server. A Text Resource may contain one or more single texts or multiple versions of a work. ITF makes no assumptions about the type or level of document that a Text Resource contains.
 
-*ITF Edition*
-: An ITF Edition is created when a Text Resource is made available for access. If the Text Resource is subsequently updated, it is considered a new Edition. In order to maintain the integrity of references and citations, ITF-compliant servers provide a way of accessing previous Editions of a Text Resource.
+*ITF Release*
+: An ITF Release is created when a Text Resource is made available for access. If the Text Resource is subsequently updated, it is considered a new Release. In order to maintain the integrity of references and citations, ITF-compliant servers provide a way of accessing previous Releases of a Text Resource.
 
 *ITF Version*
 : Texts change over time through the actions of one or more contributors. Text Resources can represent this history by making multiple versions of a text available. Versions are identified by labels and, optionally, dates. When multiple contributors are active, there may be more than one version considered active on a particular date. 
@@ -349,15 +349,15 @@ The response will return a JSON response containing the following information fo
 | Resource Textinfo Element | Description|
 | ------- | ---------------|
 | `identifier` | The unique identifier of the Resource, expressed as a string. The identifier _MUST_ be supplied without URI encoding. |
-| `date` | The date of the most recent edition of the Resource in ISO 8601-1:2019 format. |
+| `date` | The date of the most recent release of the Resource in ISO 8601-1:2019 format. |
 | `versioning` | Indicates whether a resource contains multiple versions and how they are ordered. Possible values: _none, linear, date, graph_ |
 | `modes` | Indicates which standard modes are supported. A list of one or more of _char, token, book, prose_. |
 | `custom_modes` | _OPTIONAL_ List of custom modes that are supported. |
 | `qualities` | Indicates which qualities are supported. A list of one or more of _raw, compact, plaintext, rich_. |
 | `formats` | Indicates which formats are supported. A list of one or more of _txt, tei, html, md_. |
 | `DC-metadata` | _OPTIONAL_ URL of a DC metadata record |
-| 'first_edition' | Date of the first edition of the Resource in ISO 8601-1:2019 format. _MUST_ be the same as "date" if the Resource does not support editions.| 
-| `editions` | _OPTIONAL_ If the server supports editions this section _MUST_ exist. The editions section can contains a list of dates of all the editions in ISO 8601-1:2019 format. 
+| 'first_release' | Date of the first release of the Resource in ISO 8601-1:2019 format. _MUST_ be the same as "date" if the Resource does not support releases.| 
+| `releases` | _OPTIONAL_ If the server supports releases this section _MUST_ exist. The releases section can contains a list of dates of all the releases in ISO 8601-1:2019 format. 
 
 Example JSON response for a Resource.
 
@@ -370,8 +370,8 @@ Example JSON response for a Resource.
   "custom_modes" : [ "prose" ],
   "qualities" : ["compact", "plaintext"],
   "formats" : [ "txt" ],
-  "first_edition" : "2022-05-07",
-  "editions" : [
+  "first_release" : "2022-05-07",
+  "releases" : [
     "2022-05-07",
     "2023-01-06",
     "2023-11-24"
@@ -428,10 +428,10 @@ version but merely enumerates the version structure of the resource.
 | Versions Element | Description|
 | ------- | ---------------|
 | `identifier` | The unique identifier of the Resource, expressed as a string. The identifier _MUST_ be supplied without URI encoding. |
-| `date` | The date of the edition of the resource in ISO 8601-1:2019 format |
+| `date` | The date of the release of the resource in ISO 8601-1:2019 format |
 | `versioning` | Indicates of a Resource contain multiple versions and how they are ordered. Possible values: _none, linear, date, graph_ |
 | `first_version` | Indicates the label of the earliest (or only) version of the text in the Resource. |
-| `versions` | A keyed list of all the versions in this edition of this resource, if more the one version is present. This element _MUST NOT_ appear if there is only one text in the resource. Each version is described by a single version node in the list, keyed by the version label. |
+| `versions` | A keyed list of all the versions in this release of this resource, if more the one version is present. This element _MUST NOT_ appear if there is only one text in the resource. Each version is described by a single version node in the list, keyed by the version label. |
 
 | Version Node Element | Description|
 | ------- | ---------------|
@@ -513,10 +513,10 @@ The response will return the following information.
 | Resource Modes Element | Description|
 | ------- | ---------------|
 | `identifier` | The unique identifier of the Resource, expressed as a string. The identifier _MUST_ be supplied without URI encoding. |
-| `date` | The date of the most recent edition of the Resource in ISO 8601-1:2019 format. |
+| `date` | The date of the most recent release of the Resource in ISO 8601-1:2019 format. |
 | `modes` | Indicates which standard modes are supported. A list of one or more of _char, token, book, prose_. |
 | `custom_modes` | _OPTIONAL_ List of custom modes that are supported. |
-| `custom_mode_definitions` | A keyed list of all the custom modes in this edition of this resource. This element _MUST NOT_ appear if there are no custom modes in the resource. Each custom mode is described by a set of custom mode elements detailed below. |
+| `custom_mode_definitions` | A keyed list of all the custom modes in this release of this resource. This element _MUST NOT_ appear if there are no custom modes in the resource. Each custom mode is described by a set of custom mode elements detailed below. |
 
 | Custom Mode Element | Description|
 | ------- | ---------------|
@@ -594,10 +594,10 @@ A Version Modes Request describes in detail how the mode coordinates map to the 
 - Basic level: assigns labels to the higher levels of a mode to provide a navigational or structural map of the text
 - Detailed level: describe all the levels of a mode in terms of _base_mode_ coordinates  
  
-## 4 Accessing Previous Editions
+## 4 Accessing Previous Releases
 
 An ITF text resource MAY change over time, allowing updates, corrections or the addition 
-of new versions of a text. In ITF terminology, each change constitutes a new "edition" 
+of new versions of a text. In ITF terminology, each change constitutes a new release 
 of the text resource. In order to resolve text references correctly, an ITF-compliant text
-service that supports multiple editions MUST provide a mechanism for accessing these earlier 
-editions.
+service that supports multiple releases MUST provide a mechanism for accessing these earlier 
+releases.
