@@ -61,10 +61,6 @@ as if they were NFC normalised UTF-8 Unicode. Character counts and offsets _MUST
 terms of Unicode codepoints, and the texts returned as a result of invoking ITF APIs _MUST_ 
 be in that form, unless the _OPTIONAL_ "raw" quality specifier is invoked.   
 
-> DISCUSSION POINT: Is "raw" quality useful in the context of ITF? It may only make
-> sense to allow it for full text retrieval.
-> > MH: I assume that by 'full text retrieval' you are referring to the raw original underlying file and not the entire text returned by setting fragment to full.
-
 *ITF Text Resource* 
 : An abstract textual work, identified by a unique identifier on an ITF-compliant server. A Text Resource may contain one or more single texts or multiple versions of a work. ITF makes no assumptions about the type or level of document that a Text Resource contains.
 
@@ -76,8 +72,6 @@ be in that form, unless the _OPTIONAL_ "raw" quality specifier is invoked.
 
 *ITF Mode*
 : It is useful to be able to specify or reference text fragments in terms of the structure of a document rather than just as character offsets from the start of a file. Modes describe the different ways that this can be achieved. Some modes reflect the physical structure of the source material (e.g. a volume, broken down by page, line and word) while others might reflect semantic structure (e.g. a novel, broken down by chapter, headers, paragraph, sentence and word). The latter modes are more human friendly. They map readily to many analytical tools, and are easier to map between versions of a text.
-
-> Probably needs considerable expansion
 
 ### 1.4 Overview of the ITF Specification
 The ITF specification is intended to facilitate systematic referencing and reuse of 
@@ -122,10 +116,6 @@ For example:
 
     http://www.example.org/text-service/abcd1234/default/char/0,247/teilite.xml
 
-> To avoid ambiguity, I think it's useful to make it clear that the files are presented using the minimalistic
-> TEI Lite rather than TEI (in general). There will be considerable difference in many projects between their
-> original TEI and the TEI Lite version.
-
 The sections of the Text Fragment Request URL are:
 
 | Syntax | Description |
@@ -135,8 +125,6 @@ The sections of the Text Fragment Request URL are:
 |`prefix`| The path on the host server to the ITF-compliant text service. This prefix is optional, but may be useful when the host server supports multiple services. **Note:** The prefix may contain slashes or constructions that resemble service parameters. |
 |`identifier`| A unique identifier of the requested text resource, expressed as a string. This may be an ark, URN, filename, or other unique identifier. It SHOULD ideally be a Persistent Identifier. Special characters MUST be URI encoded. |
 |`version, mode, fragment, quality, format`| Parameters defining the characteristics of the returned text fragment. These are described in detail in [Section 2.4 - Fragment Request Parameters](#24-text-fragment-request-parameters). |
-
-> DISCUSSION POINT: Is this sufficient?
 
 All parameters are required for compliant construction of an ITF Text Fragment API
 URL. The sequence of parameters in the URL MUST be in the order described above. Their 
@@ -151,11 +139,6 @@ The API places no restrictions on the form of the identifiers that a server may 
 support other than it MUST be expressed as a string. Public facing servers
 SHOULD ideally use Persistent Identifiers and undertake to maintain the ITF endpoint and 
 underlying resources.
-
-> DISCUSSION POINT: How much do we want or need to go into persistence/preservation?
-> Should a "friable" resource have to indicate this via the Info API? 
-> > MH: I'd say that we should elaborate on persistence/preservation/friable as it would be useful 
-> > for less technical audiences.
 
 All special characters (e.g. ? or \#) MUST be URI encoded to avoid unpredictable
 client behaviours. The URL syntax relies upon slash (/) separators so any slashes 
@@ -175,26 +158,8 @@ be used with a resource that contains no versions.
 |`d:yyyy-mm-dd`| Specifies the version current at a particular date in ISO 8601-1:2019 format. Negative (BCE) years are allowed. |
 |`d:yyyy-mm-ddThh:mm:ss`| Specifies the version current at a particular dateTime in ISO 8601-1:2019 format. Negative (BCE) years are allowed. |
 
-> DISCUSSION POINTS: Do we allow truncation to just yyyy-mm, for example? 
-> Can support for times be optional?
-> > MH: I think the question of optional times, optional days and, perhaps even months and days are all related.
-> > The minimalist side of me wants to say that they are optional -- a project might simply have a 2023 release of the text 
-> > that will be superseded by the 2024 release. The pragmatic side of me, however, leans towards the view that 
-> > they MUST be dateTime values. Any other version state could be indicated with labels/version numbers, just as 
-> > tags are used in Git.
-> Do we need version numbers or are labels sufficient
-> > MH: It depends on whether we can foresee a need for a text collection to use both labels and versions
-> > to identify specific incarnations of the resource in conjunction. That is, l:main/v:1.0.0 - for the primary release version
-> > and l:crowdsourced/v:1.0.0 - for a different version of the text (say with some crowdsourced additions that
-> > the provider doesn't want to include within the main release but does want to make available in an explicit
-> > crowdsourced release). If that specific scenario isn't to be supported, there's no reason that the label couldn't
-> > be a version number. If we were to adopt the latter approach, should we call it a 'tag' just as Git does?
-
 A server MUST return a 400 (bad request) code if 'default' is used with a versioned resource, or 
 a date is specified for a resource with no version dates. 
-
-> Is there a mechanism for retrieving the latest version of a versioned resource? If not, couldn't 'default' be used to
-> retrieve it? Or, do I need more coffee?
 
 ### 2.5 Mode
 The mode parameter specifies how the "text coordinates" in the subsequent fragment 
@@ -222,13 +187,6 @@ any custom modes can be discovered via the aforementioned mode information reque
 |`token`| The fragment will be specified in terms of tokens (words in Western languages). | 
 |`book`| The fragment will be specified in terms of the physical structure of a book. |
 
-> DISCUSSION POINT: This is where it gets tricky! My preference would be to keep modes
-> as simple as possible and discuss mapping to real world examples in the Implementation Notes.
-> How many does it make sense to start with? Letter, Journal, Anthology, Play?  
-> > MH: Char and token seem fine. Things get problematic after that. The physical features of the text are ultimately dependant on the physical nature of the artefact (books, scroll, funerary marker, clay tablets, woven strands of thread, etc). Using a book-based model is imposing a very particular type of cultural product onto texts that it doesn't apply to. Would 'surface' perhaps be a slightly better term? It certainly would avoid the problems mentioned in my next comment further down.
-> > MH: Can we add another keyword to reflect request that would be made via points defined within the document itself (e.g. xml:id values on elements in a TEI). This would allow for `head1,p27` (start at the header with xml:id head1 and go to the end of the page identified p27).
-> > BTW, What would happen if you were to say that you wanted to start at `head1` and go for the next x words or chars. Is it even possible to use a mixed mode like that?
-
 ### 2.6 Fragment
 The fragment parameter specifies the text fragment to be returned as a result of invoking the 
 Text Fragment API. The format of the fragment parameter depends on the mode selected except for
@@ -243,9 +201,6 @@ _MUST_ be counted as a single character.
 
 In ITF all counting _MUST_ be "1"-based. The first unicode codepoint of a text is codepoint 1 and the first word, word 1, the first surface, surface 1.
 
-> DISCUSSION POINT: Are these reasonable restrictions/simplifications?
-> > MH: Everything apart from 'the first page of a book is page 1' seems fine. What do you mean by page? Page 1 in the book might actually be the 20th page. If we were to use 'surface' this would differentiate surface 1 from 'page 1' as it appears in the text. This would also enable ITF to work with texts that aren’t page based (e.g. tablets, rolls).
-
 #### 2.6.1 Char Mode Fragments
 
 Char(acter) mode fragment specifiers identify a block of text in a text file by counting individual
@@ -258,9 +213,6 @@ characters (Unicode codepoints, as noted in [above](#13-the-itf-text-model). All
 |`x+n`| The fragment starts just before character number _x_, and extends for _n_ characters. |
 |`x`| Returns character number _x_. |
 
-> DISCUSSION POINT: do we need to be able to specify zero-length fragments? E.g. for the purpose of being able later to specify via annotation 
-> that a character string present in one version of a text is absent from that location in another version.
-
 #### 2.6.1 Token Mode Fragments
 
 Token mode fragment specifiers identify a block of text in a text file by counting tokens, usually 
@@ -272,10 +224,7 @@ include complete tokens.
 |`x,y`| The fragment starts just before token number _x_, and extends until token number _y_ (inclusive). |
 |`,y`| The fragment starts at the beginning of the text, and extends until token number _y_ (inclusive). |
 |`x+n`| The fragment starts just before token number _x_, and extends for _n_ tokens. |
-|`x`| Returns token number _x_. |
-
-> DISCUSSION POINT: _OPTIONAL_: If the parameters are enclosed in square brackets (\[\]) then the fragment will be extended to include any relevant 
-> leading and/or trailing punctuation according to the language rules relevant to the version.    
+|`x`| Returns token number _x_. |    
 
 #### 2.6.3 Book Mode Fragments
 
@@ -297,8 +246,6 @@ corresponding to character number _c_ of line number _l_ on page number _p_.
 |`p1`| The fragment is the whole of the page p1. |
 |`p1;l1`| The fragment is the whole of line l1 on page p1. |
 |`p1;l1;c1`| The fragment is character c1 of line l1 on page p1. |
-
-> MH: I’d recommend changing this to ‘surface’ not ‘page’. Our explanation of what surface means would naturally include mentioning that it would be ‘page’. You wouldn’t even need to change your p1,p2 examples.
 
 #### 2.6.4 Hierarchical Modes
 The physical Book mode is an example of a hierarchical text mode which follows some relatively simple rules:
@@ -340,9 +287,6 @@ The format parameter specifies the file format used when returning the requested
 |`tei`| The fragment will be returned with any enrichment expressed using TEI XML tags. |
 |`html`| The fragment will be returned with any enrichment expressed as HTML 5 tags. |
 |`md`| The fragment will be returned with any enrichment expressed via Markdown formatting. |
-
-> DISCUSSION POINT: This needs to be more nuanced since we are not necessarily returning complete TEI or HTML documents.
-> MH: It might not be returning complete files but the fragment that’s returned *must* be valid according to the relevant schema when embedded within the code for a minimalist page scaffolding. That is, if you plunked an html result in `<html><head>…</head><body>{result}</body></html>`. Within the context of TEI this means that all pointer attributes in the fragment that point internal xml:id identifiers that are also in the fragment. Those that don’t could likely be excluded from the output without any problems.
 
 ## 3 Text Information API 
 
@@ -386,9 +330,6 @@ The sections of the Text Information Request URL include:
 |`identifier`| A unique identifier of the requested text resource, expressed as a string. This may be an ark, URN, filename, or other unique identifier but ideally SHOULD be a Persistent Identifier. Special characters MUST be URI encoded. |
 |`version`| _OPTIONAL_ Specifies the version as defined in **2.4 Versions** above. |
 |`info`| Specifies the information being requested. These are described in detail below. |
-
-> DISCUSSION POINT: Is this sufficient? Is json OK as the only return format?
-> > MH: I added an example with a version and added version to the table.
 
 #### 3.2.1 Info
 
@@ -464,9 +405,6 @@ IMPLEMENTATION NOTE: If a Resource does not have _date_ versioning, resources ma
 not have to be unique or ISO 8601-1:2019 ordered. Versions with non-Gregorian or vague dating can be ordered 
 by using _linear_ or _graph_ versioning. 
 
-> DISCUSSION POINT: Do we need to return details of non-standard dating somewhere? Would support for ISO 8601 extensions for 
-> vague dates/date intervals be useful, albeit at the expense of rather more complex ordering and validation?
-
 Example JSON response for a _graph_ ordered version.
 
 ```
@@ -494,9 +432,6 @@ version but merely enumerates the version structure of the resource.
 | `versioning` | Indicates of a Resource contain multiple versions and how they are ordered. Possible values: _none, linear, date, graph_ |
 | `first_version` | Indicates the label of the earliest (or only) version of the text in the Resource. |
 | `versions` | A keyed list of all the versions in this edition of this resource, if more the one version is present. This element _MUST NOT_ appear if there is only one text in the resource. Each version is described by a single version node in the list, keyed by the version label. |
-
-DISCUSSION POINT: Is a very large number of versions a case we need to consider?
-> > MH: I think we should consider the possible ramifications to see if it would break anything. After all, it is possible that an on-going project has their materials made available internally via an ITF-server. I’m fine if it just makes the file unwieldily large and computationally expensive to generate. I’m only concerned whether there’s some reason a large number of requests would break the specification or request. 
 
 | Version Node Element | Description|
 | ------- | ---------------|
@@ -666,7 +601,3 @@ of new versions of a text. In ITF terminology, each change constitutes a new "ed
 of the text resource. In order to resolve text references correctly, an ITF-compliant text
 service that supports multiple editions MUST provide a mechanism for accessing these earlier 
 editions.
-
-> DISCUSSION POINT: The proposed mechanism for doing this would be to implement at least some of
-> [RFC7089](https://datatracker.ietf.org/doc/html/rfc7089)
-
