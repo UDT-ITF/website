@@ -7,11 +7,13 @@ anchor_headings: true
 ---
 # Workshop Report for ‘Towards an Interoperable Text Framework: Annotation and the use and reuse of digital texts’ (24 Feb 2023, Cambridge, UK)
 
+To cite this paper, please use: https://doi.org/10.17605/osf.io/qgj2y
+
 ## Summary of Unlocking Digital Texts:
 
 Digital texts are all around us – from the objects and outputs of scholarly study, to the news, social media and other texts we interact with everyday online. But how long will these digital texts last? The problem with digital texts is that they come in a variety of formats that are hard to reuse because they require technical skills or infrastructure beyond most researchers’ capabilities and funding. Unlocking Digital Texts ([https://digitalscholarship.web.ox.ac.uk/article/unlocking-digital-texts](https://digitalscholarship.web.ox.ac.uk/article/unlocking-digital-texts)) aims to scope and define an Interoperable Text Format (ITF) as a means for accessing and delivering text that is stored in a variety of extant formats as well as referencing text fragments. Importantly, we are aiming for something that is both human- and computer-readable. ITF only enables access to text; it is not an analytical tool itself.
 
-The goal of the 23 Feb 2023 hybrid workshop held in Cambridge was to bring together people with a variety of experiences of working with text in various formats to encourage community activity around the second aspect of text interoperability that Unlocking Digital Texts (UDT) outlined in our position paper ([https://osf.io/u6vb4](https://osf.io/u6vb4)): “Given that we have an actionable text version and fragment addressing mechanism, what higher level constructs are useful?”
+The goal of the 23 Feb 2023 hybrid workshop held in Cambridge was to bring together people with a variety of experiences of working with text in various formats to encourage community activity around the second aspect of text interoperability that Unlocking Digital Texts (UDT) outlined in our position paper ([https://doi.org/10.17605/osf.io/ztbgp](https://doi.org/10.17605/osf.io/ztbgp)): “Given that we have an actionable text version and fragment addressing mechanism, what higher level constructs are useful?”
 
 We concentrated on whether existing real-world practices involving the creation and use of textual resources could be mapped into ITF using the Web Annotation Data Model (WADM). If so, would the combination of ITF & WADM simply be mapping existing practices or could it foster the creation of new ones?
 
