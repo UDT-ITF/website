@@ -7,7 +7,7 @@ anchor_headings: true
 ---
 # Workshop Report for ‘Towards an Interoperable Text Framework: Annotation and the use and reuse of digital texts’ (24 Feb 2023, Cambridge, UK)
 
-To cite this paper, please use: https://doi.org/10.17605/osf.io/qgj2y
+To cite this paper, please use: [https://doi.org/10.17605/osf.io/qgj2y](https://doi.org/10.17605/osf.io/qgj2y)
 
 ## Summary of Unlocking Digital Texts:
 
