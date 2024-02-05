@@ -1,4 +1,4 @@
-# Unlocking Digital Texts - Oxford Workshop
+# Unlocking Digital Texts - "How do we construct a useful text and text fragment reference mechanism that we can use as the basis for an API?" - Oxford Workshop
 
 
 ## Background
@@ -151,7 +151,7 @@ The workshop resulted in a good outline of the requirements for a text fragment 
     * Defoe API https://github.com/alan-turing-institute/defoe
 * National Archives (UK)
     * Git-based WADM platform
-    * ALTO XML to WADM conversion
+    * ALTO XML to WADM conversion-
 * Quill Project https://www.quillproject.net
     * Version as a graph representation
     * JSON serialisation of editorial events (aka Google Docs, Microsoft Office365)
@@ -160,7 +160,7 @@ The workshop resulted in a good outline of the requirements for a text fragment 
     * TIDO Viewer https://gitlab.gwdg.de/subugoe/emo/tido
 * Text+ https://www.text-plus.org/en/home/
     * German National Text Infrastructure
-* Text Fabric https://github.com/annotation/text-fabric
+* Text Fabric https://github.com/annotation/text-fabric-
     * Hebrew Biblical texts (not Unicode)
     * Disaggregated text as a graph representation
 * Unlocking Digital Texts https://osf.io/r78gx/
@@ -168,7 +168,7 @@ The workshop resulted in a good outline of the requirements for a text fragment 
 ## Glossary of API’s, Standards and Tools Referenced
 
 ALTO - Analyzed Layout and Text Object, an XML format used for OCR output \
-	 (https://www.loc.gov/standards/alto/techcenter/structure.html) 
+	 (https://www.loc.gov/standards/alto/techcenter/structure.html) -
 
 DOI - Digital Object Identifier (https://www.doi.org/)
 
@@ -276,7 +276,7 @@ XML - eXtensible Markup Language (https://www.w3.org/TR/REC-xml/)
      Memento - Access past versions of a web resource (http://timetravel.mementoweb.org/guide/api/)
 
 [^22]:
-     Unicode Normalisation Forms https://www.unicode.org/reports/tr15/
+     Unicode Normalisation Forms https://www.unicode.org/reports/tr15/https://www.aliexpress.com/
 
 [^23]:
      Unicode (https://home.unicode.org/)
