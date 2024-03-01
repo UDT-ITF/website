@@ -2,7 +2,7 @@
 layout: page
 title: Unlocking Digital Texts Oxford Workshop Report
 subtitle: The Oxford Workshop held on 26 Jan 2023 brought together interested parties representing a wealth of text-oriented projects and resources to consider the question... “How do we construct a useful text and text fragment reference mechanism that we can use as the basis for an API?”. 
-permalink: /publications/2022-oxford-report/
+permalink: /publications/2024-oxford-report/
 hero:
   image: ""
 anchor_headings: true
