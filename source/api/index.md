@@ -356,7 +356,7 @@ The response will return a JSON response containing the following information fo
 | `qualities` | Indicates which qualities are supported. A list of one or more of _raw, compact, plaintext, rich_. |
 | `formats` | Indicates which formats are supported. A list of one or more of _txt, tei, html, md_. |
 | `DC-metadata` | _OPTIONAL_ URL of a DC metadata record |
-| 'first_release' | Date of the first release of the Resource in ISO 8601-1:2019 format. _MUST_ be the same as "date" if the Resource does not support releases.| 
+| `first_release` | Date of the first release of the Resource in ISO 8601-1:2019 format. _MUST_ be the same as "date" if the Resource does not support releases.| 
 | `releases` | _OPTIONAL_ If the server supports releases this section _MUST_ exist. The releases section can contains a list of dates of all the releases in ISO 8601-1:2019 format. 
 
 Example JSON response for a Resource.
