@@ -18,6 +18,9 @@ editors:
   - name: Michael Hawkins
     ORCID: https://orcid.org/0000-0003-4306-7515
     institution: Cambridge Digital Humanities, University of Cambridge & Digital Innovation and Development, Cambridge University Library
+  - name: Robert Ralley
+    ORCID: https://orcid.org/0000-0002-9769-754X
+    institution: Cambridge Digital Humanities, University of Cambridge
   - name: Name Surname
     ORCID: https://orcid.org/xxxx-xxxx-xxxx-xxxx
     institution: Dept (Institute)
@@ -77,7 +80,7 @@ A description of the structure and properties of the compound object. It carries
 ##### TextFrame
 {: #overview-textframe}
 
-A virtual container that represents a particular view of the object and has content resources associated with it or with parts of it. The TextFrame provides a frame of reference for the layout of the content, both spatially and temporally. The name of a TextFrame is derived from classic letterpress typesetting where individual letter blocks are arranged within a frame before being inked and pressed on physical sheets. Within ITF, the TextFrame functions analogously to IIIF’s TextFrame. It provides the container onto which other content, like text and annotations, are placed.
+A virtual container that represents a particular view of the object and has content resources associated with it or with parts of it. The TextFrame provides a frame of reference for the layout of the content, both spatially and temporally. The name of a TextFrame is derived from classic letterpress typesetting where individual letter blocks are arranged within a frame before being inked and pressed on physical sheets. Within ITF, the TextFrame functions analogously to IIIF’s Canvas. It provides the container onto which other content, like text and annotations, are placed.
 
 ##### Range
 {: #overview-range}
@@ -116,6 +119,7 @@ Most of the properties defined by this specification may be associated with any 
 
 The requirements for which classes have which properties are summarized in [Appendix A][prezi30-appendixa].
 
+> There's a reference to the IIIF community here that needs removing/altering.
 Other properties are allowed, either via local extensions or those endorsed by the IIIF community. If a client discovers properties that it does not understand, then it _MUST_ ignore them. See the [Linked Data Context and Extensions][prezi30-ldce] section for more information about extensions.
 
 This section also defines processing requirements for clients for each of the combinations of class and property.  These requirements are for general purpose client implementations that are intended to be used to render the entire resource to the user, and not necessarily for consuming applications with specialized use or individual component implementations that might be used to construct a client. The inclusion of these requirements gives publishers a baseline expectation for how they can expect implementations advertised as compliant with this specification to behave when processing their content.
@@ -298,38 +302,7 @@ The value _MUST_ be an array of JSON objects, where each item in the array confo
 }
 ```
 
-> Remove thumbnail, I think.
-##### thumbnail
-
-A content resource, such as a small image or short audio clip, that represents the resource that has the `thumbnail` property. A resource _MAY_ have multiple thumbnail resources that have the same or different `type` and `format`.
-
-The value _MUST_ be an array of JSON objects, each of which _MUST_ have the `id` and `type` properties, and _SHOULD_ have the `format` property. Images and videos _SHOULD_ have the `width` and `height` properties, and time-based media _SHOULD_ have the `duration` property. It is _RECOMMENDED_ that a [IIIF Image API][image-api] service be available for images to enable manipulations such as resizing.
-
- * A Collection _SHOULD_ have the `thumbnail` property with at least one item.<br/>
-   Clients _SHOULD_ render `thumbnail` on a Collection.
- * A Manifest _SHOULD_ have the `thumbnail` property with at least one item.<br/>
-   Clients _SHOULD_ render `thumbnail` on a Manifest.
- * A TextFrame _MAY_ have the `thumbnail` property with at least one item. A TextFrame _SHOULD_ have the `thumbnail` property if there are multiple resources that make up the view.<br/>
-   Clients _SHOULD_ render `thumbnail` on a TextFrame.
- * A content resource _MAY_ have the `thumbnail` property with at least one item. Content resources _SHOULD_ have the `thumbnail` property with at least one item if it is an option in a Choice of resources.<br/>
-   Clients _SHOULD_ render `thumbnail` on a content resource.
- * Other types of resource _MAY_ have the `thumbnail` property with at least one item.<br/>
-   Clients _MAY_ render `thumbnail` on other types of resource.
-
-{% include api/code_header.html %}
-``` json-doc
-{
-  "thumbnail": [
-    {
-      "id": "https://example.org/img/thumb.jpg",
-      "type": "Image",
-      "format": "image/jpeg",
-      "width": 300,
-      "height": 200
-    }
-  ]
-}
-```
+> Thumbnail removed from here.
 
 ##### navDate
 
@@ -354,6 +327,7 @@ The value _MUST_ be an [XSD dateTime literal][org-w3c-xsd-datetime]. The value _
 ```
 
 > Do we want?
+> I'm inclined to think not: the only situation in which I could think this would be wanted is for the TCP-style 'you're about to download a whole book' sort of warning, and that just doesn't seem necessary any more. - rr
 ##### placeholderTextFrame
 
 A single TextFrame that provides additional content for use before the main content of the resource that has the `placeholderTextFrame` property is rendered, or as an advertisement or stand-in for that content. Examples include images, text and sound standing in for video content before the user initiates playback; or a film poster to attract user attention. The content provided by `placeholderTextFrame` differs from a thumbnail: a client might use `thumbnail` to summarize and navigate multiple resources, then show content from `placeholderTextFrame` as part of the initial presentation of a single resource. A placeholder TextFrame is likely to have different dimensions to those of the TextFrame(es) of the resource that has the `placeholderTextFrame` property.
@@ -386,6 +360,7 @@ The value _MUST_ be a JSON object with the `id` and `type` properties, and _MAY_
 ```
 
 > Do we want?
+> This is tricky. (1) It depends on what precisely an accompanyingTextFrame (that accompanied another TextFrame) would actually be for. Would it simply be a vehicle for putting some other text on the screen alongside the main text, which may be useful for the reader but isn't an annotation of the main text? For instance, if you were displaying some Chaucer and wanted to present a glossary of Middle English words alongside it? (2) Looking at the IIIF API, I could imagine using an accompanyingCanvas to accompany a TextFrame (e.g. if you wanted music or recording of spoken words to accompany a text), but that seems outside our remit.  - rr
 ##### accompanyingTextFrame
 
 A single TextFrame that provides additional content for use while rendering the resource that has the `accompanyingTextFrame` property. Examples include an image to show while a duration-only TextFrame is playing audio; or background audio to play while a user is navigating an image-only Manifest.
@@ -514,6 +489,7 @@ The value _MUST_ be a string, either taken from the [profiles registry][registry
 { "profile": "https://example.org/profile/statuary" }
 ```
 
+> We may need this, but surely only for external content resources? I can't see how a TextFrame could have a duration.
 ##### duration
 
 The duration of the TextFrame or external content resource, given in seconds.
@@ -532,6 +508,7 @@ The value _MUST_ be a positive floating point number.
 { "duration": 125.0 }
 ```
 
+> This may very well be something we need to worry about, but in that case it probably needs to be renamed. I take it this is where we'd look at text directionality or whatever you want to call it. (I think TEI call it 'writing mode'). I do wonder, though, to what extent this needs to be handled here, or whether it should be via the Text API. The two complicating factors I can think of are (1) that there are languages that could be written left to right or top to bottom, so you can't necessarily infer the direction from the language (so that I presume it needs to be encoded *somewhere* and can't just be left to be inferred); and (2) there will be instances in which (e.g.) a right-to-left script is embedded within a passage of left-to-right script (e.g. English-language discussions of the Old Testament). How would specifying a direction on a TextFrame in the Presentation API cope with that?
 ##### viewingDirection
 
 The direction in which a set of TextFrames _SHOULD_ be displayed to the user. This specification defines four direction values in the table below. Others may be defined externally [as an extension][prezi30-ldce].
@@ -560,6 +537,7 @@ The value _MUST_ be a string.
 { "viewingDirection": "left-to-right" }
 ```
 
+> I'm fascinated by this section and this is a notion that might well prove useful, but as it stands I'm not sure there's anything here for us.
 ##### behavior
 
 A set of user experience features that the publisher of the content would prefer the client to use when presenting the resource. This specification defines the values in the table below. Others may be defined externally as an [extension][prezi30-ldce].
@@ -572,8 +550,10 @@ In order to determine the behaviors that are governing a particular resource, th
 
 Clients should interpret behaviors on a Range only when that Range is selected or is in some other way the context for the user's current interaction with the resources. A Range with the `behavior` value `continuous`, in a Manifest with the `behavior` value `paged`, would mean that the Manifest's TextFrames should be rendered in a paged fashion, unless the range is selected to be viewed, and its included TextFrames would be rendered in that context only as being virtually stitched together. This might occur, for example, when a physical scroll is cut into pages and bound into a codex with other pages, and the publisher would like to provide the user the experience of the scroll in its original form.
 
+> Reference here to the IIIF cookbook which will need removing (or replacing with an ITF cookbook as and when there is one).
 The descriptions of the behavior values have a set of which other values they are disjoint with, meaning that the same resource _MUST NOT_ have both of two or more from that set. In order to determine which is in effect, the client _SHOULD_ follow the inheritance rules above, taking the value from the closest resource. The user interface effects of the possible permutations of non-disjoint behavior values are client dependent, and implementers are advised to look for relevant recipes in the [IIIF cookbook][annex-cookbook].
 
+> I'd say this should be deleted (though perhaps that depends on what we do with 'behavior' overall.
 __Future Clarification Anticipated__<br/>
 Further clarifications about the implications of interactions between behavior values should be expected in subsequent minor releases.
 {: .warning}
@@ -613,6 +593,7 @@ The value _MUST_ be an array of strings.
 { "behavior": [ "auto-advance", "individuals" ] }
 ```
 
+> This can be deleted, I'd say. Not because annotations might not have durations (videos, audio etc.), but because this seems to be about how that duration relates to the duration of the canvas, which find-and-replace has now turned into TextFrame. Since TextFrames don't have durations, we don't need to worry about mismatches like this.
 ##### timeMode
 
 A mode associated with an Annotation that is to be applied to the rendering of any time-based media, or otherwise could be considered to have a duration, used as a body resource of that Annotation. Note that the association of `timeMode` with the Annotation means that different resources in the body cannot have different values. This specification defines the values specified in the table below. Others may be defined externally as an [extension][prezi30-ldce].
@@ -636,7 +617,8 @@ The value _MUST_ be a string.
 
 ###  3.3. Linking Properties
 
-These properties are references or links between resources, and split into external references where the linked object is outside of the IIIF space, and internal references where the linked object is a IIIF resource.  Clients typically create a link to the resource that is able to be activated by the user, or interact directly with the linked resource to improve the user's experience.
+> I've changed IIIF to ITF twice here, though this does make me think of a question I've raised much later in the document about how the relationship between IIIF and ITF resources is handled.
+These properties are references or links between resources, and split into external references where the linked object is outside of the ITF space, and internal references where the linked object is a ITF resource.  Clients typically create a link to the resource that is able to be activated by the user, or interact directly with the linked resource to improve the user's experience.
 
 #### 3.3.1. External Links
 
@@ -649,6 +631,7 @@ The value of this property _MUST_ be an array of JSON objects, each of which _MU
  * Any resource type _MAY_ have the `homepage` property.<br/>
    Clients _SHOULD_ render `homepage` on a Collection, Manifest or TextFrame, and _MAY_ render `homepage` on other types of resource.
 
+> Safe just to replace 'IIIF' in this paragraph with 'ITF'?
 __Model Alignment__<br/>
 Please note that this specification has stricter requirements about the JSON pattern used for the `homepage` property than the [Web Annotation Data Model][org-w3c-webanno]. The IIIF requirements are compatible, but the home page of an Agent found might have only a URI, or might be a JSON object with other properties. See the section on [collisions between contexts][prezi30-context-collisions] for more information.
 {: .note}
@@ -671,6 +654,7 @@ Please note that this specification has stricter requirements about the JSON pat
 
 ##### logo
 
+> The reference to a IIIF Image API here may actually be okay, but again it raises the question of how IIIF things are to be handled in the context of an ITF resource?
 A small image resource that represents the Agent resource it is associated with. The logo _MUST_ be clearly rendered when the resource is displayed or used, without cropping, rotating or otherwise distorting the image. It is _RECOMMENDED_ that a [IIIF Image API][image-api] service be available for this image for other manipulations such as resizing.
 
 When more than one logo is present, the client _SHOULD_ pick only one of them, based on the information in the logo properties. For example, the client could select a logo of appropriate aspect ratio based on the `height` and `width` properties of the available logos. The client _MAY_ decide on the logo by inspecting properties defined as [extensions][prezi30-ldce].
@@ -696,6 +680,7 @@ The value of this property _MUST_ be an array of JSON objects, each of which _MU
 }
 ```
 
+> Do we need this?
 ##### rendering
 
 A resource that is an alternative, non-IIIF representation of the resource that has the `rendering` property. Such representations typically cannot be painted onto a single TextFrame, as they either include too many views, have incompatible dimensions, or are compound resources requiring additional rendering functionality. The `rendering` resource _MUST_ be able to be displayed directly to a human user, although the presentation may be outside of the IIIF client. The resource _MUST NOT_ have a splash page or other interstitial resource that mediates access to it. If access control is required, then the [IIIF Authentication API][iiif-auth] is _RECOMMENDED_. Examples include a rendering of a book as a PDF or EPUB, a slide deck with images of a building, or a 3D model of a statue.
@@ -719,6 +704,7 @@ The value _MUST_ be an array of JSON objects. Each item _MUST_ have the `id`, `t
 }
 ```
 
+> This needs rewriting to move from image/IIIF to text/ITF, but I'm not sure quite what it should say.
 ##### service
 
 A service that the client might interact with directly and gain additional information or functionality for using the resource that has the `service` property, such as from an Image to the base URI of an associated [IIIF Image API][image-api] service. The service resource _SHOULD_ have additional information associated with it in order to allow the client to determine how to make appropriate use of it. Please see the [Service Registry][registry-services] document for the details of currently known service types.
@@ -741,6 +727,7 @@ The value _MUST_ be an array of JSON objects. Each object will have properties d
 }
 ```
 
+> This bit can be deleted, surely? Aside from the fact that these aren't our APIs, we don't yet have more than one version of any of ours. Or perhaps we should be making the same sort of statement about our APIs and their future versions, even though we only have two APIs and one version of each.
 For cross-version consistency, this specification defines the following values for the `type` or `@type` property for backwards compatibility with other IIIF APIs. Future versions of these APIs will define their own types. These `type` values are necessary extensions for compatibility of the older versions.
 
 | Value                | Specification |
@@ -809,10 +796,10 @@ The value _MUST_ be an array of JSON objects. Each object _MUST_ a service resou
 }
 ```
 
-
+> I've changed 'describes a related object' to 'contains a related text or a different version of the same text' in the account of what a linked Manifest might do. I've done it for the sake of making this look like an ITF spec rather than a IIIF one, but clearly there needs to be a standard way of stating what the relationship is between Manifests and texts. Do Manifests contain texts?
 ##### seeAlso
 
-A machine-readable resource such as an XML or RDF description that is related to the current resource that has the `seeAlso` property. Properties of the resource should be given to help the client select between multiple descriptions (if provided), and to make appropriate use of the document. If the relationship between the resource and the document needs to be more specific, then the document should include that relationship rather than the IIIF resource. Other IIIF resources are also valid targets for `seeAlso`, for example to link to a Manifest that describes a related object. The URI of the document _MUST_ identify a single representation of the data in a particular format. For example, if the same data exists in JSON and XML, then separate resources should be added for each representation, with distinct `id` and `format` properties.
+A machine-readable resource such as an XML or RDF description that is related to the current resource that has the `seeAlso` property. Properties of the resource should be given to help the client select between multiple descriptions (if provided), and to make appropriate use of the document. If the relationship between the resource and the document needs to be more specific, then the document should include that relationship rather than the ITF resource. Other ITF resources are also valid targets for `seeAlso`, for example to link to a Manifest that contains a related text or a different version of the same text. The URI of the document _MUST_ identify a single representation of the data in a particular format. For example, if the same data exists in JSON and XML, then separate resources should be added for each representation, with distinct `id` and `format` properties.
 
 The value _MUST_ be an array of JSON objects. Each item _MUST_ have the `id` and `type` properties, and _SHOULD_ have the `label`, `format` and `profile` properties.
 
@@ -883,6 +870,7 @@ The value _MUST_ be a JSON object, which _MUST_ have the `id` and `type` propert
 }
 ```
 
+> References to 'Range' here and presumably passim will need to be examined, and removed or amended unless we're going to add 'Range' or some equivalent to the ITF Presentation API. The IIIF Presentation API gives chapters in a book as an example of the kind of thing you'd use them for. Do we want/need them, or does the Text API's stuff about fragments mean we don't?
 ##### supplementary
 
 A link from this Range to an Annotation Collection that includes the `supplementing` Annotations of content resources for the Range. Clients might use this to present additional content to the user from a different TextFrame when interacting with the Range, or to jump to the next part of the Range within the same TextFrame.  For example, the Range might represent a newspaper article that spans non-sequential pages, and then uses the `supplementary` property to reference an Annotation Collection that consists of the Annotations that record the text, split into Annotation Pages per newspaper page. Alternatively, the Range might represent the parts of a manuscript that have been transcribed or translated, when there are other parts that have yet to be worked on. The Annotation Collection would be the Annotations that transcribe or translate, respectively.
@@ -901,11 +889,13 @@ The value _MUST_ be a JSON object, which _MUST_ have the `id` and `type` propert
 
 ### 3.4. Structural Properties
 
-These properties define the structure of the object being represented in IIIF by allowing the inclusion of child resources within parents, such as a TextFrame within a Manifest, or a Manifest within a Collection. The majority of cases use `items`, however there are two special cases for different sorts of structures.
+> The structure of 'the object being represented in IIIF' has been altered to 'the text being displayed in ITF'. Again, this is to make it an ITF document rather than a IIIF document, but I'm aware that there should be standard ways of stating these things, and that those standard phrases should be used consistently throughout the document.
+These properties define the structure of the text being displayed in ITF by allowing the inclusion of child resources within parents, such as a TextFrame within a Manifest, or a Manifest within a Collection. The majority of cases use `items`, however there are two special cases for different sorts of structures.
 
 ##### items
 
-Much of the functionality of the IIIF Presentation API is simply recording the order in which child resources occur within a parent resource, such as Collections or Manifests within a parent Collection, or TextFrames within a Manifest. All of these situations are covered with a single property, `items`.
+> I've changed 'IIIF' to 'ITF' here, but is this statement true of the ITF Presentation API (that most of its functionality is about order of child resources)? I'm not convinced it necessarily is.
+Much of the functionality of the ITF Presentation API is simply recording the order in which child resources occur within a parent resource, such as Collections or Manifests within a parent Collection, or TextFrames within a Manifest. All of these situations are covered with a single property, `items`.
 
 The value _MUST_ be an array of JSON objects. Each item _MUST_ have the `id` and `type` properties. The items will be resources of different types, as described below.
 
@@ -941,7 +931,8 @@ The value _MUST_ be an array of JSON objects. Each item _MUST_ have the `id` and
 
 ##### structures
 
-The structure of an object represented as a Manifest can be described using a hierarchy of Ranges. Ranges can be used to describe the "table of contents" of the object or other structures that the user can interact with beyond the order given by the `items` property of the Manifest. The hierarchy is built by nesting the child Range resources in the `items` array of the higher level Range. The top level Ranges of these hierarchies are given in the `structures` property.
+> 'object represented as a Manifest' changed to 'text contained in a Manifest', then later in the paragraph 'object' replaced with 'text'. Again, the phrasing here needs to be considered and consistent.
+The structure of a text contained in a Manifest can be described using a hierarchy of Ranges. Ranges can be used to describe the "table of contents" of the text or other structures that the user can interact with beyond the order given by the `items` property of the Manifest. The hierarchy is built by nesting the child Range resources in the `items` array of the higher level Range. The top level Ranges of these hierarchies are given in the `structures` property.
 
 The value _MUST_ be an array of JSON objects. Each item _MUST_ have the `id` and `type` properties, and the `type` _MUST_ be `Range`.
 
@@ -1005,6 +996,7 @@ While any resource _MAY_ be the `target` of an Annotation, this specification de
 
 Additional motivations may be added to the Annotation to further clarify the intent, drawn from [extensions][prezi30-ldce] or other sources. Clients _MUST_ ignore motivation values that they do not understand. Other motivation values given in the Web Annotation specification _SHOULD_ be used where appropriate, and examples are given in the [Presentation API Cookbook][annex-cookbook].
 
+> Here we'll obviously need to replace the values with whatever we're actually using.
 | Value | Description |
 | ----- | ----------- |
 | `painting` | Resources associated with a TextFrame by an Annotation that has the `motivation` value `painting`  _MUST_ be presented to the user as the representation of the TextFrame. The content can be thought of as being _of_ the TextFrame. The use of this motivation with target resources other than TextFrames is undefined. For example, an Annotation that has the `motivation` value `painting`, a body of an Image and the target of the TextFrame is an instruction to present that Image as (part of) the visual representation of the TextFrame. Similarly, a textual body is to be presented as (part of) the visual representation of the TextFrame and not positioned in some other part of the user interface.|
@@ -1018,7 +1010,7 @@ This section describes features applicable to all of the Presentation API conten
 
 ### 4.1. Case Sensitivity
 
-Terms in JSON-LD are [case sensitive][org-w3c-json-ld-case].  The cases of properties and enumerated values in IIIF Presentation API responses _MUST_ match those used in this specification. For example to specify that a resource is a Manifest, the property _MUST_ be given as `type` and not `Type` or `tYpE`, and the value _MUST_ be given as `Manifest` and not `manifest` or `manIfEsT`.
+Terms in JSON-LD are [case sensitive][org-w3c-json-ld-case].  The cases of properties and enumerated values in ITF Presentation API responses _MUST_ match those used in this specification. For example to specify that a resource is a Manifest, the property _MUST_ be given as `type` and not `Type` or `tYpE`, and the value _MUST_ be given as `Manifest` and not `manifest` or `manIfEsT`.
 
 ### 4.2. Resource Representations
 
@@ -1062,6 +1054,7 @@ Language _MAY_ be associated with strings that are intended to be displayed to t
 
 The values of these properties _MUST_ be JSON objects, with the keys being the [BCP 47][org-bcp-47] language code for the language, or if the language is either not known or the string does not have a language, then the key _MUST_ be the string `none`. The associated values _MUST_ be arrays of strings, where each item is the content in the given language.
 
+> Different (non-painting) example needed here.
 {% include api/code_header.html %}
 ``` json-doc
 {
@@ -1114,9 +1107,9 @@ Clients _SHOULD_ allow only `a`, `b`, `br`, `i`, `img`, `p`, `small`, `span`, `s
 
 ### 4.6. Linked Data Context and Extensions
 
-The top level resource in the response _MUST_ have the `@context` property, and it _SHOULD_ appear as the very first key/value pair of the JSON representation. This tells Linked Data processors how to interpret the document. The IIIF Presentation API context, below, _MUST_ occur once per response in the top-most resource, and thus _MUST NOT_ appear within [embedded][prezi30-terminology] resources. For example, when embedding a TextFrame within a Manifest, the TextFrame will not have the `@context` property.
+The top level resource in the response _MUST_ have the `@context` property, and it _SHOULD_ appear as the very first key/value pair of the JSON representation. This tells Linked Data processors how to interpret the document. The ITF Presentation API context, below, _MUST_ occur once per response in the top-most resource, and thus _MUST NOT_ appear within [embedded][prezi30-terminology] resources. For example, when embedding a TextFrame within a Manifest, the TextFrame will not have the `@context` property.
 
-The value of the `@context` property _MUST_ be either the URI `http://iiif.io/api/presentation/{{ page.major }}/context.json` or a JSON array with the URI `http://iiif.io/api/presentation/{{ page.major }}/context.json` as the last item. Further contexts, such as those for local or [registered extensions][registry], _MUST_ be added at the beginning of the array.
+The value of the `@context` property _MUST_ be either the URI `http://textframe.io/api/presentation/{{ page.major }}/context.json` or a JSON array with the URI `http://textframe.io/api/presentation/{{ page.major }}/context.json` as the last item. Further contexts, such as those for local or [registered extensions][registry], _MUST_ be added at the beginning of the array.
 
 {% include api/code_header.html %}
 ``` json-doc
@@ -1141,16 +1134,16 @@ The JSON representation _MUST NOT_ include the `@graph` key at the top level. Th
 
 ### 4.7. Term Collisions between Contexts
 
-There are some common terms used in more than one JSON-LD context document. Every attempt has been made to minimize these collisions, but some are inevitable. In order to know which specification is in effect at any given point, the class of the resource that has the property is the primary governing factor. Thus properties on Annotation based resources use the context from the [Web Annotation Data Model][org-w3c-webanno], whereas properties on classes defined by this specification use the IIIF Presentation API context's definition.
+There are some common terms used in more than one JSON-LD context document. Every attempt has been made to minimize these collisions, but some are inevitable. In order to know which specification is in effect at any given point, the class of the resource that has the property is the primary governing factor. Thus properties on Annotation based resources use the context from the [Web Annotation Data Model][org-w3c-webanno], whereas properties on classes defined by this specification use the ITF Presentation API context's definition.
 
-There is one property that is in direct conflict - the `label` property is defined by both and is available for every resource. The use of `label` in IIIF follows modern best practices for internationalization by allowing the language to be associated with the value using the language map construction [described above][prezi30-languages]. The Web Annotation Data Model uses it only for [Annotation Collections][prezi30-annocoll], and mandates the format is a string. For this property, the API overrides the definition from the Annotation model to ensure that labels can consistently be represented in multiple languages.
+There is one property that is in direct conflict - the `label` property is defined by both and is available for every resource. The use of `label` in ITF follows modern best practices for internationalization by allowing the language to be associated with the value using the language map construction [described above][prezi30-languages]. The Web Annotation Data Model uses it only for [Annotation Collections][prezi30-annocoll], and mandates the format is a string. For this property, the API overrides the definition from the Annotation model to ensure that labels can consistently be represented in multiple languages.
 
-The following properties are defined by both, and the IIIF representation is more specific than the Web Annotation Data Model but are not in conflict, or are never used on the same resource:
+The following properties are defined by both, and the ITF representation is more specific than the Web Annotation Data Model but are not in conflict, or are never used on the same resource:
 
-* `homepage`: In IIIF the home page of a resource is represented as a JSON object, whereas in the Web Annotation Data Model it can also be a string.
-* `type`: In IIIF the type is singular, whereas in the Web Annotation Data Model there can be more than one type.
-* `format`: In IIIF the format of a resource is also singular, whereas in the Web Annotation Data Model there can be more than one format.
-* `language`: In IIIF the `language` property always takes an array, whereas in the Web Annotation Data Model it can be a single string.
+* `homepage`: In ITF the home page of a resource is represented as a JSON object, whereas in the Web Annotation Data Model it can also be a string.
+* `type`: In ITF the type is singular, whereas in the Web Annotation Data Model there can be more than one type.
+* `format`: In ITF the format of a resource is also singular, whereas in the Web Annotation Data Model there can be more than one format.
+* `language`: In ITF the `language` property always takes an array, whereas in the Web Annotation Data Model it can be a single string.
 * `start`: The `start` property is used on a Manifest to refer to the start TextFrame or part of a TextFrame and thus is a JSON object, whereas in the Web Annotation Data Model it is used on a TextPositionSelector to give the start offset into the textual content and is thus an integer.
 
 The `rights`, `partOf`, and `items` properties are defined by both in the same way.
@@ -1177,6 +1170,7 @@ The intended usage of Collections is to allow clients to:
 
 Collections _MAY_ be [embedded][prezi30-terminology] inline within other Collections, such as when the Collection is used primarily to subdivide a larger one into more manageable pieces, however Manifests _MUST NOT_ be [embedded][prezi30-terminology] within Collections. An [embedded][prezi30-terminology] Collection _SHOULD_ also have its own URI from which the JSON description is available.
 
+> This may need replacing with something that better fits ITF.
 Manifests or Collections _MAY_ be [referenced][prezi30-terminology] from more than one Collection. For example, an institution might define four Collections: one for modern works, one for historical works, one for newspapers and one for books. The Manifest for a modern newspaper would then appear in both the modern Collection and the newspaper Collection. Alternatively, the institution may choose to have two separate newspaper Collections, and reference each as a sub-Collection of modern and historical.
 
 Collections with an empty `items` property are allowed but discouraged.  For example, if the user performs a search that matches no Manifests, then the server _MAY_ return a Collection response with no Manifests.
@@ -1225,6 +1219,7 @@ The identifier in `id` _MUST_ be able to be dereferenced to retrieve the JSON de
 
 The Manifest _MUST_ have an `items` property, which is an array of JSON-LD objects. Each object is a TextFrame, with requirements as described in the next section. The Manifest _MAY_ also have a `structures` property listing one or more [Ranges][prezi30-range] which describe additional structure of the content, such as might be rendered as a table of contents. The Manifest _MAY_ have an `annotations` property, which includes Annotation Page resources where the Annotations have the Manifest as their `target`. These will typically be comment style Annotations, and _MUST NOT_ have `painting` as their `motivation`.
 
+> Clearly the example will need to be reworked a bit for us. This one, for instance, has thumbnails, so if we get rid of that then we'll need to remove it here, and more generally I'd guess we'll need to make it fit what we're doing.
 {% include api/code_header.html %}
 ``` json-doc
 {
@@ -1422,6 +1417,7 @@ The Manifest _MUST_ have an `items` property, which is an array of JSON-LD objec
 
 ###  5.3. TextFrame
 
+> Is this first clause correct? That it represents an individual page or view? I take it that it can, but might it not also represent an entire text or a fragment of a text? Also, we'll need to pay attention to the URI stipulation later on in the paragraph. How does that relate to what happens in ITF? Perhaps all that's needed is the removal of the references to spatial regions or temporal segments, but I'll defer to someone who knows more about this.
 The TextFrame represents an individual page or view and acts as a central point for assembling the different content resources that make up the display. TextFrames _MUST_ be identified by a URI and it _MUST_ be an HTTP(S) URI. The URI of the TextFrame _MUST NOT_ contain a fragment (a `#` followed by further characters), as this would make it impossible to refer to a segment of the TextFrame's area using the [media fragment syntax][org-w3c-media-frags] of `#xywh=` for spatial regions, and/or `#t=` for temporal segments. TextFrames _MAY_ be able to be dereferenced separately from the Manifest via their URIs as well as being [embedded][prezi30-terminology].
 
 Every TextFrame _SHOULD_ have a `label` to display. If one is not provided, the client _SHOULD_ automatically generate one for use based on the TextFrame's position within the `items` property.
@@ -1430,14 +1426,17 @@ Content resources are associated with the TextFrame via Web Annotations. Content
 
 Content that is derived from the TextFrame, such as a manual or automatic (OCR) transcription of text in an image or the words spoken in an audio representation, _MUST_ be associated by an Annotation that has the `motivation` value `supplementing`. Annotations _MAY_ have any other `motivation` values as well. Thus, content of any type may be associated with the TextFrame via an Annotation that has the `motivation` value `painting`, meaning the content is _part of_ the TextFrame; an Annotation that has the `motivation` value `supplementing`, meaning the content is _from_ the TextFrame but not necessarily part of it; or an Annotation with another `motivation` meaning that it is somehow about the TextFrame.
 
+> Does this paragraph, and the two that follow it, relate to the ITF situation at all, or can it all be deleted? The text itself has no duration, though annotations to it might. Are we worrying about allowing annotations to particular geometric areas of the TextFrame? If not deleted, I suspect these paragraphs need heavy surgery.
 A TextFrame _MUST_ have a rectangular aspect ratio (described with the `height` and `width` properties) and/or a `duration` to provide an extent in time. These dimensions allow resources to be associated with specific regions of the TextFrame, within the space and/or time extents provided. Content _MUST NOT_ be associated with space or time outside of the TextFrame's dimensions, such as at coordinates below 0,0, greater than the height or width, before 0 seconds, or after the duration. Content resources that have dimensions which are not defined for the TextFrame _MUST NOT_ be associated with that TextFrame by an Annotation that has the `motivation` value `painting`. For example, it is valid to use an Annotation that has the `motivation` value `painting` to associate an Image (which has only height and width) with a TextFrame that has all three dimensions, but it is an error to associate a Video resource (which has height, width and duration) with a TextFrame that does not have all three dimensions. Such a resource _SHOULD_ instead be [referenced][prezi30-terminology] using the `rendering` property, or by Annotations that have a `motivation` value other than `painting` in the `annotations` property.
 
 Parts of TextFrames _MAY_ be described using a Specific Resource with a Selector, following the patterns defined in the [Web Annotation][org-w3c-webanno] data model. The use of the FragmentSelector class is _RECOMMENDED_ by that specification, as it allows for refinement by other Selectors and for consistency with use cases that cannot be represented using a URI fragment directly. Parts of TextFrames can be [referenced][prezi30-terminology] from Ranges, as the `body` or `target` of Annotations, or in the `start` property.
 
 Parts of TextFrames _MAY_ also be identified by appending a fragment to the TextFrame's URI, and these parts are still considered to be TextFrames: their `type` value is the string `TextFrame`. Rectangular spatial parts of TextFrames _MAY_ also be described by appending an `xywh=` fragment to the end of the TextFrame's URI. Similarly, temporal parts of TextFrames _MAY_ be described by appending a `t=` fragment to the end of the TextFrame's URI. Spatial and temporal fragments _MAY_ be combined, using an `&` character between them, and the temporal dimension _SHOULD_ come first. It is an error to select a region using a dimension that is not defined by the TextFrame, such as a temporal region of a TextFrame that only has height and width dimensions.
 
+> This point seems fine but the example in the second sentence clearly needs to be altered. The last sentence of the paragraph doesn't seem to apply to us. Can that last sentence be deleted, or is there something comparable we need to say?
 TextFrames _MAY_ be treated as content resources for the purposes of annotating on to other TextFrames. For example, a TextFrame (TextFrame A) with a video resource and Annotations representing subtitles or captions may be annotated on to another TextFrame (TextFrame B). This pattern maintains the correct spatial and temporal alignment of TextFrame A's content relative to TextFrame B's dimensions.
 
+> Can this be deleted? Or is there something comparable that needs to be said about TextFrames and their Texts? I'm feeling that generally this section, more than any other in the spec, needs to be rethought and rewritten from scratch. I think our needs are very different from those of the IIIF Canvas.
 Renderers _MUST_ scale content into the space represented by the TextFrame, and _SHOULD_ follow any `timeMode` value provided for time-based media. If the TextFrame represents a view of a physical object, the spatial dimensions of the TextFrame _SHOULD_ be the same scale as that physical object, and content _SHOULD_ represent only the object.
 
 {% include api/code_header.html %}
@@ -1475,6 +1474,7 @@ Renderers _MUST_ scale content into the space represented by the TextFrame, and 
 
 ###  5.4. Range
 
+> See my comment somewhere distantly above. Do we need range, for its ability to handle e.g. chapters in a book? Or is this kind of thing handled by the fragments discussed in the Text API?
 Ranges are used to represent structure within an object beyond the default order of the TextFrames in the `items` property of the Manifest, such as newspaper sections or articles, chapters within a book, or movements within a piece of music. Ranges can include TextFrames, parts of TextFrames, or other Ranges, creating a tree structure like a table of contents.
 
 The intent of adding a Range to the Manifest is to allow the client to display a linear or hierarchical navigation interface to enable the user to quickly move through the object's content. Clients _SHOULD_ present only Ranges that have the `label` property and do not have a `behavior` value `no-nav` to the user. Clients _SHOULD NOT_ render TextFrame labels as part of the navigation, and a Range that wraps the TextFrame _MUST_ be created if this is the desired presentation.
@@ -1485,6 +1485,7 @@ Ranges _MUST_ have URIs and they _SHOULD_ be HTTP(S) URIs. Top level Ranges are 
 
 All of the TextFrames or parts that should be considered as being part of a Range _MUST_ be included within the Range's `items` property, or a descendant Range's `items`.
 
+> This paragraph needs altering to fit ITF a bit better. Time segments of a single TextFrame representing different sections of a piece of music clearly doesn't work as an example for us. But I'm reluctant to do anything with this paragraph until we've dealt with the wider question of whether we need Range at all, and if so what for.
 The TextFrames and parts of TextFrames need not be contiguous or in the same order as in the Manifest's `items` property or any other Range. Examples include newspaper articles that are continued in different sections, a chapter that starts half way through a page, or time segments of a single TextFrame that represent different sections of a piece of music.
 
 Ranges _MAY_ link to an Annotation Collection that has the content of the Range using the `supplementary` property. The [referenced][prezi30-terminology] Annotation Collection will contain Annotations that target areas of TextFrames within the Range and link content resources to those TextFrames.
@@ -1551,7 +1552,8 @@ Ranges _MAY_ link to an Annotation Collection that has the content of the Range 
 
 ###  5.5. Annotation Page
 
-Association of Images and other content with their respective TextFrames is done via Annotations. Traditionally Annotations are used for associating commentary with the resource the Annotation's text or body is about, the [Web Annotation][org-w3c-webanno] model allows any resource to be associated with any other resource, or parts thereof, and it is reused for both commentary and painting resources on the TextFrame. Other resources beyond images might include the full text of the object, musical notations, musical performances, diagram transcriptions, commentary Annotations, tags, video, data and more.
+> Clearly 'Images and other content' cfor our purposes needs to be altered, but I'm not sure what it's actually saying here. It sounds as though it's saying that Annotations are used to connect the TextFrame to the text in it, which seems odd. What does that sentence actually mean? The rest of the paragraph needs turning round somehow, too, so that the pointed-to-thing is text, and the resources associated with it can be more text (or ideally anything else, though there we're into IIIF territory anyway).
+Association of Images and other content with their respective TextFrames is done via Annotations. Traditionally Annotations are used for associating commentary with the resource the Annotation's text or body is about; the [Web Annotation][org-w3c-webanno] model allows any resource to be associated with any other resource, or parts thereof, and it is reused for both commentary and painting resources on the TextFrame. Other resources beyond images might include the full text of the object, musical notations, musical performances, diagram transcriptions, commentary Annotations, tags, video, data and more.
 
 These Annotations are collected together in Annotation Page resources, which are included in the `items` property from the TextFrame. Each Annotation Page can be [embedded][prezi30-terminology] in its entirety, if the Annotations should be processed as soon as possible when the user navigates to that TextFrame, or a reference to an external page. This reference _MUST_ include `id` and `type`, _MUST NOT_ include `items` and _MAY_ include other properties, such as `behavior`. All of the Annotations in the Annotation Page _SHOULD_ have the TextFrame as their `target`.  Clients _SHOULD_ process the Annotation Pages and their items in the order given in the TextFrame.  Publishers may choose to expedite the processing of [embedded][prezi30-terminology] Annotation Pages by ordering them before external pages, which will need to be dereferenced by the client.
 
@@ -1585,7 +1587,7 @@ The definition of `label` in the Web Annotation specification does not produce J
 
 ### 5.6. Annotation
 
-Annotations follow the [Web Annotation][org-w3c-webanno] data model. The description provided here is a summary plus any IIIF specific requirements. The W3C standard is the official documentation.
+Annotations follow the [Web Annotation][org-w3c-webanno] data model. The description provided here is a summary plus any ITF specific requirements. The W3C standard is the official documentation.
 
 Annotations _MUST_ have their own HTTP(S) URIs, conveyed in the `id` property. The JSON-LD description of the Annotation _SHOULD_ be returned if the URI is dereferenced, according to the [Web Annotation Protocol][org-w3c-webanno-protocol].
 
@@ -1595,6 +1597,7 @@ Note that the Web Annotation data model defines different patterns for the `valu
 
 Additional features of the Web Annotation data model _MAY_ also be used, such as selecting a segment of the TextFrame or content resource, or embedding the comment or transcription within the Annotation. The use of these advanced features sometimes results in situations where the `target` is not a content resource, but instead a SpecificResource, a Choice, or other non-content object. Implementations should check the `type` of the resource and not assume that it is always content to be rendered.
 
+> Can this be deleted? I take it we hope that eventually an ITF equivalent will exist, but it currently doesn't. Or perhaps we replace it with a statement saying that additional Selector classes may be defined by users later on, or something along those lines.
 The IIIF community has defined [additional Selector classes][registry-selectors] for use with SpecificResources, especially for cases when it is not possible to use the official FragmentSelector. See the additional documentation for details.
 
 {% include api/code_header.html %}
@@ -1622,6 +1625,7 @@ Content resources _MUST_ have an `id` property, with the value being the URI at 
 
 The type of the content resource _MUST_ be included, and _SHOULD_ be taken from the table listed under the definition of `type`. The `format` of the resource _SHOULD_ be included and, if so, _SHOULD_ be the media type that is returned when the resource is dereferenced. The `profile` of the resource, if it has one, _SHOULD_ also be included. Content resources in appropriate formats _MAY_ also have the `language`, `height`, `width`, and `duration` properties. Content resources _MAY_ also have descriptive and linking properties, as defined in [section 3][prezi30-resource-properties].
 
+> To what extent are we worrying about, or including in the spec, discussions about IIIF handling of external resources...? (This makes me wonder how ITF plays with IIIF in general. There are a lot of places in this API that envisage links to (or the inclusion of) images, videos, audio files and the like. Those are clearly going to be wanted by people making websites, so I suppose we need to specify how people annotate them to the TextFrame. But what beyond that? Can we just say: everything to do with images, videos, audio etc. has to be handled via IIIF?)
 If the content resource is an Image, and a IIIF Image service is available for it, then the `id` property of the content resource _MAY_ be a complete URI to any particular representation supported by the Image Service, such as `https://example.org/image1/full/1000,/0/default.jpg`, but _MUST NOT_ be just the URI of the IIIF Image service. Its `type` value _MUST_ be the string `Image`. Its media type _MAY_ be listed in `format`, and its height and width _MAY_ be given as integer values for `height` and `width` respectively. The Image _SHOULD_ have the service [referenced][prezi30-terminology] from it using the `service` property.
 
 If there is a need to distinguish between content resources, then the resource _SHOULD_ have the `label` property.
@@ -1723,6 +1727,7 @@ While any HTTP(S) URI is technically acceptable for any of the resources in the 
 
 ###  6.2. Requests
 
+> Reference in here to the IIIF Image API (image-api) that presumably needs to be changed to the Text API.
 Clients are only expected to follow links to Presentation API resources. Unlike [IIIF Image API][image-api] requests, or other parameterized services, the URIs for Presentation API resources cannot be assumed to follow any particular pattern.
 
 ###  6.3. Responses
@@ -1731,6 +1736,7 @@ The format for all responses is JSON, as described above. It is good practice fo
 
 If the server receives a request with an `Accept` header, it _SHOULD_ respond following the rules of [content negotiation][org-rfc-7231-conneg]. Note that content types provided in the `Accept` header of the request _MAY_ include parameters, for example `profile` or `charset`.
 
+> Context url to be updated.
 If the request does not include an `Accept` header, the HTTP `Content-Type` header of the response _SHOULD_ have the value `application/ld+json` (JSON-LD) with the `profile` parameter given as the context document: `http://iiif.io/api/presentation/3/context.json`.
 
 {% include api/code_header.html %}
@@ -1751,6 +1757,7 @@ The HTTP server _MUST_ follow the [CORS requirements][org-w3c-cors] to enable br
 
 Responses _SHOULD_ be compressed by the server as there are significant performance gains to be made for very repetitive data structures.
 
+> Are we safe to delete the section on Authentication? Or do we need to say something about authentication even if it's just that we aren't dealing with it?
 ## 7. Authentication
 
 It may be necessary to restrict access to the descriptions made available via the Presentation API. As the primary means of interaction with the descriptions is by web browsers using XmlHttpRequests across domains, there are some considerations regarding the most appropriate methods for authenticating users and authorizing their access. The approach taken is described in the [Authentication][iiif-auth] specification, and requires requesting a token to add to the requests to identify the user. This token might also be used for other requests defined by other APIs.
@@ -1872,6 +1879,7 @@ __Behavior Values__
 
 ### B. Example Manifest Response
 
+> Clearly this will need to be replaced with something that fits the ITF API.
 {% include api/code_header.html %}
 ```json
 {
@@ -2169,10 +2177,12 @@ __Behavior Values__
 
 ### C. Versioning
 
+> Are we following Semantic Versioning? If so then we just need to remove 'Starting th version 2.0,' from this sentence. If not, we should perhaps remove this section.
 Starting with version 2.0, this specification follows [Semantic Versioning][org-semver]. See the note [Versioning of APIs][notes-versioning] for details regarding how this is implemented.
 
 ### D. Acknowledgements
 
+> This section will need to be replaced with an acknowledgements section of our own. The first paragraph can for the moment be removed, I take it.
 Many thanks to the members of the [IIIF community][iiif-community] for their continuous engagement, innovative ideas, and feedback.
 
 Many of the changes in this version are due to the work of the [IIIF AV Technical Specification Group][groups-av], chaired by Jason Ronallo (North Carolina State University), Jon Dunn (Indiana University) and Tom Crane (Digirati). The IIIF Community thanks them for their leadership, and the members of the group for their tireless work.
@@ -2180,6 +2190,7 @@ Many of the changes in this version are due to the work of the [IIIF AV Technica
 
 ### E. Change Log
 
+> The change log needs changing, clearly.
 | Date       | Description           |
 | ---------- | --------------------- |
 | 2020-06-03 | Version 3.0 (Surfing Raven) [View change log][prezi30-change-log] |
