@@ -44,22 +44,21 @@ __Previous Version:__
 
 ##  1. Introduction
 
-This is a DRAFT proposal for an Interoperable Text Framework (ITF) presentation API specification for discussion.
+This is a DRAFT proposal for an Interoperable Text Framework (ITF) presentation API specification for discussion. Its base text was derived from the [IIIF Presentation API](https://github.com/IIIF/api).
 
 ### 1.1 Audience
+
 This document is intended for developers building applications that share 
 textual resources for display, computational analysis or any other purpose. 
-The background use-cases for developing the API are drawn from cultural heritage and 
-research organisations but the use of the API is not restricted to these domains. 
+The background use-cases for developing the API are drawn from cultural heritage and research organisations but the use of the API is not restricted to these domains. 
 
 ### 1.2 Terminology
-The key words _MUST_, _MUST NOT_, _REQUIRED_, _SHALL_, _SHALL NOT_, _SHOULD_, _SHOULD NOT_, 
-_RECOMMENDED_, and _OPTIONAL_ in this document are to be interpreted as described in
-[RFC 2119](https://datatracker.ietf.org/doc/html/rfc2119).
+
+The key words _MUST_, _MUST NOT_, _REQUIRED_, _SHALL_, _SHALL NOT_, _SHOULD_, _SHOULD NOT_, _RECOMMENDED_, and _OPTIONAL_ in this document are to be interpreted as described in [RFC 2119](https://datatracker.ietf.org/doc/html/rfc2119).
 
 ##  2. Resource Type Overview
 
-The objectives described above require a model in which one can characterize the compound object (via the _Manifest_ resource) and the individual views of the object (_TextFrame_ resources). A compound object may also have sections; for example, a book may have chapters of several pages, or a play might be divided into acts and scenes (_Range_ resources) and there may be groups of such objects (_Collection_ resources). These resource types, along with their properties, make up the ITF Presentation API.
+ITF’s objectives require a model in which one can characterize the compound object (via the _Manifest_ resource) and the individual views of the object (_TextFrame_ resources). A compound object may also have sections; for example, a book may have chapters of several pages, or a play might be divided into acts and scenes (_Range_ resources) and there may be groups of such objects (_Collection_ resources). These resource types, along with their properties, make up the ITF Presentation API.
 
 This section provides an overview of the resource types (or classes) that are used in the specification. They are each presented in more detail in [Section 5][prezi30-resource-structure].
 
@@ -75,17 +74,17 @@ An ordered list of Manifests, and/or further Collections. Collections allow Mani
 ##### Manifest
 {: #overview-manifest}
 
-A description of the structure and properties of the compound object. It carries information needed for the client to present the content to the user, such as a title and other descriptive information about the object or the intellectual work that it conveys. Each Manifest usually describes how to present a single compound object such as a book, manuscript or other textual resource.
+A description of the structure and properties of the compound object. It carries information needed for the client to present the content to the user, such as a title and other descriptive information about the object or the intellectual work that it conveys. Each Manifest usually describes how to present a single ‘text’. While this text may, of course, represent an entire document, such as a book, manuscript, or any portion thereof.
 
 ##### TextFrame
 {: #overview-textframe}
 
-A virtual container that represents a particular view of the object and has content resources associated with it or with parts of it. The TextFrame provides a frame of reference for the layout of the content, both spatially and temporally. The name of a TextFrame is derived from classic letterpress typesetting where individual letter blocks are arranged within a frame before being inked and pressed on physical sheets. Within ITF, the TextFrame functions analogously to IIIF’s Canvas. It provides the container onto which other content, like text and annotations, are placed.
+A virtual container that represents a particular view of the object and has content resources associated with it or with parts of it. The TextFrame provides a frame of reference for the layout of the content, both spatially and temporally. The name of a TextFrame is derived from classic letterpress typesetting where individual letter blocks are arranged within a frame before being inked and pressed on physical sheets. The TextFrame functions analogously to IIIF’s Canvas, providing the container onto which other content is placed.
 
 ##### Range
 {: #overview-range}
 
-An ordered list of TextFrames, and/or further Ranges. Ranges allow TextFrames, or parts thereof, to be grouped together in some way. This could be for content-based reasons, such as might be described in a table of contents or the set of scenes in a play. Equally, physical features might be important such as page gatherings in an early book, or when recorded music is split across different physical carriers such as two CDs.
+An ordered list of TextFrames, and/or further Ranges. Ranges allow TextFrames to be grouped together in some way. It could be for content-based reasons, such as might be described in a table of contents or the set of scenes in a play. Or, it could be for reasons due to the physical features of the original item, such as page gatherings in a manuscript or printed book. Obviously, texts can be grouped together for any number of reasons that have nothing to due with the physicality of the object.
 
 ### 2.2. Additional Types
 
@@ -94,35 +93,35 @@ This specification makes use of types defined in the [Web Annotation Data Model]
 ##### Annotation Page
 {: #overview-annotationpage}
 
-An ordered list of Annotations that is typically associated with a TextFrames but may be referenced from other types of resource as well. Annotation Pages collect and order lists of Annotations, which in turn provide commentary about a resource or content that is part of a TextFrames.
+An ordered list of Annotations that is typically associated with a TextFrames but may be referenced from other types of resource. Annotation Pages collect and order lists of Annotations that provide commentary about a resource or content that is part of a TextFrames.
 
 ##### Annotation
 {: #overview-annotation}
 
-Annotations associate content resources with TextFrames. The same mechanism is used for the visible and/or audible resources as is used for images, commentary, tags and other content. This provides a single, unified method for aligning information, and provides a standards-based framework for distinguishing parts of resources and parts of TextFrames. As Annotations can be added later, it promotes a distributed system in which publishers can align their content with the descriptions created by others. Annotation related functionality may also rely on further classes such as SpecificResource, Choice or Selectors.
+Annotations associate content resources with TextFrames. The same mechanism is used for all types of content, such as comments, tags, textual notes/enrichments, other textual resources, images, audios or video. This provides a single, unified method for aligning information, and provides a standards-based framework for distinguishing parts of resources and parts of TextFrames. As Annotations can be added later, it promotes a distributed system in which publishers can align their content with the descriptions created by others. Annotation-related functionality may also rely on further classes such as SpecificResource, Choice or Selectors.
 
 ##### Content 
 {: #overview-content}
 
-Web resources such as images, audio, video, or text which are associated with a TextFrames via an Annotation, or provide a representation of any resource.
+Web resources such as text, images, audio or video that are associated with a TextFrames via an Annotation, or provide a representation of any resource.
 
 ##### Annotation Collection
 {: #overview-annotationcollection}
 
-> WE NEED OUR OWN EXAMPLE
-An ordered list of Annotation Pages. Annotation Collections allow higher level groupings of Annotations to be recorded. For example, all of the English translation Annotations of a medieval French document could be kept separate from the transcription or an edition in modern French, or the director's commentary on a film can be separated from the script.
-
+An ordered list of Annotation Pages. Annotation Collections allow higher level groupings of Annotations to be recorded. For example, all the English translation Annotations of a medieval French document could be kept separate from the transcription or an edition in modern French, or the director's commentary on a film can be separated from the script.
 
 ##  3. Resource Properties
 
-Most of the properties defined by this specification may be associated with any of the resource types described above, and may have more than one value. Properties relate to the resource with which they are associated, so the `label` property on a Manifest is the human readable label of the Manifest, whereas the same `label` property on a TextFrame is the human readable label for that particular view.
+Most properties defined in this specification may be associated with any of the resource types described above, and may have more than one value. Properties relate to the resource with which they are associated. For example, the `label` property on a Manifest, is the human-readable label of the Manifest; the `label` property on a TextFrame is the human-readable label for that TextFrame.
 
-The requirements for which classes have which properties are summarized in [Appendix A][prezi30-appendixa].
+> ‘that it does not understand’ - does this mean properties not defined in the specification or properties that are completely bespoke. It’s the difference between it discovering a ‘label’ when it isn’t allowed (labels are known … but not in that context) and some completely new data structure.
+> > I added 'or are encountered in an undocumented context' to clarify. I'm not sure if that's what IIIF expects their clients to do, but it's what I would expect. Otherwise, it would be chaos - as each client attempts to figure out what a 'label' means in an undocumented context.
 
-> There's a reference to the IIIF community here that needs removing/altering.
-Other properties are allowed, either via local extensions or those endorsed by the IIIF community. If a client discovers properties that it does not understand, then it _MUST_ ignore them. See the [Linked Data Context and Extensions][prezi30-ldce] section for more information about extensions.
+The requirements for which properties each class contains are summarized in [Appendix A][prezi30-appendixa]. 
 
-This section also defines processing requirements for clients for each of the combinations of class and property.  These requirements are for general purpose client implementations that are intended to be used to render the entire resource to the user, and not necessarily for consuming applications with specialized use or individual component implementations that might be used to construct a client. The inclusion of these requirements gives publishers a baseline expectation for how they can expect implementations advertised as compliant with this specification to behave when processing their content.
+This section also defines processing requirements for clients for each of the combinations of class and property. Any properties that a client does not understand or are encountered in an undocumented context  _MUST_ be ignored. See the [Linked Data Context and Extensions][prezi30-ldce] section for more information about extensions.
+
+ These requirements are for general purpose client implementations that are intended to be used to render the entire resource to the user, and not necessarily for consuming applications with specialized use or individual component implementations that might be used to construct a client. The inclusion of these requirements gives publishers a baseline expectation for how they can expect implementations advertised as compliant with this specification to behave when processing their content.
 
 ###  3.1. Descriptive Properties
 
@@ -130,7 +129,7 @@ These properties describe or represent the resource they are associated with, an
 
 ##### label
 
-A human readable label, name or title. The `label` property is intended to be displayed as a short, textual surrogate for the resource if a human needs to make a distinction between it and similar resources, for example between objects, pages, or options for a choice of images to display. The `label` property can be fully internationalized, and each language can have multiple values.  This pattern is described in more detail in the [languages][prezi30-languages] section.
+A human-readable label, name or title. The `label` property is intended to be displayed as a short, textual surrogate for the resource if a human needs to make a distinction between it and other similar resources. The `label` property can be internationalized, and each language can have multiple values. This pattern is described in more detail in the [languages][prezi30-languages] section.
 
 The value of the property _MUST_ be a JSON object, as described in the [languages][prezi30-languages] section.
 
@@ -140,7 +139,7 @@ The value of the property _MUST_ be a JSON object, as described in the [language
    Clients _MUST_ render `label` on a Manifest.
  * A TextFrame _SHOULD_ have the `label` property with at least one entry.<br/>
    Clients _MUST_ render `label` on a TextFrame, and _SHOULD_ generate a `label` for TextFrames that do not have them.
- * A content resource _MAY_ have the `label` property with at least one entry. If there is a Choice of content resource for the same TextFrame, then they _SHOULD_ each have at least the `label` property with at least one entry.<br/>
+ * A content resource _MAY_ have the `label` property with at least one entry. If there is a Choice of content resource for the same TextFrame, then they _SHOULD_ each have at least a `label` property with at least one entry.<br/>
    Clients _MAY_ render `label` on content resources, and _SHOULD_ render them when part of a Choice.
  * A Range _SHOULD_ have the `label` property with at least one entry. <br/>
    Clients _MUST_ render `label` on a Range.
@@ -149,14 +148,17 @@ The value of the property _MUST_ be a JSON object, as described in the [language
  * Other types of resource _MAY_ have the `label` property with at least one entry.<br/>
    Clients _MAY_ render `label` on other types of resource.
 
-{% include api/code_header.html %}
 ``` json-doc
-{ "label": { "en": [ "Example Object Title" ] } }
+{
+    "label": {
+        "en": ["Example Title of Text"]
+    }
+}
 ```
 
 ##### metadata
 
-An ordered list of descriptions to be displayed to the user when they interact with the resource, given as pairs of human readable `label` and `value` entries. The content of these entries is intended for presentation only; descriptive semantics _SHOULD NOT_ be inferred. An entry might be used to convey information about the creation of the object, a physical description, ownership information, or other purposes.
+An ordered list of descriptions to be displayed to the user when they interact with the resource, given as pairs of human-readable `label` and `value` entries. The content of these entries is intended for presentation only; descriptive semantics _SHOULD NOT_ be inferred. An entry might be used to convey information about the creation of the object, a physical description, ownership information, or other purposes.
 
 The value of the `metadata` property _MUST_ be an array of JSON objects, where each item in the array has both `label` and `value` properties. The values of both `label` and `value` _MUST_ be JSON objects, as described in the [languages][prezi30-languages] section.
 
@@ -169,23 +171,26 @@ The value of the `metadata` property _MUST_ be an array of JSON objects, where e
  * Other types of resource _MAY_ have the `metadata` property with at least one item.<br/>
    Clients _MAY_ render `metadata` on other types of resource.
 
-Clients _SHOULD_ display the entries in the order provided. Clients _SHOULD_ expect to encounter long texts in the `value` property, and render them appropriately, such as with an expand button, or in a tabbed interface.
+Clients _SHOULD_ display the entries in the order provided. Clients _SHOULD_ expect to encounter long texts in the `value` property, and render them appropriately.
 
-{% include api/code_header.html %}
 ``` json-doc
 {
-  "metadata": [
-    {
-      "label": { "en": [ "Creator" ] },
-      "value": { "en": [ "Anne Artist (1776-1824)" ] }
-    }
-  ]
+    "metadata": [
+        {
+            "label": {
+                "en": ["Author"]
+            },
+            "value": {
+                "en": ["Mr Gerence James [Marks]"]
+            }
+        }
+    ]
 }
 ```
 
 ##### summary
 
-A short textual summary intended to be conveyed to the user when the `metadata` entries for the resource are not being displayed. This could be used as a brief description for item level search results, for small-screen environments, or as an alternative user interface when the `metadata` property is not currently being rendered. The `summary` property follows the same pattern as the `label` property described above.
+A short textual summary intended to be conveyed to the user. This could be used as a brief description for item-level search results, small-screen environments, or as an alternative user interface when the `metadata` property is not currently rendered. The `summary` property follows the same pattern as the `label` property described above.
 
 The value of the property _MUST_ be a JSON object, as described in the [languages][prezi30-languages] section.
 
@@ -198,53 +203,59 @@ The value of the property _MUST_ be a JSON object, as described in the [language
  * Other types of resource _MAY_ have the `summary` property with at least one entry.<br/>
    Clients _MAY_ render `summary` on other types of resource.
 
-{% include api/code_header.html %}
+> Can you provide a summary of one of our items - either a case, note or text. Might as well keep it anchored with real examples.
+
 ``` json-doc
-{ "summary": { "en": [ "This is a summary of the object." ] } }
+{
+    "summary": {
+        "en": ["This is a summary of the object."]
+    }
+}
 ```
 
 ##### requiredStatement
 
-Text that _MUST_ be displayed when the resource is displayed or used. For example, the `requiredStatement` property could be used to present copyright or ownership statements, an acknowledgement of the owning and/or publishing institution, or any other text that the publishing organization deems critical to display to the user. Given the wide variation of potential client user interfaces, it will not always be possible to display this statement to the user in the client's initial state. If initially hidden, clients _MUST_ make the method of revealing it as obvious as possible.
+Text that _MUST_ be shown when the resource is displayed or used. For example, the `requiredStatement` property could be used to present copyright or ownership statements, an acknowledgement of the owning and/or publishing institution, or any other text that the publishing organization deems critical to display to the user. Given the wide variation of potential client user interfaces, it will not always be possible to display this statement to the user in the client's initial state. If initially hidden, clients _MUST_ make the method of revealing it as obvious as possible.
 
-The value of the property _MUST_ be a JSON object, that has the `label` and `value` properties, in the same way as a `metadata` property entry. The values of both `label` and `value` _MUST_ be JSON objects, as described in the [languages][prezi30-languages] section.
+The value of the property _MUST_ be a JSON object, that has the `label` and `value` properties, just like a `metadata` property entry. The values of both `label` and `value` _MUST_ be JSON objects, as described in the [languages][prezi30-languages] section.
 
  * Any resource type _MAY_ have the `requiredStatement` property.<br/>
    Clients _MUST_ render `requiredStatement` on every resource type.
 
-{% include api/code_header.html %}
 ``` json-doc
 {
-  "requiredStatement": {
-    "label": { "en": [ "Attribution" ] },
-    "value": { "en": [ "Lauren Kassell, Michael Hawkins, Robert Ralley, John Young, Joanne Edge, Janet Yvonne Martin-Portugues, and Natalie Kaoukji (eds.), ‘CASE9026’, The casebooks of Simon Forman and Richard Napier, 1596–1634: a digital edition, https://casebooks.lib.cam.ac.uk/case/CASE9026, accessed 18 July 2024." ] }
-  }
+    "requiredStatement": {
+        "label": {
+            "en": ["Attribution"]
+        },
+        "value": {
+            "en": ["Lauren Kassell, Michael Hawkins, Robert Ralley, John Young, Joanne Edge, Janet Yvonne Martin-Portugues, and Natalie Kaoukji (eds.), ‘CASE9026’, The casebooks of Simon Forman and Richard Napier, 1596–1634: a digital edition, https://casebooks.lib.cam.ac.uk/case/CASE9026, accessed 18 July 2024."]
+        }
+    }
 }
 ```
 
 ##### rights
 
-A string that identifies a license or rights statement that applies to the content of the resource, such as the JSON of a Manifest or the pixels of an image. The value _MUST_ be drawn from the set of [Creative Commons][org-cc-licenses] license URIs, the [RightsStatements.org][org-rs-terms] rights statement URIs, or those added via the [extension][prezi30-ldce] mechanism. The inclusion of this property is informative, and for example could be used to display an icon representing the rights assertions.
+A string that identifies a license or rights statement that applies to the content of the resource, such as the JSON of a Manifest or the text in the TextFrame. The value _MUST_ be drawn from the set of [Creative Commons][org-cc-licenses] license URIs, the [RightsStatements.org][org-rs-terms] rights statement URIs, or those added via the [extension][prezi30-ldce] mechanism. The inclusion of this property is informative.
 
-If displaying rights information directly to the user is the desired interaction, or a publisher-defined label is needed, then it is _RECOMMENDED_ to include the information using the `requiredStatement` property or in the `metadata` property.
+If displaying rights information directly to the user is the desired interaction, or a publisher-defined label is needed, it is _RECOMMENDED_ to include the information using the `requiredStatement` property or in the `metadata` property.
 
 The value _MUST_ be a string. If the value is drawn from Creative Commons or RightsStatements.org, then the string _MUST_ be a URI defined by that specification.
 
  * Any resource type _MAY_ have the `rights` property.<br/>
    Clients _MAY_ render `rights` on any resource type.
 
-{% include api/code_header.html %}
 ``` json-doc
-{ "rights": "http://creativecommons.org/licenses/by/4.0/" }
+{ "rights": "https://creativecommons.org/licenses/by/4.0/" }
 ```
 
 __Machine actionable URIs and links for users__<br/>
-The machine actionable URIs for both Creative Commons licenses and RightsStatements.org right statements are `http` URIs. In both cases, human readable descriptions are available from equivalent `https` URIs. Clients may wish to rewrite links presented to users to use these equivalent `https` URIs.
-{: .note}
+The machine actionable URIs for both Creative Commons licenses and RightsStatements.org right statements are `HTTP(S)` URIs. Human-readable descriptions are available from URIs to either sites. 
 
 ##### provider
 
-An organization or person that contributed to providing the content of the resource. Clients can then display this information to the user to acknowledge the provider's contributions.  This differs from the `requiredStatement` property, in that the data is structured, allowing the client to do more than just present text but instead have richer information about the people and organizations to use in different interfaces.
+An organization or person that contributed to providing the content of the resource. Clients can then display this information to the user to acknowledge the provider's contributions. This differs from the `requiredStatement` property, in that the data is structured, offering the clients richer information about the people and organizations to use in different interfaces.
 
 The organization or person is represented as an `Agent` resource.
 
@@ -264,7 +275,6 @@ The value _MUST_ be an array of JSON objects, where each item in the array confo
  * Other types of resource _MAY_ have the `provider` property with at least one item. <br/>
    Clients _SHOULD_ render `provider` on other types of resource.
 
-{% include api/code_header.html %}
 ``` json-doc
 {
   "provider": [
@@ -302,13 +312,15 @@ The value _MUST_ be an array of JSON objects, where each item in the array confo
 }
 ```
 
-> Thumbnail removed from here.
-
 ##### navDate
 
-A date that clients may use for navigation purposes when presenting the resource to the user in a date-based user interface, such as a calendar or timeline. More descriptive date ranges, intended for display directly to the user, _SHOULD_ be included in the `metadata` property for human consumption. If the resource contains TextFrames that have the `duration` property, the datetime given corresponds to the navigation datetime of the start of the resource. For example, a Range that includes a TextFrame that represents a set of video content recording a historical event, the `navDate` is the datetime of the first moment of the recorded event.
+A date that clients may use for navigation purposes when presenting the resource to the user in a date-based user interface, such as a calendar or timeline. More descriptive date ranges, intended for display directly to the user, *SHOULD* be included in the `metadata` property for human consumption.
 
 The value _MUST_ be an [XSD dateTime literal][org-w3c-xsd-datetime]. The value _MUST_ have a timezone, and _SHOULD_ be given in UTC with the `Z` timezone indicator, but _MAY_ instead be given as an offset of the form `+hh:mm`.
+
+The use of an XSD dateTime literal poses challenges for historical materials or those dated according to different calendars. Prior to 1752 England used the Julian Calendar. Dates on the Julian calendar could be off by almost a fortnight from the Gregorian. To further complicate things, Lady Day (25 March) and not 1 Jan was considered the start of the New Year. Finally, there’s the fact that timezones are a late nineteenth-century invention.
+
+At present, it’s recommended that these difficulties are glossed over in `navDate` since it is intended to provide a value to sort items chronologically. These difficulties are usually dealt with by domain experts when creating the textual resource and should be recorded using an appropriate textual form of the date in the `metadata` property. For example, documents written in England after 1 January and before Lady Day prior to 1752 were generally written with split years: ’19 January 1601/2’. In most instances, the most pragmatic solution would be to use the Julian date for the navDate: `1602-01-19:00:00:00Z’. If a collection of texts involved materials dated in multiple calendars, such as a collection of 17th-century letters to and from the continent and England, it would likely be worthwhile to convert the Julian dates into Gregorian so that the letters appear in the correct order. 
 
  * A Collection _MAY_ have the `navDate` property.<br/>
    Clients _MAY_ render `navDate` on a Collection.
@@ -321,74 +333,8 @@ The value _MUST_ be an [XSD dateTime literal][org-w3c-xsd-datetime]. The value _
  * Other types of resource _MUST NOT_ have the `navDate` property.<br/>
    Clients _SHOULD_ ignore `navDate` on other types of resource.
 
-{% include api/code_header.html %}
 ``` json-doc
-{ "navDate": "1596-11-30T08:30:00" }
-```
-
-> Do we want?
-> I'm inclined to think not: the only situation in which I could think this would be wanted is for the TCP-style 'you're about to download a whole book' sort of warning, and that just doesn't seem necessary any more. - rr
-##### placeholderTextFrame
-
-A single TextFrame that provides additional content for use before the main content of the resource that has the `placeholderTextFrame` property is rendered, or as an advertisement or stand-in for that content. Examples include images, text and sound standing in for video content before the user initiates playback; or a film poster to attract user attention. The content provided by `placeholderTextFrame` differs from a thumbnail: a client might use `thumbnail` to summarize and navigate multiple resources, then show content from `placeholderTextFrame` as part of the initial presentation of a single resource. A placeholder TextFrame is likely to have different dimensions to those of the TextFrame(es) of the resource that has the `placeholderTextFrame` property.
-
-Clients _MAY_ display the content of a linked placeholder TextFrame when presenting the resource. When more than one such TextFrame is available, for example if `placeholderTextFrame` is provided for the currently selected Range and the current Manifest, the client _SHOULD_ pick the one most specific to the content. Publishers _SHOULD NOT_ assume that the placeholder TextFrame will be processed by all clients. Clients _SHOULD_ take care to avoid conflicts between time-based media in the rendered placeholder TextFrame and the content of the resource that has the `placeholderTextFrame` property.
-
-The value _MUST_ be a JSON object with the `id` and `type` properties, and _MAY_ have other properties of TextFrames. The value of `type` _MUST_ be the string `TextFrame`. The object _MUST NOT_ have the `placeholderTextFrame` property, nor the `accompanyingTextFrame` property.
-
-  * A Collection _MAY_ have the `placeholderTextFrame` property.<br/>
-    Clients _MAY_ render `placeholderTextFrame` on a Collection.
-  * A Manifest _MAY_ have the `placeholderTextFrame` property.<br/>
-    Clients _MAY_ render `placeholderTextFrame` on a Manifest.
-  * A TextFrame _MAY_ have the `placeholderTextFrame` property.<br/>
-    Clients _MAY_ render `placeholderTextFrame` on a TextFrame.
-  * A Range _MAY_ have the `placeholderTextFrame` property.<br/>
-    Clients _MAY_ render `placeholderTextFrame` on a Range.
-  * Other types of resource _MUST NOT_ have the `placeholderTextFrame` property.<br/>
-    Clients _SHOULD_ ignore `placeholderTextFrame` on other types of resource.
-
-{% include api/code_header.html %}
-``` json-doc
-{
-  "placeholderTextFrame": {
-    "id": "https://example.org/itf/1/TextFrame/placeholder",
-    "type": "TextFrame",
-    "height": 1400,
-    "width": 1200
-  }
-}
-```
-
-> Do we want?
-> This is tricky. (1) It depends on what precisely an accompanyingTextFrame (that accompanied another TextFrame) would actually be for. Would it simply be a vehicle for putting some other text on the screen alongside the main text, which may be useful for the reader but isn't an annotation of the main text? For instance, if you were displaying some Chaucer and wanted to present a glossary of Middle English words alongside it? (2) Looking at the IIIF API, I could imagine using an accompanyingCanvas to accompany a TextFrame (e.g. if you wanted music or recording of spoken words to accompany a text), but that seems outside our remit.  - rr
-##### accompanyingTextFrame
-
-A single TextFrame that provides additional content for use while rendering the resource that has the `accompanyingTextFrame` property. Examples include an image to show while a duration-only TextFrame is playing audio; or background audio to play while a user is navigating an image-only Manifest.
-
-Clients _MAY_ display the content of an accompanying TextFrame when presenting the resource. As with `placeholderTextFrame` above, when more than one accompanying TextFrame is available, the client _SHOULD_ pick the one most specific to the content. Publishers _SHOULD NOT_ assume that the accompanying TextFrame will be processed by all clients. Clients _SHOULD_ take care to avoid conflicts between time-based media in the accompanying TextFrame and the content of the resource that has the `accompanyingTextFrame` property.
-
-The value _MUST_ be a JSON object with the `id` and `type` properties, and _MAY_ have other properties of TextFrames. The value of `type` _MUST_ be the string `TextFrame`. The object _MUST NOT_ have the `placeholderTextFrame` property, nor the `accompanyingTextFrame` property.
-
- * A Collection _MAY_ have the `accompanyingTextFrame` property.<br/>
-   Clients _MAY_ render `accompanyingTextFrame` on a Collection.
- * A Manifest _MAY_ have the `accompanyingTextFrame` property.<br/>
-   Clients _MAY_ render `accompanyingTextFrame` on a Manifest.
- * A TextFrame _MAY_ have the `accompanyingTextFrame` property.<br/>
-   Clients _MAY_ render `accompanyingTextFrame` on a TextFrame.
- * A Range _MAY_ have the `accompanyingTextFrame` property.<br/>
-   Clients _MAY_ render `accompanyingTextFrame` on a Range.
- * Other types of resource _MUST NOT_ have the `accompanyingTextFrame` property.<br/>
-   Clients _SHOULD_ ignore `accompanyingTextFrame` on other types of resource.
-
-{% include api/code_header.html %}
-``` json-doc
-{
-  "accompanyingTextFrame": {
-    "id": "https://example.org/itf/1/TextFrame/accompany",
-    "type": "TextFrame",
-    "duration": 180.0
-  }
-}
+{ "navDate": "1602-01-19T00:00:00Z" }
 ```
 
 ###  3.2. Technical Properties
@@ -397,53 +343,48 @@ These properties describe technical features of the resources, and are typically
 
 ##### id
 
-The URI that identifies the resource. If the resource is only available embedded  within another resource (see the [terminology section][prezi30-terminology] for an explanation of "embedded"), such as a Range within a Manifest, then the URI _MAY_ be the URI of the embedding resource with a unique fragment on the end. This is not true for TextFrames, which _MUST_ have their own URI without a fragment.
+The URI that identifies the resource. If the resource is only available embedded within another resource (see the [terminology section][prezi30-terminology] for an explanation of "embedded"), such as a Range within a Manifest, then the URI _MAY_ be the URI of the embedding resource with a unique fragment on the end. TextFrames, however, _MUST_ have their own URI formatted according to the [ITF Text Fragment API](https://textframe.io/api/).
 
-The value _MUST_ be a string, and the value _MUST_ be an HTTP(S) URI for resources defined in this specification. If the resource is retrievable via HTTP(S), then the URI _MUST_ be the URI at which it is published. External resources, such as profiles, _MAY_ have non-HTTP(S) URIs defined by other communities.
+The value _MUST_ be a string referring to the HTTP(S) URI for resources defined in this specification. If the resource is retrievable via HTTP(S), then the URI _MUST_ be the URI at which it is published. External resources, such as profiles, _MAY_ have non-HTTP(S) URIs defined by other communities.
 
-The existence of an HTTP(S) URI in the `id` property does not mean that the URI will always be dereferencable.  If the resource with the `id` property is [embedded][prezi30-terminology], it _MAY_ also be dereferenceable. If the resource is referenced (again, see the [terminology section][prezi30-terminology] for an explanation of "referenced"), it _MUST_ be dereferenceable. The [definitions of the Resources][prezi30-resource-structure] give further guidance.
+The existence of an HTTP(S) URI in the `id` property does not mean that the URI will always be dereferencable. If the resource with the `id` property is [embedded][prezi30-terminology], it _MAY_ also be dereferenceable. If the resource is referenced (again, see the [terminology section][prezi30-terminology] for an explanation of "referenced"), it _MUST_ be dereferenceable. The [definitions of the Resources][prezi30-resource-structure] give further guidance.
 
  * All resource types _MUST_ have the `id` property.<br/>
    Clients _MAY_ render `id` on any resource type, and _SHOULD_ render `id` on Collections, Manifests and TextFrames.
 
-{% include api/code_header.html %}
 ``` json-doc
 { "id": "https://example.org/itf/1/manifest" }
 ```
 
 ##### type
 
-The type or class of the resource. For classes defined for this specification, the value of `type` will be described in the sections below describing each individual class.
+The type or class of the resource. For classes defined for this specification, the value of `type` will be described in the sections describing each individual class below.
 
-For content resources, the value of `type` is drawn from other specifications. Recommendations for common content types such as image, text or audio are given in the table below.
+For content resources, the value of `type` is drawn from other specifications. Recommendations for common content types such as text, image, or audio are given in the table below.
 
-The JSON objects that appear in the value of the `service` property will have many different classes, and can be used to distinguish the sort of service, with specific properties defined in a [registered context document][prezi30-ldce].
+The JSON objects that appear in the value of the `service` property will have many different classes, and can be used to distinguish the type of service, with specific properties defined in a [registered context document][prezi30-ldce].
 
 The value _MUST_ be a string.
 
  * All resource types _MUST_ have the `type` property.<br/>
    Clients _MUST_ process, and _MAY_ render, `type` on any resource type.
 
-| Class         | Description                      |
-| ------------- | -------------------------------- |
-| `Dataset`     | Data not intended to be rendered to humans directly |
+| Class         | Description                                                                                                         |
+| ------------- |---------------------------------------------------------------------------------------------------------------------|
+| `Dataset`     | Data not intended to be rendered to humans directly                                                                 |
 | `Image`       | Two dimensional visual resources primarily intended to be seen, such as might be rendered with an &lt;img> HTML tag |
-| `Model`       | A three (or more) dimensional model intended to be interacted with by humans |
-| `Sound`       | Auditory resources primarily intended to be heard, such as might be rendered with an &lt;audio> HTML tag |
-| `Text`        | Resources primarily intended to be read |
-| `Video`       | Moving images, with or without accompanying audio, such as might be rendered with a &lt;video> HTML tag |
-{: .api-table #table-type}
+| `Model`       | A three (or more) dimensional model intended to be interacted with by humans                                        |
+| `Sound`       | Auditory resources primarily intended to be heard, such as might be rendered with an &lt;audio> HTML tag            |
+| `Text`        | Resources primarily intended to be read                                                                             |
+| `Video`       | Moving images, with or without accompanying audio, such as might be rendered with a &lt;video> HTML tag             |
 
-{% include api/code_header.html %}
 ``` json-doc
-{ "type": "Image" }
+{ "type": "Dataset" }
 ```
 
 ##### format
 
-The specific media type (often called a MIME type) for a content resource, for example `text/html`. This is important for distinguishing different formats of the same overall type of resource, such as distinguishing text in XML from plain text.
-
-Note that this is different to the `formats` property in the [Image API][image-api], which gives the extension to use within that API. It would be inappropriate to use in this case, as `format` can be used with any content resource, not just images.
+The specific media type (often called a MIME type) for a content resource, for example `text/html`. This is important for distinguishing different formats of the same overall type of resource, such as distinguishing text in XML from html or plain text.
 
 The value _MUST_ be a string, and it _SHOULD_ be the value of the `Content-Type` header returned when the resource is dereferenced.
 
@@ -452,7 +393,6 @@ The value _MUST_ be a string, and it _SHOULD_ be the value of the `Content-Type`
  * Other types of resource _MUST NOT_ have the `format` property.<br/>
    Clients _SHOULD_ ignore `format` on other types of resource.
 
-{% include api/code_header.html %}
 ``` json-doc
 { "format": "application/xml" }
 ```
@@ -468,7 +408,6 @@ The value _MUST_ be an array of strings. Each item in the array _MUST_ be a vali
  * Other types of resource _MUST NOT_ have the `language` property.<br/>
    Clients _SHOULD_ ignore `language` on other types of resource.
 
-{% include api/code_header.html %}
 ``` json-doc
 { "language": [ "en" ] }
 ```
@@ -484,15 +423,16 @@ The value _MUST_ be a string, either taken from the [profiles registry][registry
 * Other types of resource _MAY_ have the `profile` property.<br/>
   Clients _MAY_ process the `profile` of other types of resource.
 
-{% include api/code_header.html %}
 ``` json-doc
-{ "profile": "https://example.org/profile/statuary" }
+{ "profile": "https://casebooks.lib.cam.ac.uk/about-us/editorial-and-tagging-guidelines" }
 ```
 
 > We may need this, but surely only for external content resources? I can't see how a TextFrame could have a duration.
+> > This feels like something suited towards interactive displays — show this quote for X seconds, then next one for y seconds.
+
 ##### duration
 
-The duration of the TextFrame or external content resource, given in seconds.
+The duration of the external content resource or TextFrame, given in seconds.
 
 The value _MUST_ be a positive floating point number.
 
@@ -503,15 +443,16 @@ The value _MUST_ be a positive floating point number.
  * Other types of resource _MUST NOT_ have a `duration`.<br/>
    Clients _SHOULD_ ignore `duration` on other types of resource.
 
-{% include api/code_header.html %}
 ``` json-doc
 { "duration": 125.0 }
 ```
 
 > This may very well be something we need to worry about, but in that case it probably needs to be renamed. I take it this is where we'd look at text directionality or whatever you want to call it. (I think TEI call it 'writing mode'). I do wonder, though, to what extent this needs to be handled here, or whether it should be via the Text API. The two complicating factors I can think of are (1) that there are languages that could be written left to right or top to bottom, so you can't necessarily infer the direction from the language (so that I presume it needs to be encoded *somewhere* and can't just be left to be inferred); and (2) there will be instances in which (e.g.) a right-to-left script is embedded within a passage of left-to-right script (e.g. English-language discussions of the Old Testament). How would specifying a direction on a TextFrame in the Presentation API cope with that?
+> > I think this might actually be two issues — ‘writing mode’ for the direction of the text. viewingDirection, as I understand it, is more a case of how we arrange big chunks for text when displayed. Think of it being used to display a bunch of thumbnails in a certain way in some interactive display. I can see it being useful for us in this regard for a collection that has a side-by-side view of three manuscripts. A left to write language might want to put the frames containing exemplars A, B, C from left to right (with the leftmost indicating the best or one you should be focusing on). If it were a RTL language might prefer it going in the other direction. 
+
 ##### viewingDirection
 
-The direction in which a set of TextFrames _SHOULD_ be displayed to the user. This specification defines four direction values in the table below. Others may be defined externally [as an extension][prezi30-ldce].
+The direction in which a set of TextFrames _SHOULD_ be displayed to the user. It refers to the order in which multiple TextFrames are arranged and _not_ to the order of the text that they might contain. This specification defines four direction values in the table below. Others may be defined externally [as an extension][prezi30-ldce].
 
 The value _MUST_ be a string.
 
@@ -524,20 +465,21 @@ The value _MUST_ be a string.
  * Other types of resource _MUST NOT_ have the `viewingDirection` property.<br/>
    Clients _SHOULD_ ignore `viewingDirection` on other types of resource.
 
-| Value | Description |
-| ----- | ----------- |
+| Value           | Description                                                               |
+|-----------------|---------------------------------------------------------------------------|
 | `left-to-right` | The object is displayed from left to right. The default if not specified. |
-| `right-to-left` | The object is displayed from right to left. |
-| `top-to-bottom` | The object is displayed from the top to the bottom. |
-| `bottom-to-top` | The object is displayed from the bottom to the top. |
+| `right-to-left` | The object is displayed from right to left.                               |
+| `top-to-bottom` | The object is displayed from the top to the bottom.                       |
+| `bottom-to-top` | The object is displayed from the bottom to the top.                       |
 {: .api-table #table-direction}
 
-{% include api/code_header.html %}
 ``` json-doc
 { "viewingDirection": "left-to-right" }
 ```
 
 > I'm fascinated by this section and this is a notion that might well prove useful, but as it stands I'm not sure there's anything here for us.
+> > Me too. I'm generally leaving most of it as is - apart from attempting to deal with the more image-specific bits.
+
 ##### behavior
 
 A set of user experience features that the publisher of the content would prefer the client to use when presenting the resource. This specification defines the values in the table below. Others may be defined externally as an [extension][prezi30-ldce].
@@ -548,124 +490,95 @@ In order to determine the behaviors that are governing a particular resource, th
 * TextFrames inherit behaviors from their referencing Manifest, but **DO NOT** inherit behaviors from any referencing Ranges, as there might be several with different behaviors.
 * Ranges inherit behaviors from any referencing Range and referencing Manifest.
 
-Clients should interpret behaviors on a Range only when that Range is selected or is in some other way the context for the user's current interaction with the resources. A Range with the `behavior` value `continuous`, in a Manifest with the `behavior` value `paged`, would mean that the Manifest's TextFrames should be rendered in a paged fashion, unless the range is selected to be viewed, and its included TextFrames would be rendered in that context only as being virtually stitched together. This might occur, for example, when a physical scroll is cut into pages and bound into a codex with other pages, and the publisher would like to provide the user the experience of the scroll in its original form.
+Clients should interpret behaviors on a Range only when that Range is selected or is in some other way the context for the user's current interaction with the resources. A Range with the `behavior` value `continuous`, in a Manifest with the `behavior` value `paged`, would mean that the Manifest's TextFrames should be rendered in a paged fashion, unless the range is selected to be viewed, and its included TextFrames would be rendered in that context only as being virtually stitched together. This might occur, for example, when an editor is making a 'sourcebook' that combines excerpts into a single text for use in classes.
 
-> Reference here to the IIIF cookbook which will need removing (or replacing with an ITF cookbook as and when there is one).
-The descriptions of the behavior values have a set of which other values they are disjoint with, meaning that the same resource _MUST NOT_ have both of two or more from that set. In order to determine which is in effect, the client _SHOULD_ follow the inheritance rules above, taking the value from the closest resource. The user interface effects of the possible permutations of non-disjoint behavior values are client dependent, and implementers are advised to look for relevant recipes in the [IIIF cookbook][annex-cookbook].
+> We might want to require that some sort of notice is displayed when stiching them together in this fashion - like an ellipsis when quoting. Otherwise, it would be possible toeasily create 'wicked bibles' (so to speak) of their own making. 
 
-> I'd say this should be deleted (though perhaps that depends on what we do with 'behavior' overall.
-__Future Clarification Anticipated__<br/>
-Further clarifications about the implications of interactions between behavior values should be expected in subsequent minor releases.
-{: .warning}
+The descriptions of the behavior values also lists the other values they are disjoint with, meaning that the same resource _MUST NOT_ have both of two or more from that set. In order to determine which is in effect, the client _SHOULD_ follow the inheritance rules above, taking the value from the closest resource. The user interface effects of the possible permutations of non-disjoint behavior values are client dependent.
 
 The value _MUST_ be an array of strings.
 
  * Any resource type _MAY_ have the `behavior` property with at least one item.<br/>
    Clients _SHOULD_ process `behavior` on any resource type.
 
-| Value | Description |
-| ----- | ----------- |
-|| **Temporal Behaviors** |
-| `auto-advance`{: style="white-space:nowrap;"} | Valid on Collections, Manifests, TextFrames, and Ranges that include or are TextFrames with at least the `duration` dimension. When the client reaches the end of a TextFrame, or segment thereof as specified in a Range, with a duration dimension that has this behavior, it _SHOULD_ immediately proceed to the next TextFrame or segment and render it. If there is no subsequent TextFrame in the current context, then this behavior should be ignored. When applied to a Collection, the client should treat the first TextFrame of the next Manifest as following the last TextFrame of the previous Manifest, respecting any `start` property specified. Disjoint with `no-auto-advance`. |
-| `no-auto-advance`{: style="white-space:nowrap;"} | Valid on Collections, Manifests, TextFrames, and Ranges that include or are TextFrames with at least the `duration` dimension. When the client reaches the end of a TextFrame or segment with a duration dimension that has this behavior, it _MUST NOT_ proceed to the next TextFrame, if any. This is a default temporal behavior if not specified. Disjoint with `auto-advance`.|
-| `repeat` | Valid on Collections and Manifests, that include TextFrames that have at least the `duration` dimension. When the client reaches the end of the duration of the final TextFrame in the resource, and the `behavior` value `auto-advance`{: style="white-space:nowrap;"} is also in effect, then the client _SHOULD_ return to the first TextFrame, or segment of TextFrame, in the resource that has the `behavior` value `repeat` and start playing again. If the `behavior` value `auto-advance` is not in effect, then the client _SHOULD_ render a navigation control for the user to manually return to the first TextFrame or segment. Disjoint with `no-repeat`.|
-| `no-repeat` | Valid on Collections and Manifests, that include TextFrames that have at least the `duration` dimension. When the client reaches the end of the duration of the final TextFrame in the resource, the client _MUST NOT_ return to the first TextFrame, or segment of TextFrame. This is a default temporal behavior if not specified. Disjoint with `repeat`.|
-| | **Layout Behaviors** |
-| `unordered` | Valid on Collections, Manifests and Ranges. The TextFrames included in resources that have this behavior have no inherent order, and user interfaces _SHOULD_ avoid implying an order to the user. Disjoint with `individuals`, `continuous`, and `paged`.|
-| `individuals` | Valid on Collections, Manifests, and Ranges. For Collections that have this behavior, each of the included Manifests are distinct objects in the given order. For Manifests and Ranges, the included TextFrames are distinct views, and _SHOULD NOT_ be presented in a page-turning interface. This is the default layout behavior if not specified. Disjoint with `unordered`, `continuous`, and `paged`. |
-| `continuous` | Valid on Collections, Manifests and Ranges, which include TextFrames that have at least `height` and `width` dimensions. TextFrames included in resources that have this behavior are partial views and an appropriate rendering might display all of the TextFrames virtually stitched together, such as a long scroll split into sections. This behavior has no implication for audio resources. The `viewingDirection` of the Manifest will determine the appropriate arrangement of the TextFrames. Disjoint with `unordered`, `individuals` and `paged`. |
-| `paged` | Valid on Collections, Manifests and Ranges, which include TextFrames that have at least `height` and `width` dimensions. TextFrames included in resources that have this behavior represent views that _SHOULD_ be presented in a page-turning interface if one is available. The first TextFrame is a single view (the first recto) and thus the second TextFrame likely represents the back of the object in the first TextFrame. If this is not the case, see the `behavior` value `non-paged`. Disjoint with `unordered`, `individuals`, `continuous`, `facing-pages` and `non-paged`. |
-| `facing-pages`{: style="white-space:nowrap;"} | Valid only on TextFrames, where the TextFrame has at least `height` and `width` dimensions. TextFrames that have this behavior, in a Manifest that has the `behavior` value `paged`, _MUST_ be displayed by themselves, as they depict both parts of the opening. If all of the TextFrames are like this, then page turning is not possible, so simply use `individuals` instead. Disjoint with `paged` and `non-paged`.|
-| `non-paged` | Valid only on TextFrames, where the TextFrame has at least `height` and `width` dimensions. TextFrames that have this behavior _MUST NOT_ be presented in a page turning interface, and _MUST_ be skipped over when determining the page order. This behavior _MUST_ be ignored if the current Manifest does not have the `behavior` value `paged`. Disjoint with `paged` and `facing-pages`. |
-| | **Collection Behaviors** |
-| `multi-part` | Valid only on Collections. Collections that have this behavior consist of multiple Manifests or Collections which together form part of a logical whole or a contiguous set, such as multi-volume books or a set of journal issues. Clients might render these Collections as a table of contents rather than with thumbnails, or provide viewing interfaces that can easily advance from one member to the next. Disjoint with `together`.|
-| `together` | Valid only on Collections. A client _SHOULD_ present all of the child Manifests to the user at once in a separate viewing area with its own controls. Clients _SHOULD_ catch attempts to create too many viewing areas. This behavior _SHOULD NOT_ be interpreted as applying to the members of any child resources. Disjoint with `multi-part`.|
-| | **Range Behaviors** |
-| `sequence` | Valid only on Ranges, where the Range is [referenced][prezi30-terminology] in the `structures` property of a Manifest. Ranges that have this behavior represent different orderings of the TextFrames listed in the `items` property of the Manifest, and user interfaces that interact with this order _SHOULD_ use the order within the selected Range, rather than the default order of `items`. Disjoint with `thumbnail-nav` and `no-nav`.|
-| `thumbnail-nav`{: style="white-space:nowrap;"} | Valid only on Ranges. Ranges that have this behavior _MAY_ be used by the client to present an alternative navigation or overview based on thumbnails, such as regular keyframes along a timeline for a video, or sections of a long scroll. Clients _SHOULD NOT_ use them to generate a conventional table of contents. Child Ranges of a Range with this behavior _MUST_ have a suitable `thumbnail` property. Disjoint with `sequence` and `no-nav`.|
-| `no-nav` | Valid only on Ranges. Ranges that have this behavior _MUST NOT_ be displayed to the user in a navigation hierarchy. This allows for Ranges to be present that capture unnamed regions with no interesting content, such as the set of blank pages at the beginning of a book, or dead air between parts of a performance, that are still part of the Manifest but do not need to be navigated to directly. Disjoint with `sequence` and `thumbnail-nav`.|
-| | **Miscellaneous Behaviors** |
-| `hidden` | Valid on Annotation Collections, Annotation Pages, Annotations, Specific Resources and Choices. If this behavior is provided, then the client _SHOULD NOT_ render the resource by default, but allow the user to turn it on and off. This behavior does not inherit, as it is not valid on Collections, Manifests, Ranges or TextFrames. |
+> Concerning 'facing-pages' - do we want to add a property that allows the frame to be identified as a recto or verso? That'd avoid the need for including empty TextFrames for empty pages with no content. We should assume that empty TextFrames are possible since a collection might include not just text (of each page) but also a link to an image. So, the page flip mechanism could deal with a situation where a particular TextFrame has no text but does include the properties necessary to point to the page image._
+
+| Value              | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         |
+|--------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+|                    | **Temporal Behaviors**                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
+| `auto-advance`     | Valid on Collections, Manifests, TextFrames, and Ranges that include or are TextFrames with at least the `duration` dimension. When the client reaches the end of a TextFrame, or segment thereof as specified in a Range, with a duration dimension that has this behavior, it _SHOULD_ immediately proceed to the next TextFrame or segment and render it. If there is no subsequent TextFrame in the current context, then this behavior should be ignored. When applied to a Collection, the client should treat the first TextFrame of the next Manifest as following the last TextFrame of the previous Manifest, respecting any `start` property specified. Disjoint with `no-auto-advance`. |
+| `no-auto-advance`  | Valid on Collections, Manifests, TextFrames, and Ranges that include or are TextFrames with at least the `duration` dimension. When the client reaches the end of a TextFrame or segment with a duration dimension that has this behavior, it _MUST NOT_ proceed to the next TextFrame, if any. This is a default temporal behavior if not specified. Disjoint with `auto-advance`.                                                                                                                                                                                                                                                                                                                 |
+| `repeat`           | Valid on Collections and Manifests that include TextFrames that at least contain a `duration` dimension. When the client reaches the end of the duration of the final TextFrame in the resource, and the `behavior` value `auto-advance` is also in effect, the client _SHOULD_ return to the first TextFrame, or segment of TextFrame, in the resource that has the `behavior` value `repeat` and start playing again. If the `behavior` value `auto-advance` is not in effect, the client _SHOULD_ render a navigation control for the user to manually return to the first TextFrame or segment. Disjoint with `no-repeat`.                                                                      |
+| `no-repeat`        | Valid on Collections and Manifests that include TextFrames that at least contain a `duration` dimension. When the client reaches the end of the duration of the final TextFrame in the resource, the client _MUST NOT_ return to the first TextFrame, or segment of TextFrame. This is a default temporal behavior if not specified. Disjoint with `repeat`.                                                                                                                                                                                                                                                                                                                                        |
+|                    | **Layout Behaviors**                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
+| `unordered`        | Valid on Collections, Manifests and Ranges. The TextFrames included in resources that have this behavior have no inherent order, and user interfaces _SHOULD_ avoid implying an order to the user. Disjoint with `individuals`, `continuous`, and `paged`.                                                                                                                                                                                                                                                                                                                                                                                                                                          |
+| `individuals`      | Valid on Collections, Manifests, and Ranges. For Collections that have this behavior, each of the included Manifests are distinct objects in the given order. For Manifests and Ranges, the included TextFrames are distinct views, and _SHOULD NOT_ be presented in a page-turning interface. This is the default layout behavior if not specified. Disjoint with `unordered`, `continuous`, and `paged`.                                                                                                                                                                                                                                                                                          |
+| `continuous`       | Valid on Collections, Manifests and Ranges that include TextFrames. TextFrames included in resources with this behavior and with an appropriate rendering might display all of the TextFrames virtually stitched together, such as joining a series of excerpts or quotes. This behavior has no implication for audio resources. The `viewingDirection` of the Manifest will determine the appropriate arrangement of the TextFrames. Disjoint with `unordered`, `individuals` and `paged`.                                                                                                                                                                                                         |
+| `paged`            | Valid on Collections, Manifests and Ranges that include TextFrames that break the text into separate pages. TextFrames included in resources that have this behavior represent views that _SHOULD_ be presented in a page-turning interface if one is available. The first TextFrame is a single view (the first recto) and thus the second TextFrame likely represents the back of the object in the first TextFrame. If this is not the case, see the `behavior` value `non-paged`. Disjoint with `unordered`, `individuals`, `continuous`, `facing-pages` and `non-paged`.                                                                                                                       |
+| `facing-pages`     | Valid only on TextFrames that contain the text of a single page _and_ where TextFrames are provided for every recto and verso - even if the a particular frame contains no text because it is blank. TextFrames that have this behavior, in a Manifest that has the `behavior` value `paged`, _MUST_ be displayed by themselves, as they depict both parts of the opening. If all of the TextFrames are like this, then page turning is not possible, so simply use `individuals` instead. Disjoint with `paged` and `non-paged`.                                                                                                                                                                   |
+| `non-paged`        | Valid only on TextFrames. TextFrames that have this behavior _MUST NOT_ be presented in a page turning interface, and _MUST_ be skipped over when determining the page order. This behavior _MUST_ be ignored if the current Manifest does not have the `behavior` value `paged`. Disjoint with `paged` and `facing-pages`.                                                                                                                                                                                                                                                                                                                                                                         |
+|                    | **Collection Behaviors**                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            |
+| `multi-part`       | Valid only on Collections. Collections that have this behavior consist of multiple Manifests or Collections, which, together, form part of a logical whole or a contiguous set, such as multi-volume books or a set of journal issues. Clients might render these Collections as a table of contents or provide viewing interfaces that can easily advance from one member to the next. Disjoint with `together`.                                                                                                                                                                                                                                                                                   |
+| `together`         | Valid only on Collections. A client _SHOULD_ present all of the child Manifests to the user at once in a separate viewing area with its own controls. Clients _SHOULD_ catch attempts to create too many viewing areas. This behavior _SHOULD NOT_ be interpreted as applying to the members of any child resources. Disjoint with `multi-part`.                                                                                                                                                                                                                                                                                                                                                    |
+|                    | **Range Behaviors**                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 |
+| `sequence`         | Valid only on Ranges, where the Range is [referenced][prezi30-terminology] in the `structures` property of a Manifest. Ranges that have this behavior represent different orderings of the TextFrames listed in the `items` property of the Manifest, and user interfaces that interact with this order _SHOULD_ use the order within the selected Range, rather than the default order of `items`. Disjoint with `no-nav`.                                                                                                                                                                                                                                                                         |
+| `no-nav`           | Valid only on Ranges. Ranges that have this behavior _MUST NOT_ be displayed to the user in a navigation hierarchy. This allows for Ranges to be present that capture unnamed regions with no interesting content, such as the set of blank pages at the beginning of a book, or dead air between parts of a performance, that are still part of the Manifest but do not need to be navigated to directly. Disjoint with `sequence`.                                                                                                                                                                                                                                                                |
+|                    | **Miscellaneous Behaviors**                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         |
+| `hidden`           | Valid on Annotation Collections, Annotation Pages, Annotations, Specific Resources and Choices. If this behavior is provided, then the client _SHOULD NOT_ render the resource by default, but allow the user to turn it on and off. This behavior does not inherit, as it is not valid on Collections, Manifests, Ranges or TextFrames.                                                                                                                                                                                                                                                                                                                                                            |
 {: .api-table #table-behavior}
 
-{% include api/code_header.html %}
 ``` json-doc
 { "behavior": [ "auto-advance", "individuals" ] }
-```
-
-> This can be deleted, I'd say. Not because annotations might not have durations (videos, audio etc.), but because this seems to be about how that duration relates to the duration of the canvas, which find-and-replace has now turned into TextFrame. Since TextFrames don't have durations, we don't need to worry about mismatches like this.
-##### timeMode
-
-A mode associated with an Annotation that is to be applied to the rendering of any time-based media, or otherwise could be considered to have a duration, used as a body resource of that Annotation. Note that the association of `timeMode` with the Annotation means that different resources in the body cannot have different values. This specification defines the values specified in the table below. Others may be defined externally as an [extension][prezi30-ldce].
-
-The value _MUST_ be a string.
-
- * An Annotation _MAY_ have the `timeMode` property.<br/>
-   Clients _SHOULD_ process `timeMode` on an Annotation.
-
-| Value | Description |
-| ----- | ----------- |
-| `trim` | (default, if not supplied) If the content resource has a longer duration than the duration of portion of the TextFrame it is associated with, then at the end of the TextFrame's duration, the playback of the content resource _MUST_ also end. If the content resource has a shorter duration than the duration of the portion of the TextFrame it is associated with, then, for video resources, the last frame _SHOULD_ persist on-screen until the end of the TextFrame portion's duration. For example, a video of 120 seconds annotated to a TextFrame with a duration of 100 seconds would play only the first 100 seconds and drop the last 20 second. |
-| `scale` | Fit the duration of content resource to the duration of the portion of the TextFrame it is associated with by scaling. For example, a video of 120 seconds annotated to a TextFrame with a duration of 60 seconds would be played at double-speed. |
-| `loop` | If the content resource is shorter than the `duration` of the TextFrame, it _MUST_ be repeated to fill the entire duration. Resources longer than the `duration` _MUST_ be trimmed as described above. For example, if a 20 second duration audio stream is annotated onto a TextFrame with duration 30 seconds, it will be played one and a half times. |
-{: .api-table #table-timemode}
-
-{% include api/code_header.html %}
-``` json-doc
-{ "timeMode": "trim" }
 ```
 
 ###  3.3. Linking Properties
 
 > I've changed IIIF to ITF twice here, though this does make me think of a question I've raised much later in the document about how the relationship between IIIF and ITF resources is handled.
-These properties are references or links between resources, and split into external references where the linked object is outside of the ITF space, and internal references where the linked object is a ITF resource.  Clients typically create a link to the resource that is able to be activated by the user, or interact directly with the linked resource to improve the user's experience.
+
+These properties are references or links between resources, and split into external references where the linked object is outside the ITF space, and internal references where the linked object is an ITF resource. Clients typically create a link to the resource that is able to be activated by the user, or interact directly with the linked resource to improve the user's experience.
 
 #### 3.3.1. External Links
 
 ##### homepage
 
-A web page that is about the object represented by the resource that has the `homepage` property. The web page is usually published by the organization responsible for the object, and might be generated by a content management system or other cataloging system. The resource _MUST_ be able to be displayed directly to the user. Resources that are related, but not home pages, _MUST_ instead be added into the `metadata` property, with an appropriate `label` or `value` to describe the relationship.
+A web page that is about the text that has the `homepage` property. The web page is usually published by the organization responsible for the text, and might be generated by a content management system or other cataloging system. The resource _MUST_ be able to be displayed directly to the user. Resources that are related, but not home pages, _MUST_ instead be added into the `metadata` property, with an appropriate `label` or `value` to describe the relationship.
 
 The value of this property _MUST_ be an array of JSON objects, each of which _MUST_ have the `id`, `type`, and `label` properties, _SHOULD_ have a `format` property, and _MAY_ have the `language` property.
 
  * Any resource type _MAY_ have the `homepage` property.<br/>
    Clients _SHOULD_ render `homepage` on a Collection, Manifest or TextFrame, and _MAY_ render `homepage` on other types of resource.
 
-> Safe just to replace 'IIIF' in this paragraph with 'ITF'?
 __Model Alignment__<br/>
-Please note that this specification has stricter requirements about the JSON pattern used for the `homepage` property than the [Web Annotation Data Model][org-w3c-webanno]. The IIIF requirements are compatible, but the home page of an Agent found might have only a URI, or might be a JSON object with other properties. See the section on [collisions between contexts][prezi30-context-collisions] for more information.
+Please note that this specification, like the IIIF specification from which it is derived, has stricter requirements about the JSON pattern used for the `homepage` property than the [Web Annotation Data Model][org-w3c-webanno]. The ITF requirements are compatible, but the home page of an Agent found might only have a URI, or it might be a JSON object with other properties. See the section on [collisions between contexts][prezi30-context-collisions] for more information.
 {: .note}
 
-{% include api/code_header.html %}
 ``` json-doc
 {
-  "homepage": [
-    {
-      "id": "https://example.com/info/",
-      "type": "Text",
-      "label": { "en": [ "Homepage for Example Object" ] },
-      "format": "text/html",
-      "language": [ "en" ]
-    }
-  ]
+    "homepage": [
+        {
+            "id": "https://example.com/info/",
+            "type": "Text",
+            "label": {
+                "en": ["Homepage for Example Text"]
+            },
+            "format": "text/html",
+            "language": ["en"]
+        }
+    ]
 }
 ```
 
+##### logo 
 
-##### logo
+A small image resource that represents the Agent resource it is associated with. The logo _MUST_ be rendered when the resource is displayed or used, without cropping, rotating or otherwise distorting the image.
 
-> The reference to a IIIF Image API here may actually be okay, but again it raises the question of how IIIF things are to be handled in the context of an ITF resource?
-A small image resource that represents the Agent resource it is associated with. The logo _MUST_ be clearly rendered when the resource is displayed or used, without cropping, rotating or otherwise distorting the image. It is _RECOMMENDED_ that a [IIIF Image API][image-api] service be available for this image for other manipulations such as resizing.
-
-When more than one logo is present, the client _SHOULD_ pick only one of them, based on the information in the logo properties. For example, the client could select a logo of appropriate aspect ratio based on the `height` and `width` properties of the available logos. The client _MAY_ decide on the logo by inspecting properties defined as [extensions][prezi30-ldce].
+When more than one logo is present, the client _SHOULD_ pick one of them, based on the information in the logo properties. For example, the client could select a logo of appropriate aspect ratio based on the `height` and `width` properties of the available logos. The client _MAY_ decide on the logo by inspecting properties defined as [extensions][prezi30-ldce].
 
 The value of this property _MUST_ be an array of JSON objects, each of which _MUST_ have `id` and `type` properties, and _SHOULD_ have `format`. The value of `type` _MUST_ be "Image".
 
  * Agent resources _SHOULD_ have the `logo` property.<br/>
    Clients _MUST_ render `logo` on Agent resources.
 
-
-{% include api/code_header.html %}
 ``` json-doc
 {
   "logo": [
@@ -680,41 +593,15 @@ The value of this property _MUST_ be an array of JSON objects, each of which _MU
 }
 ```
 
-> Do we need this?
-##### rendering
-
-A resource that is an alternative, non-IIIF representation of the resource that has the `rendering` property. Such representations typically cannot be painted onto a single TextFrame, as they either include too many views, have incompatible dimensions, or are compound resources requiring additional rendering functionality. The `rendering` resource _MUST_ be able to be displayed directly to a human user, although the presentation may be outside of the IIIF client. The resource _MUST NOT_ have a splash page or other interstitial resource that mediates access to it. If access control is required, then the [IIIF Authentication API][iiif-auth] is _RECOMMENDED_. Examples include a rendering of a book as a PDF or EPUB, a slide deck with images of a building, or a 3D model of a statue.
-
-The value _MUST_ be an array of JSON objects. Each item _MUST_ have the `id`, `type` and `label` properties, and _SHOULD_ have a `format` property.
-
- * Any resource type _MAY_ have the `rendering` property with at least one item.<br/>
-   Clients _SHOULD_ render `rendering` on a Collection, Manifest or TextFrame, and _MAY_ render `rendering` on other types of resource.
-
-{% include api/code_header.html %}
-``` json-doc
-{
-  "rendering": [
-    {
-      "id": "https://example.org/1.pdf",
-      "type": "Text",
-      "label": { "en": [ "PDF Rendering of Book" ] },
-      "format": "application/pdf"
-    }
-  ]
-}
-```
-
-> This needs rewriting to move from image/IIIF to text/ITF, but I'm not sure quite what it should say.
 ##### service
 
-A service that the client might interact with directly and gain additional information or functionality for using the resource that has the `service` property, such as from an Image to the base URI of an associated [IIIF Image API][image-api] service. The service resource _SHOULD_ have additional information associated with it in order to allow the client to determine how to make appropriate use of it. Please see the [Service Registry][registry-services] document for the details of currently known service types.
+A service that the client might interact with to gain additional information or functionality when using the resource with the `service` property. The service resource _SHOULD_ have additional information associated with it in order to allow the client to determine how to make appropriate use of it. Please see the [Service Registry][registry-services] document for the details of currently known service types.
 
 The value _MUST_ be an array of JSON objects. Each object will have properties depending on the service's definition, but _MUST_ have either the `id` or `@id` and `type` or `@type` properties. Each object _SHOULD_ have a `profile` property.
 
  * Any resource type _MAY_ have the `service` property with at least one item.<br/>
-   Clients _MAY_ process `service` on any resource type, and _SHOULD_ process the IIIF Image API service.
+   Clients _MAY_ process `service` on any resource type, and _SHOULD_ process the ITF Text Fragment API service.
 
-{% include api/code_header.html %}
 ``` json-doc
 {
   "service": [
@@ -727,46 +614,39 @@ The value _MUST_ be an array of JSON objects. Each object will have properties d
 }
 ```
 
-> This bit can be deleted, surely? Aside from the fact that these aren't our APIs, we don't yet have more than one version of any of ours. Or perhaps we should be making the same sort of statement about our APIs and their future versions, even though we only have two APIs and one version of each.
 For cross-version consistency, this specification defines the following values for the `type` or `@type` property for backwards compatibility with other IIIF APIs. Future versions of these APIs will define their own types. These `type` values are necessary extensions for compatibility of the older versions.
 
-| Value                | Specification |
-| -------------------- | ------------- |
-| ImageService1        | [Image API version 1][image11]  |
-| ImageService2        | [Image API version 2][image21]  |
-| SearchService1       | [Search API version 1][search1] |
-| AutoCompleteService1 | [Search API version 1][search1-autocomplete] |
-| AuthCookieService1   | [Authentication API version 1][auth1-cookie-service] |
-| AuthTokenService1    | [Authentication API version 1][auth1-token-service] |
-| AuthLogoutService1   | [Authentication API version 1][auth1-logout-service] |
+| Value                | Specification                  |
+|----------------------|--------------------------------|
+| TextService1         | [Text API version 1]           |
+| ImageService1        | [Image API version 1]          |
+| ImageService2        | [Image API version 2]          |
+| SearchService1       | [Search API version 1]         |
+| AutoCompleteService1 | [Search API version 1]         |
+| AuthCookieService1   | [Authentication API version 1] |
+| AuthTokenService1    | [Authentication API version 1] |
+| AuthLogoutService1   | [Authentication API version 1] |
 {: .api-table #table-service-types}
 
 Implementations _SHOULD_ be prepared to recognize the `@id` and `@type` property names used by older specifications, as well as `id` and `type`. Note that the `@context` key _SHOULD NOT_ be present within the `service`, but instead included at the beginning of the document. The example below includes both version 2 and version 3 IIIF Image API services.
 
-{% include api/code_header.html %}
 ``` json-doc
 {
   "service": [
     {
-      "@id": "https://example.org/itf2/image1/identifier",
+      "@id": "https://example.org/itf/identifier",
       "@type": "ImageService2",
-      "profile": "http://iiif.io/api/image/2/level2.json"
-    },
-    {
-      "id": "https://example.org/itf3/image1/identifier",
-      "type": "ImageService3",
-      "profile": "level2"
+      "profile": "http://textframe.io/api/level1.json"
     }
   ]
 }
 ```
 
-
 ##### services
 
-A list of one or more service definitions on the top-most resource of the document, that are typically shared by more than one subsequent resource. This allows for these shared services to be collected together in a single place, rather than either having their information duplicated potentially many times throughout the document, or requiring a consuming client to traverse the entire document structure to find the information. The resource that the service applies to _MUST_ still have the `service` property, as described above, where the service resources have at least the `id` and `type` or `@id` and `@type` properties. This allows the client to know that the service applies to that resource. Usage of the `services` property is at the discretion of the publishing system.
+A list of one or more service definitions on the top-most resource of the document that are typically shared by more than one subsequent resource. This allows for these shared services to be collected together in a single place, rather than having their information duplicated throughout the document or requiring a client to traverse the entire document structure to find the desired service. The resource that the service applies to _MUST_ still have the `service` property, as described above, where the service resources have at least the `id` and `type` or `@id` and `@type` properties. This allows the client to know that the service applies to that resource. Usage of the `services` property is at the discretion of the publishing system.
 
-A client encountering a `service` property where the definition consists only of an `id` and `type` _SHOULD_ then check the `services` property on the top-most resource for an expanded definition.  If the service is not present in the `services` list, and the client requires more information in order to use the service, then it _SHOULD_ dereference the `id` (or `@id`) of the service in order to retrieve a service description.
+A client encountering a `service` property where the definition consists only of an `id` and `type` _SHOULD_ check the `services` property on the top-most resource for an expanded definition. If the service is not present in the `services` list, and the client requires more information in order to use the service, the client _SHOULD_ dereference the `id` (or `@id`) of the service in order to retrieve a service description.
 
 The value _MUST_ be an array of JSON objects. Each object _MUST_ a service resource, as described above.
 
@@ -775,20 +655,19 @@ The value _MUST_ be an array of JSON objects. Each object _MUST_ a service resou
 * A Manifest _MAY_ have the `services` property.<br/>
   Clients _SHOULD_ process `services` on a Manifest.
 
-{% include api/code_header.html %}
 ``` json-doc
 {
   "services": [
     {
       "@id": "https://example.org/itf/auth/login",
       "@type": "AuthCookieService1",
-      "profile": "http://iiif.io/api/auth/1/login",
+      "profile": "http://itf.io/api/auth/1/login",
       "label": "Login to Example Institution",
       "service": [
         {
           "@id": "https://example.org/itf/auth/token",
           "@type": "AuthTokenService1",
-          "profile": "http://iiif.io/api/auth/1/token"          
+          "profile": "http://itf.io/api/auth/1/token"          
         }
       ]
     }
@@ -796,28 +675,28 @@ The value _MUST_ be an array of JSON objects. Each object _MUST_ a service resou
 }
 ```
 
-> I've changed 'describes a related object' to 'contains a related text or a different version of the same text' in the account of what a linked Manifest might do. I've done it for the sake of making this look like an ITF spec rather than a IIIF one, but clearly there needs to be a standard way of stating what the relationship is between Manifests and texts. Do Manifests contain texts?
 ##### seeAlso
 
-A machine-readable resource such as an XML or RDF description that is related to the current resource that has the `seeAlso` property. Properties of the resource should be given to help the client select between multiple descriptions (if provided), and to make appropriate use of the document. If the relationship between the resource and the document needs to be more specific, then the document should include that relationship rather than the ITF resource. Other ITF resources are also valid targets for `seeAlso`, for example to link to a Manifest that contains a related text or a different version of the same text. The URI of the document _MUST_ identify a single representation of the data in a particular format. For example, if the same data exists in JSON and XML, then separate resources should be added for each representation, with distinct `id` and `format` properties.
+A machine-readable resource such as an image or RDF description that is related to the resource with the `seeAlso` property. Properties of the resource should be given to help the client select between multiple descriptions (if provided), and to make appropriate use of the document. If the relationship between the resource and the document needs to be more specific, the document should include that relationship rather than the ITF resource. ITF resources are valid targets for `seeAlso`. It can be used, for example, to link to a Manifest for a different version of the same text or for a related text. The URI of the document _MUST_ identify a single representation of the data in a particular format. If the same data exists in JSON and XML, separate resources _SHOULD_ be added for each representation, each with distinct `id` and `format` properties.
 
 The value _MUST_ be an array of JSON objects. Each item _MUST_ have the `id` and `type` properties, and _SHOULD_ have the `label`, `format` and `profile` properties.
 
  * Any resource type _MAY_ have the `seeAlso` property with at least one item.<br/>
    Clients _MAY_ process `seeAlso` on any resource type.
 
-{% include api/code_header.html %}
 ``` json-doc
 {
-  "seeAlso": [
-    {
-      "id": "https://example.org/library/catalog/book1.xml",
-      "type": "Dataset",
-      "label": { "en": [ "Bibliographic Description in XML" ] },
-      "format": "text/xml",
-      "profile": "https://example.org/profiles/bibliographic"
-    }
-  ]
+    "seeAlso": [
+        {
+            "id": "https://example.org/library/catalog/book1.xml",
+            "type": "Dataset",
+            "label": {
+                "en": ["Bibliographic Description in EAD XML"]
+            },
+            "format": "text/xml",
+            "profile": "https://example.org/profiles/ead"
+        }
+    ]
 }
 ```
 
@@ -825,23 +704,29 @@ The value _MUST_ be an array of JSON objects. Each item _MUST_ have the `id` and
 
 ##### partOf
 
-A containing resource that includes the resource that has the `partOf` property. When a client encounters the `partOf` property, it might retrieve the [referenced][prezi30-terminology] containing resource, if it is not [embedded][prezi30-terminology] in the current representation, in order to contribute to the processing of the contained resource. For example, the `partOf` property on a TextFrame can be used to reference an external Manifest in order to enable the discovery of further relevant information. Similarly, a Manifest can reference a containing Collection using `partOf` to aid in navigation.
+When a client encounters the `partOf` property, it might retrieve the [referenced][prezi30-terminology] containing resource, if it is not [embedded][prezi30-terminology] in the current representation, in order to contribute to the processing of the contained resource. For example, the `partOf` property on a TextFrame can be used to reference an external Manifest in order to enable the discovery of further relevant information. Similarly, a Manifest can reference a containing Collection using `partOf` to aid in navigation.
 
 The value _MUST_ be an array of JSON objects. Each item _MUST_ have the `id` and `type` properties, and _SHOULD_ have the `label` property.
 
  * Any resource type _MAY_ have the `partOf` property with at least one item<br/>
    Clients _MAY_ render `partOf` on any resource type.
 
-{% include api/code_header.html %}
 ``` json-doc
-{ "partOf": [ { "id": "https://example.org/itf/1", "type": "Manifest" } ] }
+{
+    "partOf": [
+        {
+            "id": "https://example.org/itf/1",
+            "type": "Manifest"
+        }
+    ]
+}
 ```
 
 ##### start
 
-A TextFrame, or part of a TextFrame, which the client _SHOULD_ show on initialization for the resource that has the `start` property. The reference to part of a TextFrame is handled in the same way that Ranges reference parts of TextFrames. This property allows the client to begin with the first TextFrame that contains interesting content rather than requiring the user to manually navigate to find it.
+A TextFrame, or part of a TextFrame, which the client _SHOULD_ focus upon or highlight on initialization of the resource that has the `start` property. The reference to part of a TextFrame is handled in the same way that Ranges reference parts of TextFrames. This property allows the client to begin with the first TextFrame that contains interesting content rather than requiring the user to manually navigate to find it.
 
-The value _MUST_ be a JSON object, which _MUST_ have the `id` and `type` properties.  The object _MUST_ be either a TextFrame (as in the first example below), or a Specific Resource with a Selector and a `source` property where the value is a TextFrame (as in the second example below).
+The value _MUST_ be a JSON object, which _MUST_ have the `id` and `type` properties. The object _MUST_ be either a TextFrame (as in the first example below), or a Specific Resource with a Selector and a `source` property where the value is a TextFrame (as in the second example below).
 
  * A Manifest _MAY_ have the `start` property.<br/>
    Clients _SHOULD_ process `start` on a Manifest.
@@ -850,12 +735,15 @@ The value _MUST_ be a JSON object, which _MUST_ have the `id` and `type` propert
  * Other types of resource _MUST NOT_ have the `start` property.<br/>
    Clients _SHOULD_ ignore `start` on other types of resource.
 
-{% include api/code_header.html %}
 ``` json-doc
-{ "start": { "id": "https://example.org/itf/1/TextFrame/1", "type": "TextFrame" } }
+{
+    "start": {
+        "id": "https://example.org/itf/1/TextFrame/1",
+        "type": "TextFrame"
+    }
+}
 ```
 
-{% include api/code_header.html %}
 ``` json-doc
 {
   "start": {
@@ -863,17 +751,19 @@ The value _MUST_ be a JSON object, which _MUST_ have the `id` and `type` propert
     "type": "SpecificResource",
     "source": "https://example.org/itf/1/TextFrame/1",
     "selector": {
-      "type": "PointSelector",
-      "t": 14.5
+      "mode": "char",
+      "fragment": 0,247
     }
   }
 }
 ```
 
 > References to 'Range' here and presumably passim will need to be examined, and removed or amended unless we're going to add 'Range' or some equivalent to the ITF Presentation API. The IIIF Presentation API gives chapters in a book as an example of the kind of thing you'd use them for. Do we want/need them, or does the Text API's stuff about fragments mean we don't?
+> > How’s the above?
+
 ##### supplementary
 
-A link from this Range to an Annotation Collection that includes the `supplementing` Annotations of content resources for the Range. Clients might use this to present additional content to the user from a different TextFrame when interacting with the Range, or to jump to the next part of the Range within the same TextFrame.  For example, the Range might represent a newspaper article that spans non-sequential pages, and then uses the `supplementary` property to reference an Annotation Collection that consists of the Annotations that record the text, split into Annotation Pages per newspaper page. Alternatively, the Range might represent the parts of a manuscript that have been transcribed or translated, when there are other parts that have yet to be worked on. The Annotation Collection would be the Annotations that transcribe or translate, respectively.
+A link from this Range to an Annotation Collection that includes the `supplementing` Annotations of content resources for the Range. Clients might use this to present additional content to the user from a different TextFrame when interacting with the Range, or to jump to the next part of the Range within the same TextFrame. For example, the Range might represent a newspaper article that spans non-sequential pages, and then uses the `supplementary` property to reference an Annotation Collection that consists of the Annotations that record the text, split into Annotation Pages per newspaper page. Alternatively, the Range might represent the parts of a manuscript that have been transcribed or translated, when there are other parts that have yet to be worked on. The Annotation Collection would be the Annotations that transcribe or translate, respectively.
 
 The value _MUST_ be a JSON object, which _MUST_ have the `id` and `type` properties, and the `type` _MUST_ be `AnnotationCollection`.
 
@@ -882,20 +772,25 @@ The value _MUST_ be a JSON object, which _MUST_ have the `id` and `type` propert
  * Other types of resource _MUST NOT_ have the `supplementary` property.<br/>
    Clients _SHOULD_ ignore `supplementary` on other types of resource.
 
-{% include api/code_header.html %}
 ``` json-doc
-{ "supplementary": { "id": "https://example.org/itf/1/annos/1", "type": "AnnotationCollection" } }
+{
+    "supplementary": {
+        "id": "https://example.org/itf/1/annos/1",
+        "type": "AnnotationCollection"
+    }
+}
 ```
 
 ### 3.4. Structural Properties
 
-> The structure of 'the object being represented in IIIF' has been altered to 'the text being displayed in ITF'. Again, this is to make it an ITF document rather than a IIIF document, but I'm aware that there should be standard ways of stating these things, and that those standard phrases should be used consistently throughout the document.
-These properties define the structure of the text being displayed in ITF by allowing the inclusion of child resources within parents, such as a TextFrame within a Manifest, or a Manifest within a Collection. The majority of cases use `items`, however there are two special cases for different sorts of structures.
+These properties define the structure of the text being displayed in ITF by allowing the inclusion of child resources within parents, such as a TextFrame within a Manifest, or a Manifest within a Collection. The majority of use cases would use `items`, however there are two special cases for different sorts of structures.
 
 ##### items
 
 > I've changed 'IIIF' to 'ITF' here, but is this statement true of the ITF Presentation API (that most of its functionality is about order of child resources)? I'm not convinced it necessarily is.
-Much of the functionality of the ITF Presentation API is simply recording the order in which child resources occur within a parent resource, such as Collections or Manifests within a parent Collection, or TextFrames within a Manifest. All of these situations are covered with a single property, `items`.
+> > Is this a little better?
+
+`items` can be used to record the order in which child resources occur within a parent resource. This could be Collections or Manifests within a parent Collection, or TextFrames within a Manifest. All of these situations are covered with a single property, `items`.
 
 The value _MUST_ be an array of JSON objects. Each item _MUST_ have the `id` and `type` properties. The items will be resources of different types, as described below.
 
@@ -912,7 +807,6 @@ The value _MUST_ be an array of JSON objects. Each item _MUST_ have the `id` and
  * Other types of resource _MUST NOT_ have the `items` property.<br/>
    Clients _SHOULD_ ignore `items` on other types of resource.
 
-{% include api/code_header.html %}
 ``` json-doc
 {
   "items": [
@@ -930,9 +824,8 @@ The value _MUST_ be an array of JSON objects. Each item _MUST_ have the `id` and
 ```
 
 ##### structures
-
-> 'object represented as a Manifest' changed to 'text contained in a Manifest', then later in the paragraph 'object' replaced with 'text'. Again, the phrasing here needs to be considered and consistent.
-The structure of a text contained in a Manifest can be described using a hierarchy of Ranges. Ranges can be used to describe the "table of contents" of the text or other structures that the user can interact with beyond the order given by the `items` property of the Manifest. The hierarchy is built by nesting the child Range resources in the `items` array of the higher level Range. The top level Ranges of these hierarchies are given in the `structures` property.
+ 
+The structure of a text represented in a Manifest can be described using a hierarchy of Ranges. Ranges can be used to describe the "table of contents" of the text or other structures that the user can interact with beyond the order given by the `items` property of the Manifest. The hierarchy is built by nesting the child Range resources in the `items` array of the higher level Range. The top level Ranges of these hierarchies are given in the `structures` property.
 
 The value _MUST_ be an array of JSON objects. Each item _MUST_ have the `id` and `type` properties, and the `type` _MUST_ be `Range`.
 
@@ -941,22 +834,25 @@ The value _MUST_ be an array of JSON objects. Each item _MUST_ have the `id` and
  * Other types of resource _MUST NOT_ have the `structures` property.<br/>
    Clients _SHOULD_ ignore `structures` on other types of resource.
 
-{% include api/code_header.html %}
 ``` json-doc
 {
-  "structures": [
-    {
-      "id": "https://example.org/itf/range/1",
-      "type": "Range",
-      "items": [ { ... } ]
-    }
-  ]
+    "structures": [
+        {
+            "id": "https://example.org/itf/range/1",
+            "type": "Range",
+            "items": [
+                { ... },
+                { ... },
+                ...
+            ]
+        }
+    ]
 }
 ```
 
 ##### annotations
 
-An ordered list of Annotation Pages that contain commentary or other Annotations about this resource, separate from the Annotations that are used to paint content on to a TextFrame. The `motivation` of the Annotations _MUST NOT_ be `painting`, and the target of the Annotations _MUST_ include this resource or part of it.
+An ordered list of Annotation Pages that contain commentary or other Annotations about this resource, separate from the Annotations that are used to supplement content on to a TextFrame. The `motivation` of the Annotations _MUST NOT_ be `supplementing`, and the target of the Annotations _MUST_ include this resource or part of it.
 
 The value _MUST_ be an array of JSON objects. Each item _MUST_ have at least the `id` and `type` properties.
 
@@ -973,16 +869,19 @@ The value _MUST_ be an array of JSON objects. Each item _MUST_ have at least the
  * Other types of resource _MUST NOT_ have the `annotations` property.<br/>
    Clients _SHOULD_ ignore `annotations` on other types of resource.
 
-{% include api/code_header.html %}
 ``` json-doc
 {
-  "annotations": [
-    {
-      "id": "https://example.org/itf/annotationPage/1",
-      "type": "AnnotationPage",
-      "items": [ { ... } ]
-    }
-  ]
+    "annotations": [
+        {
+            "id": "https://example.org/itf/annotationPage/1",
+            "type": "AnnotationPage",
+            "items": [
+                { ... },
+                { ... },
+                ...
+            ]
+        }
+    ]
 }
 ```
 
@@ -992,31 +891,34 @@ The value _MUST_ be an array of JSON objects. Each item _MUST_ have at least the
 
 This specification defines two values for the Web Annotation property of `motivation`, or `purpose` when used on a Specific Resource or Textual Body.
 
-While any resource _MAY_ be the `target` of an Annotation, this specification defines only motivations for Annotations that target TextFrames. These motivations allow clients to determine how the Annotation should be rendered, by distinguishing between Annotations that provide the content of the TextFrame, from ones with externally defined motivations which are typically comments about the TextFrame.
+While any resource _MAY_ be the `target` of an Annotation, this specification only defines motivations for Annotations that target TextFrames. These motivations allow clients to determine how the Annotation should be rendered, by distinguishing between Annotations that provide the content that are _part of_ the original text and those that are _concern_ the text or its contents.
 
-Additional motivations may be added to the Annotation to further clarify the intent, drawn from [extensions][prezi30-ldce] or other sources. Clients _MUST_ ignore motivation values that they do not understand. Other motivation values given in the Web Annotation specification _SHOULD_ be used where appropriate, and examples are given in the [Presentation API Cookbook][annex-cookbook].
+Additional motivations may be added to the Annotation to further clarify the intent, drawn from [extensions][prezi30-ldce] or other sources. Clients _MUST_ ignore motivation values that they do not understand. Other motivation values given in the Web Annotation specification _SHOULD_ be used where appropriate.
 
 > Here we'll obviously need to replace the values with whatever we're actually using.
-| Value | Description |
-| ----- | ----------- |
-| `painting` | Resources associated with a TextFrame by an Annotation that has the `motivation` value `painting`  _MUST_ be presented to the user as the representation of the TextFrame. The content can be thought of as being _of_ the TextFrame. The use of this motivation with target resources other than TextFrames is undefined. For example, an Annotation that has the `motivation` value `painting`, a body of an Image and the target of the TextFrame is an instruction to present that Image as (part of) the visual representation of the TextFrame. Similarly, a textual body is to be presented as (part of) the visual representation of the TextFrame and not positioned in some other part of the user interface.|
+> > How’s this?
+ 
+| Value          | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
+|----------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `asserting`    | Used when the editor or creation of the annotation is asserting or claiming something about the text or its contents that is described in the target. For example, it could be recording that the original document is damaged and that all (or a particular part) is illegible. This is likely going to be the most common motivation used by modern editors. |
+| `classifying`  | Used when the annotation is classifying the Target as something, for example, classifying the text as a certain type of document, such as a letter. The difference between `classifying` and `asserting` is subtle, but significant. If editors are uncomfortable with the epistemological ramifications of using the verb `classifying`, they can easily use `asserting` instead. |
+| `identifying`  | Used when assigning an identity to the Target, such as the IRI that identifies a named entity with a mention of that entity within the text. |
 | `supplementing` | Resources associated with a TextFrame by an Annotation that has the `motivation` value `supplementing`  _MAY_ be presented to the user as part of the representation of the TextFrame, or _MAY_ be presented in a different part of the user interface. The content can be thought of as being _from_ the TextFrame. The use of this motivation with target resources other than TextFrames is undefined. For example, an Annotation that has the `motivation` value `supplementing`, a body of an Image and the target of part of the TextFrame is an instruction to present that Image to the user either in the TextFrame's rendering area or somewhere associated with it, and could be used to present an easier to read representation of a diagram. Similarly, a textual body is to be presented either in the targeted region of the TextFrame or otherwise associated with it, and might be OCR, a manual transcription or a translation of handwritten text, or captions for what is being said in a TextFrame with audio content. |
+| `writing`      | Resources associated with a TextFrame by an Annotation with the `motivation` value of `writing` _MUST_ be presented to the user as part of the visual representation of the TextFrame. The content can be thought of as being _of_ the TextFrame. It should be used, for example, to record text that is written onto the original document, such as page or folio numbers added to the document by a cataloguer, additions or annotations written on the page, etc. The use of this motivation with target resources other than TextFrames is undefined. |
 {: .api-table #table-motivations}
-
 
 ##  4. JSON-LD Considerations
 
-This section describes features applicable to all of the Presentation API content. For the most part, these are features of the JSON-LD specification that have particular uses within the API.
+This section describes features applicable to all the Presentation API content. For the most part, these are features of the JSON-LD specification that have particular uses within the API.
 
 ### 4.1. Case Sensitivity
 
-Terms in JSON-LD are [case sensitive][org-w3c-json-ld-case].  The cases of properties and enumerated values in ITF Presentation API responses _MUST_ match those used in this specification. For example to specify that a resource is a Manifest, the property _MUST_ be given as `type` and not `Type` or `tYpE`, and the value _MUST_ be given as `Manifest` and not `manifest` or `manIfEsT`.
+Terms in JSON-LD are [case sensitive][org-w3c-json-ld-case]. The cases of properties and enumerated values in ITF Presentation API responses _MUST_ match those used in this specification. For example to specify that a resource is a Manifest, the property _MUST_ be given as `type` and not `Type`, `TYPE` or `tYpE`, and the value _MUST_ be given as `Manifest` and not `manifest`, `MANIFEST` or `manIfEsT`.
 
 ### 4.2. Resource Representations
 
 Resource descriptions _SHOULD_ be [embedded][prezi30-terminology] within the JSON description of parent resources, and _MAY_ also be available via separate requests from the HTTP(S) URI given in the resource's `id` property. Links to resources _MUST_ be given as a JSON object with the `id` and `type` properties and _SHOULD_ have `format` or `profile` to give a hint as to what sort of resource is being referred to.
 
-{% include api/code_header.html %}
 ``` json-doc
 {
   "rendering": [
@@ -1034,7 +936,6 @@ Resource descriptions _SHOULD_ be [embedded][prezi30-terminology] within the JSO
 
 Any of the properties in the API that can have multiple values _MUST_ always be given as an array of values, even if there is only a single item in that array.
 
-{% include api/code_header.html %}
 ``` json-doc
 {
   "thumbnail": [
@@ -1055,20 +956,17 @@ Language _MAY_ be associated with strings that are intended to be displayed to t
 The values of these properties _MUST_ be JSON objects, with the keys being the [BCP 47][org-bcp-47] language code for the language, or if the language is either not known or the string does not have a language, then the key _MUST_ be the string `none`. The associated values _MUST_ be arrays of strings, where each item is the content in the given language.
 
 > Different (non-painting) example needed here.
-{% include api/code_header.html %}
+
 ``` json-doc
 {
   "label": {
+    "lat": [
+      "Prolegomena ad lexici prophetici partem secundam in quibus agitur De forma sanctuarij Iudaici",
+    ],
     "en": [
-      "Whistler's Mother",
-      "Arrangement in Grey and Black No. 1: The Artist's Mother"
+      "Prolegomena to the second part of the Prophetic Lexicon, in which is treated the design of the Jewish Sanctuary"
     ],
-    "fr": [
-      "Arrangement en gris et noir no 1",
-      "Portrait de la mère de l'artiste",
-      "La Mère de Whistler"
-    ],
-    "none": [ "Whistler (1871)" ]
+    "none": [ "Prolegomena to the second part of the Prophetic Lexicon)" ]
   }
 }
 ```
@@ -1077,11 +975,11 @@ Note that [BCP 47][org-bcp-47] allows the script of the text to be included afte
 
 In the case where multiple values are supplied, clients _MUST_ use the following algorithm to determine which values to display to the user.
 
-* If all of the values are associated with the `none` key, the client _MUST_ display all of those values.
+* If all the values are associated with the `none` key, the client _MUST_ display all of those values.
 * Else, the client should try to determine the user's language preferences, or failing that use some default language preferences. Then:
-  * If any of the values have a language associated with them, the client _MUST_ display all of the values associated with the language that best matches the language preference.
-  * If all of the values have a language associated with them, and none match the language preference, the client _MUST_ select a language and display all of the values associated with that language.
-  * If some of the values have a language associated with them, but none match the language preference, the client _MUST_ display all of the values that do not have a language associated with them.
+  * If any of the values have a language associated with them, the client _MUST_ display all the values associated with the language that best matches the language preference.
+  * If all the values have a language associated with them, and none match the language preference, the client _MUST_ select a language and display all the values associated with that language.
+  * If some of the values have a language associated with them, but none match the language preference, the client _MUST_ display all the values that do not have a language associated with them.
 
 Note that this does not apply to [embedded][prezi30-terminology] textual bodies in Annotations, which use the Web Annotation pattern of `value` and `language` as separate properties.
 
@@ -1098,29 +996,30 @@ In order to avoid HTML or script injection attacks, clients _MUST_ remove:
   * XML Comments.
   * Processing instructions.
 
-Clients _SHOULD_ allow only `a`, `b`, `br`, `i`, `img`, `p`, `small`, `span`, `sub` and `sup` tags. Clients _MAY_ choose to remove any and all tags, therefore it _SHOULD NOT_ be assumed that the formatting will always be rendered.  Note that publishers _MAY_ include arbitrary HTML content for processing using customized or experimental applications, and the requirements for clients assume an untrusted or unknown publisher.
+Clients _SHOULD_ allow only `a`, `b`, `br`, `i`, `img`, `p`, `small`, `span`, `sub` and `sup` tags. Clients _MAY_ choose to remove any and all tags, therefore it _SHOULD NOT_ be assumed that the formatting will always be rendered. Note that publishers _MAY_ include arbitrary HTML content for processing using customized or experimental applications, and the requirements for clients assume an untrusted or unknown publisher.
 
-{% include api/code_header.html %}
 ``` json-doc
-{ "summary": { "en-latn": [ "<p>Short <b>summary</b> of the resource.</p>" ] } }
+{
+    "summary": {
+        "en": ["<p>A short <b>summary</b> of the resource.</p>"]
+    }
+}
 ```
 
 ### 4.6. Linked Data Context and Extensions
 
-The top level resource in the response _MUST_ have the `@context` property, and it _SHOULD_ appear as the very first key/value pair of the JSON representation. This tells Linked Data processors how to interpret the document. The ITF Presentation API context, below, _MUST_ occur once per response in the top-most resource, and thus _MUST NOT_ appear within [embedded][prezi30-terminology] resources. For example, when embedding a TextFrame within a Manifest, the TextFrame will not have the `@context` property.
+The top level resource in the response _MUST_ have the `@context` property, and it _SHOULD_ appear as the very first key/value pair in the JSON representation. This tells Linked Data processors how to interpret the document. The ITF Presentation API context, below, _MUST_ occur once per response in the top-most resource, and, thus, _MUST NOT_ appear within [embedded][prezi30-terminology] resources. For example, when embedding a TextFrame within a Manifest, the TextFrame will not have the `@context` property.
 
-The value of the `@context` property _MUST_ be either the URI `http://textframe.io/api/presentation/{{ page.major }}/context.json` or a JSON array with the URI `http://textframe.io/api/presentation/{{ page.major }}/context.json` as the last item. Further contexts, such as those for local or [registered extensions][registry], _MUST_ be added at the beginning of the array.
+The value of the `@context` property _MUST_ be either the URI `https://textframe.io/api/presentation/{{ page.major }}/context.json` or a JSON array with the URI `https://textframe.io/api/presentation/{{ page.major }}/context.json` as the last item. Further contexts, such as those for local or [registered extensions][registry], _MUST_ be added at the beginning of the array.
 
-{% include api/code_header.html %}
 ``` json-doc
 {
-  "@context": "http://iiif.io/api/presentation/{{ page.major }}/context.json"
+  "@context": "https://textframe.io/api/presentation/{{ page.major }}/context.json"
 }
 ```
 
 Any additional properties beyond those defined in this specification or the Web Annotation Data Model _SHOULD_ be mapped to RDF predicates using further context documents. These extensions _SHOULD_ be added to the top level `@context` property, and _MUST_ be added before the above context. The JSON-LD 1.1 functionality of predicate specific context definitions, known as [scoped contexts][org-w3c-json-ld-scoped-contexts], _MUST_ be used to minimize cross-extension collisions. Extensions intended for community use _SHOULD_ be [registered in the extensions registry][registry], but registration is not mandatory.
 
-{% include api/code_header.html %}
 ``` json-doc
 {
   "@context": [
@@ -1134,17 +1033,19 @@ The JSON representation _MUST NOT_ include the `@graph` key at the top level. Th
 
 ### 4.7. Term Collisions between Contexts
 
-There are some common terms used in more than one JSON-LD context document. Every attempt has been made to minimize these collisions, but some are inevitable. In order to know which specification is in effect at any given point, the class of the resource that has the property is the primary governing factor. Thus properties on Annotation based resources use the context from the [Web Annotation Data Model][org-w3c-webanno], whereas properties on classes defined by this specification use the ITF Presentation API context's definition.
+There are some common terms used in more than one JSON-LD context document. Every attempt has been made to minimize these collisions, but some are inevitable. In order to know which specification is in effect at any given point, the class of the resource that has the property is the primary governing factor. Properties on Annotation-based resources, therefore, use the context from the [Web Annotation Data Model][org-w3c-webanno], whereas properties on classes defined by this specification use the ITF Presentation API context's definition.
 
-There is one property that is in direct conflict - the `label` property is defined by both and is available for every resource. The use of `label` in ITF follows modern best practices for internationalization by allowing the language to be associated with the value using the language map construction [described above][prezi30-languages]. The Web Annotation Data Model uses it only for [Annotation Collections][prezi30-annocoll], and mandates the format is a string. For this property, the API overrides the definition from the Annotation model to ensure that labels can consistently be represented in multiple languages.
+There is one property that is in direct conflict: the `label` property is defined by both and is available for every resource. The use of `label` in ITF follows modern best practices for internationalization by allowing the language to be associated with the value using the language map construction [described above][prezi30-languages]. The Web Annotation Data Model uses it only for [Annotation Collections][prezi30-annocoll], and mandates the format is a string. For this property, the API overrides the definition from the Annotation model to ensure that labels can consistently be represented in multiple languages.
 
 The following properties are defined by both, and the ITF representation is more specific than the Web Annotation Data Model but are not in conflict, or are never used on the same resource:
 
-* `homepage`: In ITF the home page of a resource is represented as a JSON object, whereas in the Web Annotation Data Model it can also be a string.
-* `type`: In ITF the type is singular, whereas in the Web Annotation Data Model there can be more than one type.
-* `format`: In ITF the format of a resource is also singular, whereas in the Web Annotation Data Model there can be more than one format.
-* `language`: In ITF the `language` property always takes an array, whereas in the Web Annotation Data Model it can be a single string.
-* `start`: The `start` property is used on a Manifest to refer to the start TextFrame or part of a TextFrame and thus is a JSON object, whereas in the Web Annotation Data Model it is used on a TextPositionSelector to give the start offset into the textual content and is thus an integer.
+| Property   | Notes on non-conflicting differences with the Web Annotation Data Model                                                                                                                                                                                                               |
+|------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `homepage` | In ITF the home page of a resource is represented as a JSON object, whereas in the Web Annotation Data Model it can also be a string. |
+| `type`     | In ITF the type is singular, whereas in the Web Annotation Data Model there can be more than one type. |
+| `format`   | In ITF the format of a resource is also singular, whereas in the Web Annotation Data Model there can be more than one format. |
+| `language` | In ITF the `language` property always takes an array, whereas in the Web Annotation Data Model it can be a single string. |
+| `start`    | The `start` property is used on a Manifest to refer to the start TextFrame or part of a TextFrame and thus is a JSON object, whereas in the Web Annotation Data Model it is used on a TextPositionSelector to give the start offset into the textual content and is thus an integer. |
 
 The `rights`, `partOf`, and `items` properties are defined by both in the same way.
 
@@ -1152,14 +1053,13 @@ The `rights`, `partOf`, and `items` properties are defined by both in the same w
 
 The JSON-LD keywords `@id`, `@type` and `@none` are mapped to `id`, `type` and `none` by the Presentation API [linked data context][prezi30-ldce]. Thus in content conforming to this version of the Presentation API, the only JSON key beginning with `@` will be `@context`. However, the content may include data conforming to older specifications or external specifications that use keywords beginning with `@`. Clients should expect to encounter both syntaxes.
 
-
 ##  5. Resource Structure
 
-This section provides detailed description of the resource types used in this specification. [Section 2][prezi30-type-overview] provides an overview of the resource types and figures illustrating allowed relationships between them, and [Appendix A][prezi30-appendixa] provides summary tables of the property requirements.
+This section provides a detailed description of the resource types used in this specification. [Section 2][prezi30-type-overview] provides an overview of the resource types and figures illustrating allowed relationships between them, and [Appendix A][prezi30-appendixa] provides summary tables of the property requirements.
 
 ### 5.1. Collection
 
-Collections are used to list the Manifests available for viewing. Collections _MAY_ include both other Collections and Manifests, in order to form a tree-structured hierarchy.  Collections might align with the curated management of cultural heritage resources in sets, also called "collections", but may have absolutely no such similarity.
+Collections are used to list the Manifests available for viewing. Collections _MAY_ include both other Collections and Manifests, in order to form a tree-structured hierarchy. Collections might align with the curated management of cultural heritage resources in sets, also called "collections", but may have absolutely no such similarity.
 
 The intended usage of Collections is to allow clients to:
 
@@ -1168,286 +1068,291 @@ The intended usage of Collections is to allow clients to:
   * Visualize lists or hierarchies of related Manifests.
   * Provide navigation through a list or hierarchy of available Manifests.
 
-Collections _MAY_ be [embedded][prezi30-terminology] inline within other Collections, such as when the Collection is used primarily to subdivide a larger one into more manageable pieces, however Manifests _MUST NOT_ be [embedded][prezi30-terminology] within Collections. An [embedded][prezi30-terminology] Collection _SHOULD_ also have its own URI from which the JSON description is available.
+Collections _MAY_ be [embedded][prezi30-terminology] inline within other Collections, such as when the Collection is used primarily to subdivide a larger one into smaller pieces. However, Manifests _MUST NOT_ be [embedded][prezi30-terminology] within Collections. An [embedded][prezi30-terminology] Collection _SHOULD_ also have its own URI from which the JSON description is available.
 
-> This may need replacing with something that better fits ITF.
-Manifests or Collections _MAY_ be [referenced][prezi30-terminology] from more than one Collection. For example, an institution might define four Collections: one for modern works, one for historical works, one for newspapers and one for books. The Manifest for a modern newspaper would then appear in both the modern Collection and the newspaper Collection. Alternatively, the institution may choose to have two separate newspaper Collections, and reference each as a sub-Collection of modern and historical.
+Manifests or Collections _MAY_ be [referenced][prezi30-terminology] from more than one Collection. For example, an institution might define four Collections: one for modern works, one for historical works, one for newspapers and one for books. The Manifest for a historical newspaper would then appear in both the historical Collection and the newspaper Collection. Alternatively, the institution may choose to have two separate newspaper Collections, and reference each as a sub-Collection of modern and historical.
 
-Collections with an empty `items` property are allowed but discouraged.  For example, if the user performs a search that matches no Manifests, then the server _MAY_ return a Collection response with no Manifests.
+Collections with an empty `items` property are allowed but discouraged. For example, if the user performs a search that matches no Manifests, then the server _MAY_ return a Collection response with no Manifests.
 
-Collections or Manifests [referenced][prezi30-terminology] in the `items` property _MUST_ have the `id`, `type` and `label` properties. They _SHOULD_ have the `thumbnail` property.
+Collections or Manifests [referenced][prezi30-terminology] in the `items` property _MUST_ have the `id`, `type` and `label` properties.
 
 An example Collection document:
 
-{% include api/code_header.html %}
 ``` json-doc
 {
-  "@context": "http://iiif.io/api/presentation/{{ page.major }}/context.json",
-  "id": "https://example.org/itf/collection/top",
-  "type": "Collection",
-  "label": { "en": [ "Collection for Example Organization" ] },
-  "summary": { "en": [ "Short summary of the Collection" ] },
-  "requiredStatement": {
-    "label": { "en": [ "Attribution" ] },
-    "value": { "en": [ "Provided by Example Organization" ] }
-  },
-
-  "items": [
-    {
-      "id": "https://example.org/itf/1/manifest",
-      "type": "Manifest",
-      "label": { "en": [ "Example Manifest 1" ] },
-      "thumbnail": [
-        {
-          "id": "https://example.org/manifest1/thumbnail.jpg",
-          "type": "Image",
-          "format": "image/jpeg"
+    "@context": "http://iiif.io/api/presentation/{{ page.major }}/context.json",
+    "id": "https://example.org/itf/collection/top",
+    "type": "Collection",
+    "label": {
+        "en": ["Collection for Example Organization"]
+    },
+    "summary": {
+        "en": ["Short summary of the Collection"]
+    },
+    "requiredStatement": {
+        "label": {
+            "en": ["Attribution"]
+        },
+        "value": {
+            "en": ["Provided by Example Organization"]
         }
-      ]
-    }
-  ]
+    },
+    "items": [
+        {
+            "@context": "http://textframe.io/api/presentation/1/context.json",
+            "id": "https://example.org/itf/CASE16313/diplomatic/info.json",
+            "type": "Manifest",
+            "label": {
+                "en": ["CASE16313: Horary consultation concerning Mrs Elizabeth Berry (PERSON9677) (5 September 1604 at 11:40)"]
+            },
+            "items": [
+                {
+                    "id": "https://example.org/itf/CASE16313/diplomatic/book/frame/full",
+                    "type": "TextFrame",
+                    "label": {
+                        "en": ["Lorem ipse dolor zzril"]
+                    },
+                    "items": [
+                        {
+                            "id": "https://example.org/itf/CASE16313/diplomatic/book/full/1",
+                            "type": "AnnotationFrame",
+                            "items": [
+                                {
+                                    "id": "https://example.org/itf/CASE16313/diplomatic/book/annotation/full/1",
+                                    "type": "Annotation",
+                                    "motivation": "text",
+                                    "body": {
+                                        "id": "https://example.org/itf/CASE16313/diplomatic/book/full/rich/html",
+                                        "type": "html",
+                                        "format": "text/html"
+                                    }
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
 }
 ```
 
-Note that while the Collection _MAY_ reference Collections or Manifests from previous versions of the API, the information included in this document _MUST_ follow the current version requirements, not the requirements of the target document. This is in contrast to the requirements of `service`, as there is no way to distinguish a version 2 Manifest from a version 3 Manifest by its `type`.
-
 ### 5.2. Manifest
 
-The Manifest resource typically represents a single object and any intellectual work or works embodied within that object. In particular it includes descriptive, rights and linking information for the object. The Manifest embeds the TextFrames that should be rendered as views of the object and contains sufficient information for the client to initialize itself and begin to display something quickly to the user.
+The Manifest resource typically represents a single object and any intellectual work or works embodied within that object. In particular, it includes descriptive, rights and linking information for the object. The Manifest embeds the TextFrames that should be rendered as views of the object and contains sufficient information for the client to initialize itself and begin to display something quickly to the user.
 
 The identifier in `id` _MUST_ be able to be dereferenced to retrieve the JSON description of the Manifest, and thus _MUST_ use the HTTP(S) URI scheme.
 
-The Manifest _MUST_ have an `items` property, which is an array of JSON-LD objects. Each object is a TextFrame, with requirements as described in the next section. The Manifest _MAY_ also have a `structures` property listing one or more [Ranges][prezi30-range] which describe additional structure of the content, such as might be rendered as a table of contents. The Manifest _MAY_ have an `annotations` property, which includes Annotation Page resources where the Annotations have the Manifest as their `target`. These will typically be comment style Annotations, and _MUST NOT_ have `painting` as their `motivation`.
+The Manifest _MUST_ have an `items` property, which is an array of JSON-LD objects. Each object is a TextFrame, with requirements as described in the next section. The Manifest _MAY_ also have a `structures` property listing one or more [Ranges][prezi30-range] which describe additional structure of the content, such as might be rendered as a table of contents. The Manifest _MAY_ have an `annotations` property, which includes Annotation Page resources where the Annotations have the Manifest as their `target`. These will typically be comment style Annotations, and _MUST NOT_ have `writing` as their `motivation`.
 
-> Clearly the example will need to be reworked a bit for us. This one, for instance, has thumbnails, so if we get rid of that then we'll need to remove it here, and more generally I'd guess we'll need to make it fit what we're doing.
-{% include api/code_header.html %}
 ``` json-doc
 {
-  // Metadata about this manifest file
-  "@context": "http://iiif.io/api/presentation/{{ page.major }}/context.json",
-  "id": "https://example.org/itf/book1/manifest",
-  "type": "Manifest",
-
-  // Descriptive metadata about the object/work
-  "label": { "en": [ "Book 1" ] },
-  "metadata": [
-    {
-      "label": { "en": [ "Author" ] },
-      "value": { "none": [ "Anne Author" ] }
+    "@context": "http://textframe.io/api/presentation/1/context.json",
+    "id": "https://example.org/itf/CASE16313/diplomatic/info.json",
+    "type": "Manifest",
+    "label": {
+        "en": ["CASE16313: Horary consultation concerning Mrs Elizabeth Berry (PERSON9677) (5 September 1604 at 11:40)"]
     },
-    {
-      "label": { "en": [ "Published" ] },
-      "value": {
-        "en": [ "Paris, circa 1400" ],
-        "fr": [ "Paris, environ 1400" ]
-      }
-    },
-    {
-      "label": { "en": [ "Notes" ] },
-      "value": {
-        "en": [
-          "Text of note 1",
-          "Text of note 2"
-        ]
-      }
-    },
-    {
-      "label": { "en": [ "Source" ] },
-      "value": { "none": [ "<span>From: <a href=\"https://example.org/db/1.html\">Some Collection</a></span>" ] }
-    }
-  ],
-  "summary": { "en": [ "Book 1, written by Anne Author, published in Paris around 1400." ] },
-
-  "thumbnail": [
-    {
-      "id": "https://example.org/itf/book1/page1/full/80,100/0/default.jpg",
-      "type": "Image",
-      "format": "image/jpeg",
-      "service": [
+    "metadata": [
         {
-          "id": "https://example.org/itf/book1/page1",
-          "type": "ImageService3",
-          "profile": "level1"
-        }
-      ]
-    }
-  ],
-
-  // Presentation Information
-  "viewingDirection": "right-to-left",
-  "behavior": [ "paged" ],
-  "navDate": "1856-01-01T00:00:00Z",
-
-  // Rights Information
-  "rights": "http://creativecommons.org/licenses/by/4.0/",
-  "requiredStatement": {
-    "label": { "en": [ "Attribution" ] },
-    "value": { "en": [ "Provided by Example Organization" ] }
-  },
-  "provider": [
-    {
-      "id": "https://example.org/about",
-      "type": "Agent",
-      "label": { "en": [ "Example Organization" ] },
-      "homepage": [
-        {
-          "id": "https://example.org/",
-          "type": "Text",
-          "label": { "en": [ "Example Organization Homepage" ] },
-          "format": "text/html"
-        }
-      ],
-      "logo": [
-        {
-          "id": "https://example.org/service/inst1/full/max/0/default.png",
-          "type": "Image",
-          "format": "image/png",
-          "service": [
-            {
-              "id": "https://example.org/service/inst1",
-              "type": "ImageService3",
-              "profile": "level2"
+            "label": {
+                "en": ["Author"]
+            },
+            "value": {
+                "en": ["Mr Gerence James [Marks]"]
             }
-          ]
-        }
-      ],
-      "seeAlso": [
+        },
         {
-          "id": "https://data.example.org/about/us.jsonld",
-          "type": "Dataset",
-          "format": "application/ld+json",
-          "profile": "https://schema.org/"
-        }
-      ]
-    }
-  ],
-
-  // Links
-  "homepage": [
-    {
-      "id": "https://example.org/info/book1/",
-      "type": "Text",
-      "label": { "en": [ "Home page for Book 1" ] },
-      "format": "text/html"
-    }
-  ],
-  "service": [
-    {
-      "id": "https://example.org/service/example",
-      "type": "ExampleExtensionService",
-      "profile": "https://example.org/docs/example-service.html"
-    }
-  ],
-  "seeAlso": [
-    {
-      "id": "https://example.org/library/catalog/book1.xml",
-      "type": "Dataset",
-      "format": "text/xml",
-      "profile": "https://example.org/profiles/bibliographic"
-    }
-  ],
-  "rendering": [
-    {
-      "id": "https://example.org/itf/book1.pdf",
-      "type": "Text",
-      "label": { "en": [ "Download as PDF" ] },
-      "format": "application/pdf"
-    }
-  ],
-  "partOf": [
-    {
-      "id": "https://example.org/collections/books/",
-      "type": "Collection"
-    }
-  ],
-  "start": {
-    "id": "https://example.org/itf/book1/TextFrame/p2",
-    "type": "TextFrame"
-  },
-
-  // List of Services, referenced from within items, structures or annotations
-  "services": [
-    {
-      "@id": "https://example.org/itf/auth/login",
-      "@type": "AuthCookieService1",
-      "profile": "http://iiif.io/api/auth/1/login",
-      "label": "Login to Example Institution",
-      "service": [
+            "label": {
+                "en": ["Author"]
+            },
+            "value": {
+                "en": ["Mr Richard Napier [Sandy] [Richard Napier [Senior]]"]
+            }
+        },
         {
-          "@id": "https://example.org/itf/auth/token",
-          "@type": "AuthTokenService1",
-          "profile": "http://iiif.io/api/auth/1/token"          
+            "label": {
+                "en": ["Date"]
+            },
+            "value": {
+                "en": ["5 September 1604 at 11:40"]
+            }
+        },
+        {
+            "label": {
+                "en": ["DateTimeStamp"]
+            },
+            "value": {
+                "en": ["1604-09-05T11:40:00"]
+            }
         }
-      ]
-    }
-  ],
+    ],
+    "summary": [
+        {
+            "en": ["Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris commodo magna nisl, ut condimentum eros gravida sit amet. Aliquam ultrices vel odio sodales mattis. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae."]
+        }
+    ],
+     
+    // Presentation Information
+    "navDate": "1604-09-05T11:40:00",
 
-  // List of TextFrames
-  "items": [
-    {
-      "id": "https://example.org/itf/book1/TextFrame/p1",
-      "type": "TextFrame",
-      "label": { "none": [ "p. 1" ] }
-      // ...
-    }
-  ],
+    // Rights Information
+    "rights": "https://creativecommons.org/licenses/by/4.0/",
+    "requiredStatement": {
+        "label": {
+            "en": ["Attribution"]
+        },
+        "value": {
+            "en": ["Cite this as: Lauren Kassell, Michael Hawkins, Robert Ralley, John Young, Joanne Edge, Janet Yvonne Martin-Portugues, and Natalie Kaoukji (eds.), ‘CASE16313’, The casebooks of Simon Forman and Richard Napier, 1596–1634: a digital edition, https://casebooks.lib.cam.ac.uk/case/CASE16313, accessed 18 July 2024."]
+        }
+    },
+    "provider": [
+        {
+            "id": "https://example.org/about",
+            "type": "Agent",
+            "label": {
+                "en": ["Example Organization"]
+            },
+            "homepage": [
+                {
+                    "id": "https://example.org/",
+                    "type": "Text",
+                    "label": {
+                        "en": ["Example Organization Homepage"]
+                    },
+                    "format": "text/html"
+                }
+            ],
+            "logo": [
+                {
+                    "id": "https://example.org/service/inst1/full/max/0/default.png",
+                    "type": "Image",
+                    "format": "image/png",
+                    "service": [
+                        {
+                            "id": "https://example.org/service/inst1",
+                            "type": "ImageService3",
+                            "profile": "level2"
+                        }
+                    ]
+                }
+            ],
+            "seeAlso": [
+                {
+                    "id": "https://data.example.org/about/us.jsonld",
+                    "type": "Dataset",
+                    "format": "application/ld+json",
+                    "profile": "https://schema.org/"
+                }
+            ]
+        }
+    ],
 
-  // structure of the resource, described with Ranges
-  "structures": [
-    {
-      "id": "https://example.org/itf/book1/range/top",
-      "type": "Range"
+    // Links
+    "homepage": [
+        {
+            "id": "https://example.org/info/book1/",
+            "type": "Text",
+            "label": {
+                "en": ["Home page for Book 1"]
+            },
+            "format": "text/html"
+        }
+    ],
+    "service": [
+        {
+            "id": "https://example.org/service/example",
+            "type": "ExampleExtensionService",
+            "profile": "https://example.org/docs/example-service.html"
+        }
+    ],
+    "partOf": [
+        {
+            "id": "https://example.org/collections/books/",
+            "type": "Collection"
+        }
+    ],
+    "seeAlso": [
+        {
+            "id": "https://example.org/library/catalog/book1.xml",
+            "type": "Dataset",
+            "format": "text/xml",
+            "profile": "https://example.org/profiles/ead"
+        }
+    ],
+
+    // List of Services, referenced from within items, structures or annotations
+    "services": [
+        {
+            "@id": "https://example.org/itf/auth/login",
+            "@type": "AuthCookieService1",
+            "profile": "https://iiif.io/api/auth/1/login",
+            "label": "Login to Example Institution",
+            "service": [
+                {
+                    "@id": "https://example.org/itf/auth/token",
+                    "@type": "AuthTokenService1",
+                    "profile": "https://iiif.io/api/auth/1/token"
+                }
+            ]
+        }
+    ],
+
+    // List of TextFrames
+    "items": [
+        {
+            "id": "https://example.org/itf/CASE16313/diplomatic/book/frame/full",
+            "type": "TextFrame",
+            "label": {
+                "en": ["LABEL GOES HERE"]
+            },
+            // ...
+        }
+    ],
+
+    // structure of the resource, described with Ranges
+    "structures": [
+        {
+            "id": "https://example.org/itf/book1/range/top",
+            "type": "Range"
       // Ranges members should be included here
-    }
+        }
     // Any additional top level Ranges can be included here
-  ],
+    ],
 
-  // Commentary Annotations on the Manifest
-  "annotations": [
-    {
-      "id": "https://example.org/itf/book1/annotations/p1",
-      "type": "AnnotationPage",
-      "items": [
-        // Annotations about the Manifest are included here
-      ]
-    }
-  ]
+    // Commentary Annotations on the Manifest
+    "annotations": [
+        {
+            "id": "https://example.org/itf/book1/annotations/p1",
+            "type": "AnnotationPage",
+            "items": [
+                // Annotations about the Manifest are included here
+            ]
+        }
+    ]
 }
 ```
 
 ###  5.3. TextFrame
 
-> Is this first clause correct? That it represents an individual page or view? I take it that it can, but might it not also represent an entire text or a fragment of a text? Also, we'll need to pay attention to the URI stipulation later on in the paragraph. How does that relate to what happens in ITF? Perhaps all that's needed is the removal of the references to spatial regions or temporal segments, but I'll defer to someone who knows more about this.
-The TextFrame represents an individual page or view and acts as a central point for assembling the different content resources that make up the display. TextFrames _MUST_ be identified by a URI and it _MUST_ be an HTTP(S) URI. The URI of the TextFrame _MUST NOT_ contain a fragment (a `#` followed by further characters), as this would make it impossible to refer to a segment of the TextFrame's area using the [media fragment syntax][org-w3c-media-frags] of `#xywh=` for spatial regions, and/or `#t=` for temporal segments. TextFrames _MAY_ be able to be dereferenced separately from the Manifest via their URIs as well as being [embedded][prezi30-terminology].
+The TextFrame represents an individual frame or view that acts as the container for assembling the content resources it contains. TextFrames _MUST_ be identified by a URI and it _MUST_ be an HTTP(S) URI. The URI of the TextFrame _MUST NOT_ contain an anchor fragment (a `#` followed by further characters). TextFrames _MAY_ be able to be dereferenced separately from the Manifest via their URIs as well as being [embedded][prezi30-terminology].
 
 Every TextFrame _SHOULD_ have a `label` to display. If one is not provided, the client _SHOULD_ automatically generate one for use based on the TextFrame's position within the `items` property.
 
-Content resources are associated with the TextFrame via Web Annotations. Content that is to be rendered as part of the TextFrame _MUST_ be associated by an Annotation that has the `motivation` value `painting`. These Annotations are recorded in the `items` of one or more Annotation Pages, referred to in the `items` array of the TextFrame. Annotations that do not have the `motivation` value `painting` _MUST NOT_ be in pages [referenced][prezi30-terminology] in `items`, but instead in the `annotations` property. Referenced, external Annotation Pages _MUST_ have the `id` and `type` properties.
+Content resources are associated with the TextFrame via Web Annotations. Content that is to be rendered as part of the TextFrame _MUST_ be associated by an Annotation that has the `motivation` value `writing`. These Annotations are recorded in the `items` of one or more Annotation Pages, referred to in the `items` array of the TextFrame. Annotations that do not have the `motivation` value `writing` _MUST NOT_ be in pages [referenced][prezi30-terminology] in `items`, but instead in the `annotations` property. Referenced, external Annotation Pages _MUST_ have the `id` and `type` properties.
 
-Content that is derived from the TextFrame, such as a manual or automatic (OCR) transcription of text in an image or the words spoken in an audio representation, _MUST_ be associated by an Annotation that has the `motivation` value `supplementing`. Annotations _MAY_ have any other `motivation` values as well. Thus, content of any type may be associated with the TextFrame via an Annotation that has the `motivation` value `painting`, meaning the content is _part of_ the TextFrame; an Annotation that has the `motivation` value `supplementing`, meaning the content is _from_ the TextFrame but not necessarily part of it; or an Annotation with another `motivation` meaning that it is somehow about the TextFrame.
-
-> Does this paragraph, and the two that follow it, relate to the ITF situation at all, or can it all be deleted? The text itself has no duration, though annotations to it might. Are we worrying about allowing annotations to particular geometric areas of the TextFrame? If not deleted, I suspect these paragraphs need heavy surgery.
-A TextFrame _MUST_ have a rectangular aspect ratio (described with the `height` and `width` properties) and/or a `duration` to provide an extent in time. These dimensions allow resources to be associated with specific regions of the TextFrame, within the space and/or time extents provided. Content _MUST NOT_ be associated with space or time outside of the TextFrame's dimensions, such as at coordinates below 0,0, greater than the height or width, before 0 seconds, or after the duration. Content resources that have dimensions which are not defined for the TextFrame _MUST NOT_ be associated with that TextFrame by an Annotation that has the `motivation` value `painting`. For example, it is valid to use an Annotation that has the `motivation` value `painting` to associate an Image (which has only height and width) with a TextFrame that has all three dimensions, but it is an error to associate a Video resource (which has height, width and duration) with a TextFrame that does not have all three dimensions. Such a resource _SHOULD_ instead be [referenced][prezi30-terminology] using the `rendering` property, or by Annotations that have a `motivation` value other than `painting` in the `annotations` property.
-
-Parts of TextFrames _MAY_ be described using a Specific Resource with a Selector, following the patterns defined in the [Web Annotation][org-w3c-webanno] data model. The use of the FragmentSelector class is _RECOMMENDED_ by that specification, as it allows for refinement by other Selectors and for consistency with use cases that cannot be represented using a URI fragment directly. Parts of TextFrames can be [referenced][prezi30-terminology] from Ranges, as the `body` or `target` of Annotations, or in the `start` property.
-
-Parts of TextFrames _MAY_ also be identified by appending a fragment to the TextFrame's URI, and these parts are still considered to be TextFrames: their `type` value is the string `TextFrame`. Rectangular spatial parts of TextFrames _MAY_ also be described by appending an `xywh=` fragment to the end of the TextFrame's URI. Similarly, temporal parts of TextFrames _MAY_ be described by appending a `t=` fragment to the end of the TextFrame's URI. Spatial and temporal fragments _MAY_ be combined, using an `&` character between them, and the temporal dimension _SHOULD_ come first. It is an error to select a region using a dimension that is not defined by the TextFrame, such as a temporal region of a TextFrame that only has height and width dimensions.
+Content that is derived from the TextFrame, such as IIIF images for the underlying resource or an audio representation of the text, _MUST_ be associated by an Annotation that has the `motivation` value `supplementing`. Annotations _MAY_ have any other `motivation` values as well. Thus, content of any type may be associated with the TextFrame via an Annotation that has the `motivation` value `writing`, meaning the content is _part of_ the TextFrame; an Annotation that has the `motivation` value `supplementing`, meaning the content is _from_ the TextFrame but not necessarily part of it; or an Annotation with another `motivation` meaning that it is somehow about the TextFrame.
 
 > This point seems fine but the example in the second sentence clearly needs to be altered. The last sentence of the paragraph doesn't seem to apply to us. Can that last sentence be deleted, or is there something comparable we need to say?
-TextFrames _MAY_ be treated as content resources for the purposes of annotating on to other TextFrames. For example, a TextFrame (TextFrame A) with a video resource and Annotations representing subtitles or captions may be annotated on to another TextFrame (TextFrame B). This pattern maintains the correct spatial and temporal alignment of TextFrame A's content relative to TextFrame B's dimensions.
 
-> Can this be deleted? Or is there something comparable that needs to be said about TextFrames and their Texts? I'm feeling that generally this section, more than any other in the spec, needs to be rethought and rewritten from scratch. I think our needs are very different from those of the IIIF Canvas.
-Renderers _MUST_ scale content into the space represented by the TextFrame, and _SHOULD_ follow any `timeMode` value provided for time-based media. If the TextFrame represents a view of a physical object, the spatial dimensions of the TextFrame _SHOULD_ be the same scale as that physical object, and content _SHOULD_ represent only the object.
+TextFrames _MAY_ be treated as content resources for the purposes of annotating on to other TextFrames. For example, a TextFrame (TextFrame A) containing a commentary on a historical text along with Annotations may be annotated on to another TextFrame (TextFrame B) containing the historical text.
 
-{% include api/code_header.html %}
 ``` json-doc
 {
   // Metadata about this TextFrame
   "id": "https://example.org/itf/book1/TextFrame/p1",
   "type": "TextFrame",
   "label": { "none": [ "p. 1" ] },
-  "height": 1000,
-  "width": 750,
 
   "items": [
     {
@@ -1464,10 +1369,9 @@ Renderers _MUST_ scale content into the space represented by the TextFrame, and 
       "id": "https://example.org/itf/book1/comments/p1/1",
       "type": "AnnotationPage",
       "items": [
-        // Non-Painting Annotations on the TextFrame are included here
+        // Non-writing Annotations on the TextFrame are included here
       ]
     }
-
   ]
 }
 ```
@@ -1475,6 +1379,7 @@ Renderers _MUST_ scale content into the space represented by the TextFrame, and 
 ###  5.4. Range
 
 > See my comment somewhere distantly above. Do we need range, for its ability to handle e.g. chapters in a book? Or is this kind of thing handled by the fragments discussed in the Text API?
+
 Ranges are used to represent structure within an object beyond the default order of the TextFrames in the `items` property of the Manifest, such as newspaper sections or articles, chapters within a book, or movements within a piece of music. Ranges can include TextFrames, parts of TextFrames, or other Ranges, creating a tree structure like a table of contents.
 
 The intent of adding a Range to the Manifest is to allow the client to display a linear or hierarchical navigation interface to enable the user to quickly move through the object's content. Clients _SHOULD_ present only Ranges that have the `label` property and do not have a `behavior` value `no-nav` to the user. Clients _SHOULD NOT_ render TextFrame labels as part of the navigation, and a Range that wraps the TextFrame _MUST_ be created if this is the desired presentation.
@@ -1486,12 +1391,11 @@ Ranges _MUST_ have URIs and they _SHOULD_ be HTTP(S) URIs. Top level Ranges are 
 All of the TextFrames or parts that should be considered as being part of a Range _MUST_ be included within the Range's `items` property, or a descendant Range's `items`.
 
 > This paragraph needs altering to fit ITF a bit better. Time segments of a single TextFrame representing different sections of a piece of music clearly doesn't work as an example for us. But I'm reluctant to do anything with this paragraph until we've dealt with the wider question of whether we need Range at all, and if so what for.
-The TextFrames and parts of TextFrames need not be contiguous or in the same order as in the Manifest's `items` property or any other Range. Examples include newspaper articles that are continued in different sections, a chapter that starts half way through a page, or time segments of a single TextFrame that represent different sections of a piece of music.
+
+The TextFrames and parts of TextFrames need not be contiguous or in the same order as in the Manifest's `items` property or any other Range. Examples include newspaper articles that are continued in different sections, a chapter that starts halfway through a page, or a text that is divided into separate bound manuscript volumes.
 
 Ranges _MAY_ link to an Annotation Collection that has the content of the Range using the `supplementary` property. The [referenced][prezi30-terminology] Annotation Collection will contain Annotations that target areas of TextFrames within the Range and link content resources to those TextFrames.
 
-
-{% include api/code_header.html %}
 ``` json-doc
 {
   "@context": "http://iiif.io/api/presentation/{{ page.major }}/context.json",
@@ -1529,14 +1433,6 @@ Ranges _MAY_ link to an Annotation Collection that has the content of the Range 
             {
               "id": "https://example.org/itf/book1/TextFrame/p2",
               "type": "TextFrame"
-            },
-            {
-              "type": "SpecificResource",
-              "source": "https://example.org/itf/book1/TextFrame/p3",
-              "selector": {
-                "type": "FragmentSelector",
-                "value": "xywh=0,0,750,300"
-              }
             }
           ]
         },
@@ -1552,18 +1448,16 @@ Ranges _MAY_ link to an Annotation Collection that has the content of the Range 
 
 ###  5.5. Annotation Page
 
-> Clearly 'Images and other content' cfor our purposes needs to be altered, but I'm not sure what it's actually saying here. It sounds as though it's saying that Annotations are used to connect the TextFrame to the text in it, which seems odd. What does that sentence actually mean? The rest of the paragraph needs turning round somehow, too, so that the pointed-to-thing is text, and the resources associated with it can be more text (or ideally anything else, though there we're into IIIF territory anyway).
-Association of Images and other content with their respective TextFrames is done via Annotations. Traditionally Annotations are used for associating commentary with the resource the Annotation's text or body is about; the [Web Annotation][org-w3c-webanno] model allows any resource to be associated with any other resource, or parts thereof, and it is reused for both commentary and painting resources on the TextFrame. Other resources beyond images might include the full text of the object, musical notations, musical performances, diagram transcriptions, commentary Annotations, tags, video, data and more.
+Association of Images and other content with their respective TextFrames is done via Annotations. Traditionally Annotations are used for associating commentary with the resource the Annotation's text or body is about; the [Web Annotation][org-w3c-webanno] model allows any resource to be associated with any other resource, or parts thereof, and it is reused for both commentary and `writing` resources on the TextFrame. Other resources beyond images might include IIIF images of the text, an audio or video performance of the text, commentary Annotations, tags and more.
 
-These Annotations are collected together in Annotation Page resources, which are included in the `items` property from the TextFrame. Each Annotation Page can be [embedded][prezi30-terminology] in its entirety, if the Annotations should be processed as soon as possible when the user navigates to that TextFrame, or a reference to an external page. This reference _MUST_ include `id` and `type`, _MUST NOT_ include `items` and _MAY_ include other properties, such as `behavior`. All of the Annotations in the Annotation Page _SHOULD_ have the TextFrame as their `target`.  Clients _SHOULD_ process the Annotation Pages and their items in the order given in the TextFrame.  Publishers may choose to expedite the processing of [embedded][prezi30-terminology] Annotation Pages by ordering them before external pages, which will need to be dereferenced by the client.
+These Annotations are collected together in Annotation Page resources, which are included in the `items` property from the TextFrame. Each Annotation Page can be [embedded][prezi30-terminology] in its entirety, if the Annotations should be processed as soon as possible when the user navigates to that TextFrame, or a reference to an external page. This reference _MUST_ include `id` and `type`, _MUST NOT_ include `items` and _MAY_ include other properties, such as `behavior`. All the Annotations in the Annotation Page _SHOULD_ have the TextFrame as their `target`. Clients _SHOULD_ process the Annotation Pages and their items in the order given in the TextFrame. Publishers may choose to expedite the processing of [embedded][prezi30-terminology] Annotation Pages by ordering them before external pages, which will need to be dereferenced by the client.
 
 An Annotation Page _MUST_ have an HTTP(S) URI given in `id`, and _MAY_ have any of the other properties defined in this specification or the Web Annotation specification. The Annotations are listed in the `items` property of the Annotation Page.
 
 __Incompatibility Warning__<br/>
-The definition of `label` in the Web Annotation specification does not produce JSON conformant with the structure defined in this specification for languages. Given the absolute requirement for internationalized labels and the strong desire for consistently handling properties, the `label` property on Annotation model classes does not conform to the string requirement of the Web Annotation Data Model.  This [issue has been filed with the W3C][github-webanno-437] and will hopefully be addressed in a future version of the standard.
+The definition of `label` in the Web Annotation specification does not produce JSON conformant with the structure defined in this specification for languages. Given the absolute requirement for internationalized labels and the strong desire for consistently handling properties, the `label` property on Annotation model classes does not conform to the string requirement of the Web Annotation Data Model. This [issue has been filed with the W3C][github-webanno-437] and will hopefully be addressed in a future version of the standard.
 {: .warning}
 
-{% include api/code_header.html %}
 ``` json-doc
 {
   "@context": "http://iiif.io/api/presentation/{{ page.major }}/context.json",
@@ -1595,45 +1489,29 @@ When Annotations are used to associate content resources with a TextFrame, the c
 
 Note that the Web Annotation data model defines different patterns for the `value` property, when used within an Annotation. The value of a Textual Body or a Fragment Selector, for example, are strings rather than JSON objects with languages and values. Care must be taken to use the correct string form in these cases.
 
-Additional features of the Web Annotation data model _MAY_ also be used, such as selecting a segment of the TextFrame or content resource, or embedding the comment or transcription within the Annotation. The use of these advanced features sometimes results in situations where the `target` is not a content resource, but instead a SpecificResource, a Choice, or other non-content object. Implementations should check the `type` of the resource and not assume that it is always content to be rendered.
-
-> Can this be deleted? I take it we hope that eventually an ITF equivalent will exist, but it currently doesn't. Or perhaps we replace it with a statement saying that additional Selector classes may be defined by users later on, or something along those lines.
-The IIIF community has defined [additional Selector classes][registry-selectors] for use with SpecificResources, especially for cases when it is not possible to use the official FragmentSelector. See the additional documentation for details.
-
-{% include api/code_header.html %}
-``` json-doc
-{
-  "@context": "http://iiif.io/api/presentation/{{ page.major }}/context.json",
-  "id": "https://example.org/itf/book1/annotation/p0001-image",
-  "type": "Annotation",
-  "motivation": "painting",
-  "body": {
-    "id": "https://example.org/images/page1.jpg",
-    "type": "Image"
-  },
-  "target": "https://example.org/itf/book1/TextFrame/p1"
-}
-```
+Additional features of the Web Annotation data model _MAY_ also be used, such as selecting a segment of the TextFrame or content resource, or embedding the comment within the Annotation. The use of these advanced features sometimes results in situations where the `target` is not a content resource, but instead a SpecificResource, a Choice, or other non-content object. Implementations should check the `type` of the resource and not assume that it is always content to be rendered.
 
 ### 5.7. Content Resources
 
 Content resources are external web resources that are [referenced][prezi30-terminology] from within the Manifest or Collection. This includes images, video, audio, data, web pages or any other format.
 
-As described in the [TextFrame][prezi30-TextFrame] section, the content associated with a TextFrame (and therefore the content of a Manifest) is provided by the `body` property of Annotations with the `painting` motivation. Content resources can also be [referenced][prezi30-terminology] from `thumbnail`, `homepage`, `logo`, `rendering`, and `seeAlso` properties.
+As described in the [TextFrame][prezi30-TextFrame] section, the content associated with a TextFrame (and therefore the content of a Manifest) is provided by the `body` property of Annotations with the `painting` motivation. Content resources can also be [referenced][prezi30-terminology] from `homepage`, `logo`, `rendering`, and `seeAlso` properties.
 
 Content resources _MUST_ have an `id` property, with the value being the URI at which the resource can be obtained.
 
-The type of the content resource _MUST_ be included, and _SHOULD_ be taken from the table listed under the definition of `type`. The `format` of the resource _SHOULD_ be included and, if so, _SHOULD_ be the media type that is returned when the resource is dereferenced. The `profile` of the resource, if it has one, _SHOULD_ also be included. Content resources in appropriate formats _MAY_ also have the `language`, `height`, `width`, and `duration` properties. Content resources _MAY_ also have descriptive and linking properties, as defined in [section 3][prezi30-resource-properties].
+The type of the content resource _MUST_ be included, and _SHOULD_ be taken from the table listed under the definition of `type`. The `format` of the resource _SHOULD_ be included and, if so, _SHOULD_ be the media type that is returned when the resource is dereferenced. The `profile` of the resource, if it has one, _SHOULD_ also be included. Content resources in appropriate formats _MAY_ also have the `language` property. Content resources _MAY_ also have descriptive and linking properties, as defined in [section 3][prezi30-resource-properties].
 
 > To what extent are we worrying about, or including in the spec, discussions about IIIF handling of external resources...? (This makes me wonder how ITF plays with IIIF in general. There are a lot of places in this API that envisage links to (or the inclusion of) images, videos, audio files and the like. Those are clearly going to be wanted by people making websites, so I suppose we need to specify how people annotate them to the TextFrame. But what beyond that? Can we just say: everything to do with images, videos, audio etc. has to be handled via IIIF?)
+> > I'd say that we keep in the existing bits, but not worry about it too much. At this point, I feel the concern should be ensuring that core functionality is documented rather than attempting to cater for all possibilities of additional resources.
+
 If the content resource is an Image, and a IIIF Image service is available for it, then the `id` property of the content resource _MAY_ be a complete URI to any particular representation supported by the Image Service, such as `https://example.org/image1/full/1000,/0/default.jpg`, but _MUST NOT_ be just the URI of the IIIF Image service. Its `type` value _MUST_ be the string `Image`. Its media type _MAY_ be listed in `format`, and its height and width _MAY_ be given as integer values for `height` and `width` respectively. The Image _SHOULD_ have the service [referenced][prezi30-terminology] from it using the `service` property.
 
 If there is a need to distinguish between content resources, then the resource _SHOULD_ have the `label` property.
 
 A TextFrame _MAY_ be treated as a content resource for the purposes of annotating it on to other TextFrames. In this situation, the TextFrame _MAY_ be [embedded][prezi30-terminology] within the Annotation, or require dereferencing to obtain its description.
 
+> Update json
 
-{% include api/code_header.html %}
 ``` json-doc
 {
   "@context": "http://iiif.io/api/presentation/{{ page.major }}/context.json",
@@ -1665,56 +1543,59 @@ A TextFrame _MAY_ be treated as a content resource for the purposes of annotatin
 }
 ```
 
-
 ### 5.8. Annotation Collection
 
-Annotation Collections represent groupings of Annotation Pages that should be managed as a single whole, regardless of which TextFrame or resource they target. This allows, for example, all of the Annotations that make up a particular translation of the text of a book to be collected together. A client might then present a user interface that allows all of the Annotations in an Annotation Collection to be displayed or hidden according to the user's preference.
+Annotation Collections represent groupings of Annotation Pages that should be managed as a single whole, regardless of which TextFrame or resource they target. This allows, for example, all Annotations that make up a particular translation of a text to be collected together. A client might then present a user interface that allows all the Annotations in an Annotation Collection to be displayed or hidden according to the user's preference.
 
 Annotation Collections _MUST_ have a URI, and it _SHOULD_ be an HTTP(S) URI. They _SHOULD_ have a `label` and _MAY_ have any of the other descriptive, linking or rights properties.
 
-{% include api/code_header.html %}
 ``` json-doc
 {
-  "@context": "http://iiif.io/api/presentation/{{ page.major }}/context.json",
-  "id": "https://example.org/itf/book1/annocoll/transcription",
-  "type": "AnnotationCollection",
-  "label": {"en": ["Diplomatic Transcription"]},
-
-  "first": { "id": "https://example.org/itf/book1/annopage/l1", "type": "AnnotationPage" },
-  "last": { "id": "https://example.org/itf/book1/annopage/l120", "type": "AnnotationPage" }
-}
-```
-
-For Annotation Collections with many Annotations, there will be many pages. The Annotation Collection refers to the first and last page, and then the pages refer to the previous and next pages in the ordered list.  Each page is part of the Annotation Collection.
-
-{% include api/code_header.html %}
-``` json-doc
-{
-  "@context": "http://iiif.io/api/presentation/{{ page.major }}/context.json",
-  "id": "https://example.org/itf/book1/annopage/l1",
-  "type": "AnnotationPage",
-  "partOf": {
+    "@context": "http://iiif.io/api/presentation/{{ page.major }}/context.json",
     "id": "https://example.org/itf/book1/annocoll/transcription",
-    "type": "AnnotationCollection"
-  },
-  "next": {
-    "id": "https://example.org/itf/book1/annopage/l2",
-    "type": "AnnotationPage"
-  },
-  "items": [
-    {
-      "id": "https://example.org/itf/book1/annopage/p1/a1",
-      "type": "Annotation"
-      // ...
+    "type": "AnnotationCollection",
+    "label": {
+        "en": ["Diplomatic Transcription"]
+    },
+    "first": {
+        "id": "https://example.org/itf/book1/annopage/l1",
+        "type": "AnnotationPage"
+    },
+    "last": {
+        "id": "https://example.org/itf/book1/annopage/l120",
+        "type": "AnnotationPage"
     }
-  ]
 }
 ```
 
+For Annotation Collections with many Annotations, there will be many pages. The Annotation Collection refers to the first and last page, and then the pages refer to the previous and next pages in the ordered list. Each page is part of the Annotation Collection.
+
+``` json-doc
+{
+    "@context": "http://iiif.io/api/presentation/{{ page.major }}/context.json",
+    "id": "https://example.org/itf/book1/annopage/l1",
+    "type": "AnnotationPage",
+    "partOf": {
+        "id": "https://example.org/itf/book1/annocoll/transcription",
+        "type": "AnnotationCollection"
+    },
+    "next": {
+        "id": "https://example.org/itf/book1/annopage/l2",
+        "type": "AnnotationPage"
+    },
+    "items": [
+        {
+            "id": "https://example.org/itf/book1/annopage/p1/a1",
+            "type": "Annotation"
+            // ...
+        }
+    ]
+}
+```
 
 ## 6. HTTP Requests and Responses
 
-This section describes the _RECOMMENDED_ request and response interactions for the API. The REST and simple HATEOAS approach is followed where an interaction will retrieve a description of the resource, and additional calls may be made by following links obtained from within the description. All of the requests use the HTTP GET method; creation and update of resources is not covered by this specification. It is _RECOMMENDED_ that implementations also support HTTP HEAD requests.
+This section describes the _RECOMMENDED_ request and response interactions for the API. The REST and simple HATEOAS approach is followed where an interaction will retrieve a description of the resource, and additional calls may be made by following links obtained from within the description. All requests use the HTTP GET method; creation, update and deletion of resources is not covered by this specification. It is _RECOMMENDED_ that implementations also support HTTP HEAD requests.
 
 ### 6.1. URI Recommendations
 
@@ -1727,8 +1608,7 @@ While any HTTP(S) URI is technically acceptable for any of the resources in the 
 
 ###  6.2. Requests
 
-> Reference in here to the IIIF Image API (image-api) that presumably needs to be changed to the Text API.
-Clients are only expected to follow links to Presentation API resources. Unlike [IIIF Image API][image-api] requests, or other parameterized services, the URIs for Presentation API resources cannot be assumed to follow any particular pattern.
+Clients are only expected to follow links to Presentation API resources. Unlike [ITF Text Fragment API](https://textframe.io/api/) requests, or other parameterized services, the URIs for Presentation API resources cannot be assumed to follow any particular pattern.
 
 ###  6.3. Responses
 
@@ -1736,18 +1616,15 @@ The format for all responses is JSON, as described above. It is good practice fo
 
 If the server receives a request with an `Accept` header, it _SHOULD_ respond following the rules of [content negotiation][org-rfc-7231-conneg]. Note that content types provided in the `Accept` header of the request _MAY_ include parameters, for example `profile` or `charset`.
 
-> Context url to be updated.
-If the request does not include an `Accept` header, the HTTP `Content-Type` header of the response _SHOULD_ have the value `application/ld+json` (JSON-LD) with the `profile` parameter given as the context document: `http://iiif.io/api/presentation/3/context.json`.
+If the request does not include an `Accept` header, the HTTP `Content-Type` header of the response _SHOULD_ have the value `application/ld+json` (JSON-LD) with the `profile` parameter given as the context document: `http://itf.io/api/presentation/1/context.json`.
 
-{% include api/code_header.html %}
 ```
-Content-Type: application/ld+json;profile="http://iiif.io/api/presentation/3/context.json"
+Content-Type: application/ld+json;profile="http://itf.io/api/presentation/1/context.json"
 ```
 {: .urltemplate}
 
 If the `Content-Type` header `application/ld+json` cannot be generated due to server configuration details, then the `Content-Type` header _SHOULD_ instead be `application/json` (regular JSON), without a `profile` parameter.
 
-{% include api/code_header.html %}
 ```
 Content-Type: application/json
 ```
@@ -1757,10 +1634,9 @@ The HTTP server _MUST_ follow the [CORS requirements][org-w3c-cors] to enable br
 
 Responses _SHOULD_ be compressed by the server as there are significant performance gains to be made for very repetitive data structures.
 
-> Are we safe to delete the section on Authentication? Or do we need to say something about authentication even if it's just that we aren't dealing with it?
 ## 7. Authentication
 
-It may be necessary to restrict access to the descriptions made available via the Presentation API. As the primary means of interaction with the descriptions is by web browsers using XmlHttpRequests across domains, there are some considerations regarding the most appropriate methods for authenticating users and authorizing their access. The approach taken is described in the [Authentication][iiif-auth] specification, and requires requesting a token to add to the requests to identify the user. This token might also be used for other requests defined by other APIs.
+It may be necessary to restrict access to the descriptions made available via the Presentation API. As the primary means of interaction with the descriptions is by web browsers using XmlHttpRequests across domains, there are some considerations regarding the most appropriate methods for authenticating users and authorizing their access. The approach taken is described in the [Authentication][itf-auth] specification, and requires requesting a token to add to the requests to identify the user. This token might also be used for other requests defined by other APIs.
 
 It is possible to include Image API service descriptions within the Manifest, and within those it is also possible to include links to the Authentication API's services that are needed to interact with the image content. The first time an Authentication API service is included within a Manifest, it _MUST_ be the complete description. Subsequent references _SHOULD_ be just the URI of the service, and clients are expected to look up the details from the full description by matching the URI. Clients _MUST_ anticipate situations where the Authentication service description in the Manifest is out of date: the source of truth is the Image Information document, or other system that references the Authentication API services.
 
@@ -1879,327 +1755,884 @@ __Behavior Values__
 
 ### B. Example Manifest Response
 
-> Clearly this will need to be replaced with something that fits the ITF API.
-{% include api/code_header.html %}
 ```json
 {
-  "@context": "http://iiif.io/api/presentation/{{ page.major }}/context.json",
-  "id": "https://example.org/itf/book1/manifest",
-  "type": "Manifest",
-  "label": { "en": [ "Book 1" ] },
-  "metadata": [
-    {
-      "label": { "en": [ "Author" ] },
-      "value": { "none": [ "Anne Author" ] }
+    "@context": "http://textframe.io/api/presentation/1/context.json",
+    "id": "https://example.org/itf/CASE20258/diplomatic/info.json",
+    "type": "Manifest",
+    "label": {
+        "en": ["CASE20258: Horary consultation concerning Goodman Giles Stokes (PERSON16187) (19 January 1602 at 10:00)"]
+    },
+    "requiredStatement": {
+        "label": {
+            "en": ["Attribution"]
+        },
+        "value": {
+            "en": ["Cite this as: Lauren Kassell, Michael Hawkins, Robert Ralley, John Young, Joanne Edge, Janet Yvonne Martin-Portugues, and Natalie Kaoukji (eds.), ‘CASE20258’, The casebooks of Simon Forman and Richard Napier, 1596–1634: a digital edition, https://casebooks.lib.cam.ac.uk/case/CASE20258, accessed 18 July 2024."]
+        }
     },
     {
-      "label": { "en": [ "Published" ] },
-      "value": {
-        "en": [ "Paris, circa 1400" ],
-        "fr": [ "Paris, environ 1400" ]
-      }
-    },
-    {
-      "label": { "en": [ "Notes" ] },
-      "value": {
-        "en": [
-          "Text of note 1",
-          "Text of note 2"
-        ]
-      }
-    },
-    {
-      "label": { "en": [ "Source" ] },
-      "value": { "none": [ "<span>From: <a href=\"https://example.org/db/1.html\">Some Collection</a></span>" ] }
-    }
-  ],
-  "summary": { "en": [ "Book 1, written be Anne Author, published in Paris around 1400." ] },
-
-  "thumbnail": [
-    {
-      "id": "https://example.org/itf/book1/page1/full/80,100/0/default.jpg",
-      "type": "Image",
-      "format": "image/jpeg",
-      "service": [
+    "navDate": ["1602-01-19T10:00:00"]}
+    "metadata": [
         {
-          "id": "https://example.org/itf/book1/page1",
-          "type": "ImageService3",
-          "profile": "level1"
-        }
-      ]
-    }
-  ],
-
-  "viewingDirection": "right-to-left",
-  "behavior": [ "paged" ],
-  "navDate": "1856-01-01T00:00:00Z",
-
-  "rights": "https://creativecommons.org/licenses/by/4.0/",
-  "requiredStatement": {
-    "label": { "en": [ "Attribution" ] },
-    "value": { "en": [ "Provided by Example Organization" ] }
-  },
-
-  "provider": [
-      {
-        "id": "https://example.org/about",
-        "type": "Agent",
-        "label": { "en": [ "Example Organization" ] },
-        "homepage": [
-          {
-            "id": "https://example.org/",
-            "type": "Text",
-            "label": { "en": [ "Example Organization Homepage" ] },
-            "format": "text/html"
-          }
-        ],
-        "logo": [
-          {
-            "id": "https://example.org/service/inst1/full/max/0/default.png",
-            "type": "Image",
-            "format": "image/png",
-            "service": [
-              {
-                "id": "https://example.org/service/inst1",
-                "type": "ImageService3",
-                "profile": "level2"
-              }
-            ]
-          }
-        ],
-        "seeAlso": [
-          {
-            "id": "https://data.example.org/about/us.jsonld",
-            "type": "Dataset",
-            "format": "application/ld+json",
-            "profile": "https://schema.org/"
-          }
-        ]
-      }
-    ],
-  "homepage": [
-    {
-      "id": "https://example.org/info/book1/",
-      "type": "Text",
-      "label": { "en": [ "Home page for Book 1" ] },
-      "format": "text/html"
-    }
-  ],
-  "service": [
-    {
-      "id": "https://example.org/service/example",
-      "type": "ExampleExtensionService",
-      "profile": "https://example.org/docs/example-service.html"
-    }
-  ],
-  "seeAlso": [
-    {
-      "id": "https://example.org/library/catalog/book1.xml",
-      "type": "Dataset",
-      "format": "text/xml",
-      "profile": "https://example.org/profiles/bibliographic"
-    }
-  ],
-  "rendering": [
-    {
-      "id": "https://example.org/itf/book1.pdf",
-      "type": "Text",
-      "label": { "en": [ "Download as PDF" ] },
-      "format": "application/pdf"
-    }
-  ],
-  "partOf": [
-    {
-      "id": "https://example.org/collections/books/",
-      "type": "Collection"
-    }
-  ],
-  "start": {
-    "id": "https://example.org/itf/book1/TextFrame/p2",
-    "type": "TextFrame"
-  },
-
-  "services": [
-    {
-      "@id": "https://example.org/itf/auth/login",
-      "@type": "AuthCookieService1",
-      "profile": "http://iiif.io/api/auth/1/login",
-      "label": "Login to Example Institution",
-      "service": [
-        {
-          "@id": "https://example.org/itf/auth/token",
-          "@type": "AuthTokenService1",
-          "profile": "http://iiif.io/api/auth/1/token"          
-        }
-      ]
-    }
-  ],
-
-  "items": [
-    {
-      "id": "https://example.org/itf/book1/TextFrame/p1",
-      "type": "TextFrame",
-      "label": { "none": [ "p. 1" ] },
-      "height": 1000,
-      "width": 750,
-      "items": [
-        {
-          "id": "https://example.org/itf/book1/page/p1/1",
-          "type": "AnnotationPage",
-          "items": [
-            {
-              "id": "https://example.org/itf/book1/annotation/p0001-image",
-              "type": "Annotation",
-              "motivation": "painting",
-              "body": {
-                "id": "https://example.org/itf/book1/page1/full/max/0/default.jpg",
-                "type": "Image",
-                "format": "image/jpeg",
-                "service": [
-                  {
-                    "id": "https://example.org/itf/book1/page1",
-                    "type": "ImageService3",
-                    "profile": "level2",
-                    "service": [
-                      {
-                        "@id": "https://example.org/itf/auth/login",
-                        "@type": "AuthCookieService1"
-                      }
-                    ]
-                  }
-                ],
-                "height": 2000,
-                "width": 1500
-              },
-              "target": "https://example.org/itf/book1/TextFrame/p1"
-            }
-          ]
-        }
-      ],
-      "annotations": [
-        {
-          "id": "https://example.org/itf/book1/comments/p1/1",
-          "type": "AnnotationPage"
-        }
-      ]
-    },
-    {
-      "id": "https://example.org/itf/book1/TextFrame/p2",
-      "type": "TextFrame",
-      "label": { "none": [ "p. 2" ] },
-      "height": 1000,
-      "width": 750,
-      "items": [
-        {
-          "id": "https://example.org/itf/book1/page/p2/1",
-          "type": "AnnotationPage",
-          "items": [
-            {
-              "id": "https://example.org/itf/book1/annotation/p0002-image",
-              "type": "Annotation",
-              "motivation": "painting",
-              "body": {
-                "id": "https://example.org/itf/book1/page2/full/max/0/default.jpg",
-                "type": "Image",
-                "format": "image/jpeg",
-                "service": [
-                  {
-                    "id": "https://example.org/itf/book1/page2",
-                    "type": "ImageService3",
-                    "profile": "level2"
-                  }
-                ],
-                "height": 2000,
-                "width": 1500
-              },
-              "target": "https://example.org/itf/book1/TextFrame/p2"
-            }
-          ]
-        }
-      ]
-    }
-  ],
-
-  "structures": [
-    {
-      "id": "https://example.org/itf/book1/range/r0",
-      "type": "Range",
-      "label": { "en": [ "Table of Contents" ] },
-      "items": [
-        {
-          "id": "https://example.org/itf/book1/range/r1",
-          "type": "Range",
-          "label": { "en": [ "Introduction" ] },
-          "supplementary": {
-            "id": "https://example.org/itf/book1/annocoll/introTexts",
-            "type": "AnnotationCollection"
-          },
-          "items": [
-            {
-              "id": "https://example.org/itf/book1/TextFrame/p1",
-              "type": "TextFrame"
+            "label": {
+                "en": ["Author"]
             },
-            {
-              "type": "SpecificResource",
-              "source": "https://example.org/itf/book1/TextFrame/p2",
-              "selector": {
-                "type": "FragmentSelector",
-                "value": "xywh=0,0,750,300"
-              }
+            "value": {
+                "en": ["Mr Richard Napier [Sandy] [Richard Napier [Senior]]"]
             }
-          ]
-        }
-      ]
-    }
-  ],
-
-  "annotations": [
-    {
-      "id": "https://example.org/itf/book1/page/manifest/1",
-      "type": "AnnotationPage",
-      "items": [
+        },
         {
-          "id": "https://example.org/itf/book1/page/manifest/a1",
-          "type": "Annotation",
-          "motivation": "commenting",
-          "body": {
-            "type": "TextualBody",
-            "language": "en",
-            "value": "I love this manifest!"
-          },
-          "target": "https://example.org/itf/book1/manifest"
+            "label": {
+                "en": ["Author"]
+            },
+            "value": {
+                "en": ["Mr Gerence James [Marks]"]
+            }
+        },
+        {
+            "label": {
+                "en": ["Date"]
+            },
+            "value": {
+                "en": ["19 January 1602 at 10:00"]
+            }
+        },
+        {
+            "label": {
+                "en": ["Source"]
+            },
+            "value": {
+                "en": ["MS Ashmole 404, f. 268v (upper left part of page)"]
+            }
         }
-      ]
-    }
-  ]
+    ],
+    "summary": [],
+    "partOf": [],
+    "seeAlso": [],
+    "items": [
+        {
+            "id": "https://example.org/itf/CASE20258/diplomatic/book/frame/full",
+            "type": "TextFrame",
+            "label": {
+                "en": ["LABEL GOES HERE"]
+            },
+            "items": [
+                {
+                    "id": "https://example.org/itf/CASE20258/diplomatic/book/full/1",
+                    "type": "AnnotationFrame",
+                    "items": [
+                        {
+                            "id": "https://example.org/itf/CASE20258/diplomatic/book/annotation/full/1",
+                            "type": "Annotation",
+                            "motivation": "text",
+                            "body": {
+                                "id": "https://example.org/itf/CASE20258/diplomatic/book/full/rich/html",
+                                "type": "html",
+                                "format": "text/html"
+                            }
+                        }
+                    ],
+                    "annotations": [
+                        {
+                            "id": "https://example.org/itf/CASE20258/diplomatic/book/full/manifest/1",
+                            "type": "AnnotationFrame",
+                            "items": [
+                                {
+                                    "@context": "http://www.w3.org/ns/anno.jsonld",
+                                    "id": "https://example.org/itf/CASE20258/diplomatic/book/full/annotation/1",
+                                    "type": "Annotation",
+                                    "motivation": "asserting",
+                                    "body": {
+                                        "id": "https://example.org/itf/CASE20258/diplomatic/book/full/annotation/1/document-type",
+                                        "type": "TextualBody",
+                                        "value": "Case -- Entry -- Horary",
+                                        "format": "text/html",
+                                        "language": "en",
+                                        "purpose": "DocumentType"
+                                    },
+                                    "target": "https://example.org/itf/CASE20258/diplomatic/book/full/manifest"
+                                },
+                                {
+                                    "@context": "http://www.w3.org/ns/anno.jsonld",
+                                    "id": "https://example.org/itf/CASE20258/diplomatic/book/full/annotation/2",
+                                    "type": "Annotation",
+                                    "motivation": "asserting",
+                                    "body": {
+                                        "id": "https://example.org/itf/CASE20258/diplomatic/book/full/annotation/2/shelfmark",
+                                        "type": "TextualBody",
+                                        "value": "MS Ashmole 404",
+                                        "format": "text/html",
+                                        "language": "en",
+                                        "purpose": "Shelfmark"
+                                    },
+                                    "target": "https://example.org/itf/CASE20258/diplomatic/book/full/manifest"
+                                },
+                                {
+                                    "@context": "http://www.w3.org/ns/anno.jsonld",
+                                    "id": "https://example.org/itf/CASE20258/diplomatic/book/full/annotation/3",
+                                    "type": "Annotation",
+                                    "motivation": "asserting",
+                                    "body": {
+                                        "id": "https://example.org/itf/CASE20258/diplomatic/book/full/annotation/3/volume-name",
+                                        "type": "TextualBody",
+                                        "value": "Napier, vol. 05",
+                                        "format": "text/html",
+                                        "language": "en",
+                                        "purpose": "VolumeName"
+                                    },
+                                    "target": "https://example.org/itf/CASE20258/diplomatic/book/full/manifest"
+                                },
+                                {
+                                    "@context": "http://www.w3.org/ns/anno.jsonld",
+                                    "id": "https://example.org/itf/CASE20258/diplomatic/book/full/annotation/4",
+                                    "type": "Annotation",
+                                    "motivation": "asserting",
+                                    "body": {
+                                        "id": "https://example.org/itf/CASE20258/diplomatic/book/full/annotation/4/damaged",
+                                        "type": "TextualBody",
+                                        "value": "No",
+                                        "format": "text/html",
+                                        "language": "en",
+                                        "purpose": "Damaged"
+                                    },
+                                    "target": "https://example.org/itf/CASE20258/diplomatic/book/full/manifest"
+                                },
+                                {
+                                    "@context": "http://www.w3.org/ns/anno.jsonld",
+                                    "id": "https://example.org/itf/CASE20258/diplomatic/book/full/annotation/5",
+                                    "type": "Annotation",
+                                    "motivation": "asserting",
+                                    "body": {
+                                        "id": "https://example.org/itf/CASE20258/diplomatic/book/full/annotation/5/deleted",
+                                        "type": "TextualBody",
+                                        "value": "No",
+                                        "format": "text/html",
+                                        "language": "en",
+                                        "purpose": "Deleted"
+                                    },
+                                    "target": "https://example.org/itf/CASE20258/diplomatic/book/full/manifest"
+                                },
+                                {
+                                    "@context": "http://www.w3.org/ns/anno.jsonld",
+                                    "id": "https://example.org/itf/CASE20258/diplomatic/book/full/annotation/6",
+                                    "type": "Annotation",
+                                    "motivation": "asserting",
+                                    "body": {
+                                        "id": "https://example.org/itf/CASE20258/diplomatic/book/full/annotation/6/practitioner-identified",
+                                        "type": "TextualBody",
+                                        "value": "Yes",
+                                        "format": "text/html",
+                                        "language": "en",
+                                        "purpose": "PractitionerIdentified"
+                                    },
+                                    "target": "https://example.org/itf/CASE20258/diplomatic/book/full/manifest"
+                                },
+                                {
+                                    "@context": "http://www.w3.org/ns/anno.jsonld",
+                                    "id": "https://example.org/itf/CASE20258/diplomatic/book/full/annotation/7",
+                                    "type": "Annotation",
+                                    "motivation": "identifying",
+                                    "body": {
+                                        "id": "https://example.org/itf/CASE20258/diplomatic/book/full/annotation/7/practitioner",
+                                        "type": "TextualBody",
+                                        "value": "Mr Richard Napier [Sandy] [Richard Napier [Senior]] (PERSON5218)",
+                                        "format": "text/html",
+                                        "language": "en",
+                                        "purpose": "Practitioner"
+                                    },
+                                    "target": "https://example.org/itf/CASE20258/diplomatic/book/full/manifest"
+                                },
+                                {
+                                    "@context": "http://www.w3.org/ns/anno.jsonld",
+                                    "id": "https://example.org/itf/CASE20258/diplomatic/book/full/annotation/8",
+                                    "type": "Annotation",
+                                    "motivation": "asserting",
+                                    "body": {
+                                        "id": "https://example.org/itf/CASE20258/diplomatic/book/full/annotation/8/practitioner-identified",
+                                        "type": "TextualBody",
+                                        "value": "Yes",
+                                        "format": "text/html",
+                                        "language": "en",
+                                        "purpose": "PractitionerIdentified"
+                                    },
+                                    "target": "https://example.org/itf/CASE20258/diplomatic/book/full/manifest"
+                                },
+                                {
+                                    "@context": "http://www.w3.org/ns/anno.jsonld",
+                                    "id": "https://example.org/itf/CASE20258/diplomatic/book/full/annotation/9",
+                                    "type": "Annotation",
+                                    "motivation": "identifying",
+                                    "body": {
+                                        "id": "https://example.org/itf/CASE20258/diplomatic/book/full/annotation/9/practitioner",
+                                        "type": "TextualBody",
+                                        "value": "Other -- Mr Gerence James [Marks] (PERSON13172)",
+                                        "format": "text/html",
+                                        "language": "en",
+                                        "purpose": "Practitioner"
+                                    },
+                                    "target": "https://example.org/itf/CASE20258/diplomatic/book/full/manifest"
+                                },
+                                {
+                                    "@context": "http://www.w3.org/ns/anno.jsonld",
+                                    "id": "https://example.org/itf/CASE20258/diplomatic/book/full/annotation/10",
+                                    "type": "Annotation",
+                                    "motivation": "asserting",
+                                    "body": {
+                                        "id": "https://example.org/itf/CASE20258/diplomatic/book/full/annotation/10/number-of-practitioners",
+                                        "type": "TextualBody",
+                                        "value": "Multiple practitioners",
+                                        "format": "text/html",
+                                        "language": "en",
+                                        "purpose": "NumberOfPractitioners"
+                                    },
+                                    "target": "https://example.org/itf/CASE20258/diplomatic/book/full/manifest"
+                                },
+                                {
+                                    "@context": "http://www.w3.org/ns/anno.jsonld",
+                                    "id": "https://example.org/itf/CASE20258/diplomatic/book/full/annotation/11",
+                                    "type": "Annotation",
+                                    "motivation": "asserting",
+                                    "body": {
+                                        "id": "https://example.org/itf/CASE20258/diplomatic/book/full/annotation/11/querent-identified",
+                                        "type": "TextualBody",
+                                        "value": "Yes",
+                                        "format": "text/html",
+                                        "language": "en",
+                                        "purpose": "QuerentIdentified"
+                                    },
+                                    "target": "https://example.org/itf/CASE20258/diplomatic/book/full/manifest"
+                                },
+                                {
+                                    "@context": "http://www.w3.org/ns/anno.jsonld",
+                                    "id": "https://example.org/itf/CASE20258/diplomatic/book/full/annotation/12",
+                                    "type": "Annotation",
+                                    "motivation": "identifying",
+                                    "body": {
+                                        "id": "https://example.org/itf/CASE20258/diplomatic/book/full/annotation/12/querent",
+                                        "type": "TextualBody",
+                                        "value": "Goodman Giles Stokes (PERSON16187)",
+                                        "format": "text/html",
+                                        "language": "en",
+                                        "purpose": "Querent"
+                                    },
+                                    "target": "https://example.org/itf/CASE20258/diplomatic/book/full/manifest"
+                                },
+                                {
+                                    "@context": "http://www.w3.org/ns/anno.jsonld",
+                                    "id": "https://example.org/itf/CASE20258/diplomatic/book/full/annotation/13",
+                                    "type": "Annotation",
+                                    "motivation": "asserting",
+                                    "body": {
+                                        "id": "https://example.org/itf/CASE20258/diplomatic/book/full/annotation/13/querent-age-band",
+                                        "type": "TextualBody",
+                                        "value": "050-059 -- 50",
+                                        "format": "text/html",
+                                        "language": "en",
+                                        "purpose": "QuerentAgeBand"
+                                    },
+                                    "target": "https://example.org/itf/CASE20258/diplomatic/book/full/manifest"
+                                },
+                                {
+                                    "@context": "http://www.w3.org/ns/anno.jsonld",
+                                    "id": "https://example.org/itf/CASE20258/diplomatic/book/full/annotation/14",
+                                    "type": "Annotation",
+                                    "motivation": "asserting",
+                                    "body": {
+                                        "id": "https://example.org/itf/CASE20258/diplomatic/book/full/annotation/14/querent-sex",
+                                        "type": "TextualBody",
+                                        "value": "Male",
+                                        "format": "text/html",
+                                        "language": "en",
+                                        "purpose": "QuerentSex"
+                                    },
+                                    "target": "https://example.org/itf/CASE20258/diplomatic/book/full/manifest"
+                                },
+                                {
+                                    "@context": "http://www.w3.org/ns/anno.jsonld",
+                                    "id": "https://example.org/itf/CASE20258/diplomatic/book/full/annotation/15",
+                                    "type": "Annotation",
+                                    "motivation": "asserting",
+                                    "body": {
+                                        "id": "https://example.org/itf/CASE20258/diplomatic/book/full/annotation/15/number-of-querents",
+                                        "type": "TextualBody",
+                                        "value": "Single querent",
+                                        "format": "text/html",
+                                        "language": "en",
+                                        "purpose": "NumberOfQuerents"
+                                    },
+                                    "target": "https://example.org/itf/CASE20258/diplomatic/book/full/manifest"
+                                },
+                                {
+                                    "@context": "http://www.w3.org/ns/anno.jsonld",
+                                    "id": "https://example.org/itf/CASE20258/diplomatic/book/full/annotation/16",
+                                    "type": "Annotation",
+                                    "motivation": "asserting",
+                                    "body": {
+                                        "id": "https://example.org/itf/CASE20258/diplomatic/book/full/annotation/16/patient-identified",
+                                        "type": "TextualBody",
+                                        "value": "Yes",
+                                        "format": "text/html",
+                                        "language": "en",
+                                        "purpose": "PatientIdentified"
+                                    },
+                                    "target": "https://example.org/itf/CASE20258/diplomatic/book/full/manifest"
+                                },
+                                {
+                                    "@context": "http://www.w3.org/ns/anno.jsonld",
+                                    "id": "https://example.org/itf/CASE20258/diplomatic/book/full/annotation/17",
+                                    "type": "Annotation",
+                                    "motivation": "identifying",
+                                    "body": {
+                                        "id": "https://example.org/itf/CASE20258/diplomatic/book/full/annotation/17/patient",
+                                        "type": "TextualBody",
+                                        "value": "Goodman Giles Stokes (PERSON16187)| OR LINK TO PERSON PAGE/URI",
+                                        "format": "text/html",
+                                        "language": "en",
+                                        "purpose": "Patient"
+                                    },
+                                    "target": "ITF-RANGE-INDICATING STRING // WHOLE PAGE FOR US"
+                                },
+                                {
+                                    "@context": "http://www.w3.org/ns/anno.jsonld",
+                                    "id": "https://example.org/itf/CASE20258/diplomatic/book/full/annotation/18",
+                                    "type": "Annotation",
+                                    "motivation": "asserting",
+                                    "body": {
+                                        "id": "https://example.org/itf/CASE20258/diplomatic/book/full/annotation/18/patient-age-band",
+                                        "type": "TextualBody",
+                                        "value": "050-059 -- 50",
+                                        "format": "text/html",
+                                        "language": "en",
+                                        "purpose": "PatientAgeBand"
+                                    },
+                                    "target": "https://example.org/itf/CASE20258/diplomatic/book/full/manifest"
+                                },
+                                {
+                                    "@context": "http://www.w3.org/ns/anno.jsonld",
+                                    "id": "https://example.org/itf/CASE20258/diplomatic/book/full/annotation/19",
+                                    "type": "Annotation",
+                                    "motivation": "asserting",
+                                    "body": {
+                                        "id": "https://example.org/itf/CASE20258/diplomatic/book/full/annotation/19/patient-sex",
+                                        "type": "TextualBody",
+                                        "value": "Male",
+                                        "format": "text/html",
+                                        "language": "en",
+                                        "purpose": "PatientSex"
+                                    },
+                                    "target": "https://example.org/itf/CASE20258/diplomatic/book/full/manifest"
+                                },
+                                {
+                                    "@context": "http://www.w3.org/ns/anno.jsonld",
+                                    "id": "https://example.org/itf/CASE20258/diplomatic/book/full/annotation/20",
+                                    "type": "Annotation",
+                                    "motivation": "asserting",
+                                    "body": {
+                                        "id": "https://example.org/itf/CASE20258/diplomatic/book/full/annotation/20/number-of-patients",
+                                        "type": "TextualBody",
+                                        "value": "Single patient",
+                                        "format": "text/html",
+                                        "language": "en",
+                                        "purpose": "NumberOfPatients"
+                                    },
+                                    "target": "https://example.org/itf/CASE20258/diplomatic/book/full/manifest"
+                                },
+                                {
+                                    "@context": "http://www.w3.org/ns/anno.jsonld",
+                                    "id": "https://example.org/itf/CASE20258/diplomatic/book/full/annotation/21",
+                                    "type": "Annotation",
+                                    "motivation": "asserting",
+                                    "body": {
+                                        "id": "https://example.org/itf/CASE20258/diplomatic/book/full/annotation/21/astrologer-identified",
+                                        "type": "TextualBody",
+                                        "value": "Yes",
+                                        "format": "text/html",
+                                        "language": "en",
+                                        "purpose": "AstrologerIdentified"
+                                    },
+                                    "target": "https://example.org/itf/CASE20258/diplomatic/book/full/manifest"
+                                },
+                                {
+                                    "@context": "http://www.w3.org/ns/anno.jsonld",
+                                    "id": "https://example.org/itf/CASE20258/diplomatic/book/full/annotation/22",
+                                    "type": "Annotation",
+                                    "motivation": "identifying",
+                                    "body": {
+                                        "id": "https://example.org/itf/CASE20258/diplomatic/book/full/annotation/22/astrologer",
+                                        "type": "TextualBody",
+                                        "value": "Mr Richard Napier [Sandy] [Richard Napier [Senior]] (PERSON5218)",
+                                        "format": "text/html",
+                                        "language": "en",
+                                        "purpose": "Astrologer"
+                                    },
+                                    "target": "https://example.org/itf/CASE20258/diplomatic/book/full/manifest"
+                                },
+                                {
+                                    "@context": "http://www.w3.org/ns/anno.jsonld",
+                                    "id": "https://example.org/itf/CASE20258/diplomatic/book/full/annotation/23",
+                                    "type": "Annotation",
+                                    "motivation": "asserting",
+                                    "body": {
+                                        "id": "https://example.org/itf/CASE20258/diplomatic/book/full/annotation/23/practitioner-is-astrologer",
+                                        "type": "TextualBody",
+                                        "value": "Yes",
+                                        "format": "text/html",
+                                        "language": "en",
+                                        "purpose": "PractitionerIsAstrologer"
+                                    },
+                                    "target": "https://example.org/itf/CASE20258/diplomatic/book/full/manifest"
+                                },
+                                {
+                                    "@context": "http://www.w3.org/ns/anno.jsonld",
+                                    "id": "https://example.org/itf/CASE20258/diplomatic/book/full/annotation/24",
+                                    "type": "Annotation",
+                                    "motivation": "asserting",
+                                    "body": {
+                                        "id": "https://example.org/itf/CASE20258/diplomatic/book/full/annotation/24/astrologer-identified",
+                                        "type": "TextualBody",
+                                        "value": "Yes",
+                                        "format": "text/html",
+                                        "language": "en",
+                                        "purpose": "AstrologerIdentified"
+                                    },
+                                    "target": "https://example.org/itf/CASE20258/diplomatic/book/full/manifest"
+                                },
+                                {
+                                    "@context": "http://www.w3.org/ns/anno.jsonld",
+                                    "id": "https://example.org/itf/CASE20258/diplomatic/book/full/annotation/25",
+                                    "type": "Annotation",
+                                    "motivation": "identifying",
+                                    "body": {
+                                        "id": "https://example.org/itf/CASE20258/diplomatic/book/full/annotation/25/astrologer",
+                                        "type": "TextualBody",
+                                        "value": "Other -- Mr Gerence James [Marks] (PERSON13172)",
+                                        "format": "text/html",
+                                        "language": "en",
+                                        "purpose": "Astrologer"
+                                    },
+                                    "target": "https://example.org/itf/CASE20258/diplomatic/book/full/manifest"
+                                },
+                                {
+                                    "@context": "http://www.w3.org/ns/anno.jsonld",
+                                    "id": "https://example.org/itf/CASE20258/diplomatic/book/full/annotation/26",
+                                    "type": "Annotation",
+                                    "motivation": "asserting",
+                                    "body": {
+                                        "id": "https://example.org/itf/CASE20258/diplomatic/book/full/annotation/26/practitioner-is-astrologer",
+                                        "type": "TextualBody",
+                                        "value": "Yes",
+                                        "format": "text/html",
+                                        "language": "en",
+                                        "purpose": "PractitionerIsAstrologer"
+                                    },
+                                    "target": "https://example.org/itf/CASE20258/diplomatic/book/full/manifest"
+                                },
+                                {
+                                    "@context": "http://www.w3.org/ns/anno.jsonld",
+                                    "id": "https://example.org/itf/CASE20258/diplomatic/book/full/annotation/27",
+                                    "type": "Annotation",
+                                    "motivation": "asserting",
+                                    "body": {
+                                        "id": "https://example.org/itf/CASE20258/diplomatic/book/full/annotation/27/number-of-astrologers",
+                                        "type": "TextualBody",
+                                        "value": "Multiple astrologers",
+                                        "format": "text/html",
+                                        "language": "en",
+                                        "purpose": "NumberOfAstrologers"
+                                    },
+                                    "target": "https://example.org/itf/CASE20258/diplomatic/book/full/manifest"
+                                },
+                                {
+                                    "@context": "http://www.w3.org/ns/anno.jsonld",
+                                    "id": "https://example.org/itf/CASE20258/diplomatic/book/full/annotation/28",
+                                    "type": "Annotation",
+                                    "motivation": "asserting",
+                                    "body": {
+                                        "id": "https://example.org/itf/CASE20258/diplomatic/book/full/annotation/28/practitioner-is-querent",
+                                        "type": "TextualBody",
+                                        "value": "No",
+                                        "format": "text/html",
+                                        "language": "en",
+                                        "purpose": "PractitionerIsQuerent"
+                                    },
+                                    "target": "https://example.org/itf/CASE20258/diplomatic/book/full/manifest"
+                                },
+                                {
+                                    "@context": "http://www.w3.org/ns/anno.jsonld",
+                                    "id": "https://example.org/itf/CASE20258/diplomatic/book/full/annotation/29",
+                                    "type": "Annotation",
+                                    "motivation": "asserting",
+                                    "body": {
+                                        "id": "https://example.org/itf/CASE20258/diplomatic/book/full/annotation/29/practitioner-is-patient",
+                                        "type": "TextualBody",
+                                        "value": "No",
+                                        "format": "text/html",
+                                        "language": "en",
+                                        "purpose": "PractitionerIsPatient"
+                                    },
+                                    "target": "https://example.org/itf/CASE20258/diplomatic/book/full/manifest"
+                                },
+                                {
+                                    "@context": "http://www.w3.org/ns/anno.jsonld",
+                                    "id": "https://example.org/itf/CASE20258/diplomatic/book/full/annotation/30",
+                                    "type": "Annotation",
+                                    "motivation": "asserting",
+                                    "body": {
+                                        "id": "https://example.org/itf/CASE20258/diplomatic/book/full/annotation/30/date",
+                                        "type": "TextualBody",
+                                        "value": "1600-1609 -- 1602 -- 01 -- 19",
+                                        "format": "text/html",
+                                        "language": "en",
+                                        "purpose": "Date"
+                                    },
+                                    "target": "https://example.org/itf/CASE20258/diplomatic/book/full/manifest"
+                                },
+                                {
+                                    "@context": "http://www.w3.org/ns/anno.jsonld",
+                                    "id": "https://example.org/itf/CASE20258/diplomatic/book/full/annotation/31",
+                                    "type": "Annotation",
+                                    "motivation": "asserting",
+                                    "body": {
+                                        "id": "https://example.org/itf/CASE20258/diplomatic/book/full/annotation/31/time-of-day",
+                                        "type": "TextualBody",
+                                        "value": "AM -- 10:00-10:59 -- 00:00-14:59",
+                                        "format": "text/html",
+                                        "language": "en",
+                                        "purpose": "TimeOfDay"
+                                    },
+                                    "target": "https://example.org/itf/CASE20258/diplomatic/book/full/manifest"
+                                },
+                                {
+                                    "@context": "http://www.w3.org/ns/anno.jsonld",
+                                    "id": "https://example.org/itf/CASE20258/diplomatic/book/full/annotation/32",
+                                    "type": "Annotation",
+                                    "motivation": "asserting",
+                                    "body": {
+                                        "id": "https://example.org/itf/CASE20258/diplomatic/book/full/annotation/32/practice",
+                                        "type": "TextualBody",
+                                        "value": "Napier",
+                                        "format": "text/html",
+                                        "language": "en",
+                                        "purpose": "Practice"
+                                    },
+                                    "target": "https://example.org/itf/CASE20258/diplomatic/book/full/manifest"
+                                },
+                                {
+                                    "@context": "http://www.w3.org/ns/anno.jsonld",
+                                    "id": "https://example.org/itf/CASE20258/diplomatic/book/full/annotation/33",
+                                    "type": "Annotation",
+                                    "motivation": "asserting",
+                                    "body": {
+                                        "id": "https://example.org/itf/CASE20258/diplomatic/book/full/annotation/33/practice",
+                                        "type": "TextualBody",
+                                        "value": "Napier",
+                                        "format": "text/html",
+                                        "language": "en",
+                                        "purpose": "Practice"
+                                    },
+                                    "target": "https://example.org/itf/CASE20258/diplomatic/book/full/manifest"
+                                },
+                                {
+                                    "@context": "http://www.w3.org/ns/anno.jsonld",
+                                    "id": "https://example.org/itf/CASE20258/diplomatic/book/full/annotation/34",
+                                    "type": "Annotation",
+                                    "motivation": "asserting",
+                                    "body": {
+                                        "id": "https://example.org/itf/CASE20258/diplomatic/book/full/annotation/34/patient-present",
+                                        "type": "TextualBody",
+                                        "value": "Unclear",
+                                        "format": "text/html",
+                                        "language": "en",
+                                        "purpose": "PatientPresent"
+                                    },
+                                    "target": "https://example.org/itf/CASE20258/diplomatic/book/full/manifest"
+                                },
+                                {
+                                    "@context": "http://www.w3.org/ns/anno.jsonld",
+                                    "id": "https://example.org/itf/CASE20258/diplomatic/book/full/annotation/35",
+                                    "type": "Annotation",
+                                    "motivation": "asserting",
+                                    "body": {
+                                        "id": "https://example.org/itf/CASE20258/diplomatic/book/full/annotation/35/how-did-it-take-place",
+                                        "type": "TextualBody",
+                                        "value": "Unclear -- At unspecified location",
+                                        "format": "text/html",
+                                        "language": "en",
+                                        "purpose": "HowDidItTakePlace"
+                                    },
+                                    "target": "https://example.org/itf/CASE20258/diplomatic/book/full/manifest"
+                                },
+                                {
+                                    "@context": "http://www.w3.org/ns/anno.jsonld",
+                                    "id": "https://example.org/itf/CASE20258/diplomatic/book/full/annotation/36",
+                                    "type": "Annotation",
+                                    "motivation": "asserting",
+                                    "body": {
+                                        "id": "https://example.org/itf/CASE20258/diplomatic/book/full/annotation/36/querent-present",
+                                        "type": "TextualBody",
+                                        "value": "Unclear",
+                                        "format": "text/html",
+                                        "language": "en",
+                                        "purpose": "QuerentPresent"
+                                    },
+                                    "target": "https://example.org/itf/CASE20258/diplomatic/book/full/manifest"
+                                },
+                                {
+                                    "@context": "http://www.w3.org/ns/anno.jsonld",
+                                    "id": "https://example.org/itf/CASE20258/diplomatic/book/full/annotation/37",
+                                    "type": "Annotation",
+                                    "motivation": "asserting",
+                                    "body": {
+                                        "id": "https://example.org/itf/CASE20258/diplomatic/book/full/annotation/37/patient-knowledge",
+                                        "type": "TextualBody",
+                                        "value": "Patient asked the question",
+                                        "format": "text/html",
+                                        "language": "en",
+                                        "purpose": "PatientKnowledge"
+                                    },
+                                    "target": "https://example.org/itf/CASE20258/diplomatic/book/full/manifest"
+                                },
+                                {
+                                    "@context": "http://www.w3.org/ns/anno.jsonld",
+                                    "id": "https://example.org/itf/CASE20258/diplomatic/book/full/annotation/38",
+                                    "type": "Annotation",
+                                    "motivation": "asserting",
+                                    "body": {
+                                        "id": "https://example.org/itf/CASE20258/diplomatic/book/full/annotation/38/patient-consent",
+                                        "type": "TextualBody",
+                                        "value": "Patient asked the question",
+                                        "format": "text/html",
+                                        "language": "en",
+                                        "purpose": "PatientConsent"
+                                    },
+                                    "target": "https://example.org/itf/CASE20258/diplomatic/book/full/manifest"
+                                },
+                                {
+                                    "@context": "http://www.w3.org/ns/anno.jsonld",
+                                    "id": "https://example.org/itf/CASE20258/diplomatic/book/full/annotation/39",
+                                    "type": "Annotation",
+                                    "motivation": "classifying",
+                                    "body": {
+                                        "id": "https://example.org/itf/CASE20258/diplomatic/book/full/annotation/39/question-asked",
+                                        "type": "TextualBody",
+                                        "value": "Medical -- Not specified in question",
+                                        "format": "text/html",
+                                        "language": "en",
+                                        "purpose": "QuestionAsked"
+                                    },
+                                    "target": "https://example.org/itf/CASE20258/diplomatic/book/full/manifest"
+                                },
+                                {
+                                    "@context": "http://www.w3.org/ns/anno.jsonld",
+                                    "id": "https://example.org/itf/CASE20258/diplomatic/book/full/annotation/40",
+                                    "type": "Annotation",
+                                    "motivation": "classifying",
+                                    "body": {
+                                        "id": "https://example.org/itf/CASE20258/diplomatic/book/full/annotation/40/question-asked",
+                                        "type": "TextualBody",
+                                        "value": "Medical -- Witchcraft and devil -- Witchcraft suffered (medical)",
+                                        "format": "text/html",
+                                        "language": "en",
+                                        "purpose": "QuestionAsked"
+                                    },
+                                    "target": "https://example.org/itf/CASE20258/diplomatic/book/full/manifest"
+                                },
+                                {
+                                    "@context": "http://www.w3.org/ns/anno.jsonld",
+                                    "id": "https://example.org/itf/CASE20258/diplomatic/book/full/annotation/41",
+                                    "type": "Annotation",
+                                    "motivation": "asserting",
+                                    "body": {
+                                        "id": "https://example.org/itf/CASE20258/diplomatic/book/full/annotation/41/treatment",
+                                        "type": "TextualBody",
+                                        "value": "Yes",
+                                        "format": "text/html",
+                                        "language": "en",
+                                        "purpose": "Treatment"
+                                    },
+                                    "target": "https://example.org/itf/CASE20258/diplomatic/book/full/manifest"
+                                },
+                                {
+                                    "@context": "http://www.w3.org/ns/anno.jsonld",
+                                    "id": "https://example.org/itf/CASE20258/diplomatic/book/full/annotation/42",
+                                    "type": "Annotation",
+                                    "motivation": "asserting",
+                                    "body": {
+                                        "id": "https://example.org/itf/CASE20258/diplomatic/book/full/annotation/42/judgment",
+                                        "type": "TextualBody",
+                                        "value": "Yes",
+                                        "format": "text/html",
+                                        "language": "en",
+                                        "purpose": "Judgment"
+                                    },
+                                    "target": "https://example.org/itf/CASE20258/diplomatic/book/full/manifest"
+                                },
+                                {
+                                    "@context": "http://www.w3.org/ns/anno.jsonld",
+                                    "id": "https://example.org/itf/CASE20258/diplomatic/book/full/annotation/43",
+                                    "type": "Annotation",
+                                    "motivation": "asserting",
+                                    "body": {
+                                        "id": "https://example.org/itf/CASE20258/diplomatic/book/full/annotation/43/recipe",
+                                        "type": "TextualBody",
+                                        "value": "No",
+                                        "format": "text/html",
+                                        "language": "en",
+                                        "purpose": "Recipe"
+                                    },
+                                    "target": "https://example.org/itf/CASE20258/diplomatic/book/full/manifest"
+                                },
+                                {
+                                    "@context": "http://www.w3.org/ns/anno.jsonld",
+                                    "id": "https://example.org/itf/CASE20258/diplomatic/book/full/annotation/44",
+                                    "type": "Annotation",
+                                    "motivation": "asserting",
+                                    "body": {
+                                        "id": "https://example.org/itf/CASE20258/diplomatic/book/full/annotation/44/info",
+                                        "type": "TextualBody",
+                                        "value": "Payment",
+                                        "format": "text/html",
+                                        "language": "en",
+                                        "purpose": "Info"
+                                    },
+                                    "target": "https://example.org/itf/CASE20258/diplomatic/book/full/manifest"
+                                },
+                                {
+                                    "@context": "http://www.w3.org/ns/anno.jsonld",
+                                    "id": "https://example.org/itf/CASE20258/diplomatic/book/full/annotation/45",
+                                    "type": "Annotation",
+                                    "motivation": "asserting",
+                                    "body": {
+                                        "id": "https://example.org/itf/CASE20258/diplomatic/book/full/annotation/45/has-astro-chart",
+                                        "type": "TextualBody",
+                                        "value": "Yes",
+                                        "format": "text/html",
+                                        "language": "en",
+                                        "purpose": "HasAstroChart"
+                                    },
+                                    "target": "https://example.org/itf/CASE20258/diplomatic/book/full/manifest"
+                                },
+                                {
+                                    "@context": "http://www.w3.org/ns/anno.jsonld",
+                                    "id": "https://example.org/itf/CASE20258/diplomatic/book/full/annotation/46",
+                                    "type": "Annotation",
+                                    "motivation": "asserting",
+                                    "body": {
+                                        "id": "https://example.org/itf/CASE20258/diplomatic/book/full/annotation/46/info",
+                                        "type": "TextualBody",
+                                        "value": "Astrological chart -- Present",
+                                        "format": "text/html",
+                                        "language": "en",
+                                        "purpose": "Info"
+                                    },
+                                    "target": "https://example.org/itf/CASE20258/diplomatic/book/full/manifest"
+                                },
+                                {
+                                    "@context": "http://www.w3.org/ns/anno.jsonld",
+                                    "id": "https://example.org/itf/CASE20258/diplomatic/book/full/annotation/47",
+                                    "type": "Annotation",
+                                    "motivation": "asserting",
+                                    "body": {
+                                        "id": "https://example.org/itf/CASE20258/diplomatic/book/full/annotation/47/has-geo-chart",
+                                        "type": "TextualBody",
+                                        "value": "No",
+                                        "format": "text/html",
+                                        "language": "en",
+                                        "purpose": "HasGeoChart"
+                                    },
+                                    "target": "https://example.org/itf/CASE20258/diplomatic/book/full/manifest"
+                                },
+                                {
+                                    "@context": "http://www.w3.org/ns/anno.jsonld",
+                                    "id": "https://example.org/itf/CASE20258/diplomatic/book/full/annotation/48",
+                                    "type": "Annotation",
+                                    "motivation": "asserting",
+                                    "body": {
+                                        "id": "https://example.org/itf/CASE20258/diplomatic/book/full/annotation/48/querent-is-asking-about",
+                                        "type": "TextualBody",
+                                        "value": "Self",
+                                        "format": "text/html",
+                                        "language": "en",
+                                        "purpose": "QuerentIsAskingAbout"
+                                    },
+                                    "target": "https://example.org/itf/CASE20258/diplomatic/book/full/manifest"
+                                },
+                                {
+                                    "@context": "http://www.w3.org/ns/anno.jsonld",
+                                    "id": "https://example.org/itf/CASE20258/diplomatic/book/full/annotation/49",
+                                    "type": "Annotation",
+                                    "motivation": "asserting",
+                                    "body": {
+                                        "id": "https://example.org/itf/CASE20258/diplomatic/book/full/annotation/49/patient-assumed",
+                                        "type": "TextualBody",
+                                        "value": "Yes",
+                                        "format": "text/html",
+                                        "language": "en",
+                                        "purpose": "PatientAssumed"
+                                    },
+                                    "target": "https://example.org/itf/CASE20258/diplomatic/book/full/manifest"
+                                },
+                                {
+                                    "@context": "http://www.w3.org/ns/anno.jsonld",
+                                    "id": "https://example.org/itf/CASE20258/diplomatic/book/full/annotation/50",
+                                    "type": "Annotation",
+                                    "motivation": "asserting",
+                                    "body": {
+                                        "id": "https://example.org/itf/CASE20258/diplomatic/book/full/annotation/50/hands",
+                                        "type": "TextualBody",
+                                        "value": "Mr Gerence James [Marks]",
+                                        "format": "text/html",
+                                        "language": "en",
+                                        "purpose": "Hands"
+                                    },
+                                    "target": "https://example.org/itf/CASE20258/diplomatic/book/full/manifest"
+                                },
+                                {
+                                    "@context": "http://www.w3.org/ns/anno.jsonld",
+                                    "id": "https://example.org/itf/CASE20258/diplomatic/book/full/annotation/51",
+                                    "type": "Annotation",
+                                    "motivation": "asserting",
+                                    "body": {
+                                        "id": "https://example.org/itf/CASE20258/diplomatic/book/full/annotation/51/language",
+                                        "type": "TextualBody",
+                                        "value": "English",
+                                        "format": "text/html",
+                                        "language": "en",
+                                        "purpose": "Language"
+                                    },
+                                    "target": "https://example.org/itf/CASE20258/diplomatic/book/full/manifest"
+                                },
+                                {
+                                    "@context": "http://www.w3.org/ns/anno.jsonld",
+                                    "id": "https://example.org/itf/CASE20258/diplomatic/book/full/annotation/52",
+                                    "type": "Annotation",
+                                    "motivation": "asserting",
+                                    "body": {
+                                        "id": "https://example.org/itf/CASE20258/diplomatic/book/full/annotation/52/extent-of-transcription",
+                                        "type": "TextualBody",
+                                        "value": "Excerpt",
+                                        "format": "text/html",
+                                        "language": "en",
+                                        "purpose": "ExtentOfTranscription"
+                                    },
+                                    "target": "https://example.org/itf/CASE20258/diplomatic/book/full/manifest"
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
 }
 ```
 
 ### C. Versioning
 
 > Are we following Semantic Versioning? If so then we just need to remove 'Starting th version 2.0,' from this sentence. If not, we should perhaps remove this section.
-Starting with version 2.0, this specification follows [Semantic Versioning][org-semver]. See the note [Versioning of APIs][notes-versioning] for details regarding how this is implemented.
+> > I'd be up for it, but we don’t have it set up in github workflows and we’d need to adhere to some strict format for commit messages (https://www.conventionalcommits.org/en/v1.0.0/).
 
 ### D. Acknowledgements
 
-> This section will need to be replaced with an acknowledgements section of our own. The first paragraph can for the moment be removed, I take it.
-Many thanks to the members of the [IIIF community][iiif-community] for their continuous engagement, innovative ideas, and feedback.
-
-Many of the changes in this version are due to the work of the [IIIF AV Technical Specification Group][groups-av], chaired by Jason Ronallo (North Carolina State University), Jon Dunn (Indiana University) and Tom Crane (Digirati). The IIIF Community thanks them for their leadership, and the members of the group for their tireless work.
-
-
-### E. Change Log
-
-> The change log needs changing, clearly.
-| Date       | Description           |
-| ---------- | --------------------- |
-| 2020-06-03 | Version 3.0 (Surfing Raven) [View change log][prezi30-change-log] |
-| 2017-06-09 | Version 2.1.1 [View change log][prezi211-change-log] |
-| 2016-05-12 | Version 2.1 (Hinty McHintface) [View change log][prezi21-change-log] |
-| 2014-09-11 | Version 2.0 (Triumphant Giraffe) [View change log][prezi20-change-log] |
-| 2013-08-26 | Version 1.0 (unnamed) |
-| 2013-06-14 | Version 0.9 (unnamed) |
-{: .api-table #table-changelog}
-
-{% include acronyms.md %}
-{% include links.md %}
+The base text for the ITF Presentation API was derived from the [IIIF Presentation API](https://github.com/IIIF/api). We’d like to thank all those involved for creating such a great foundation upon which our work could be raised.
