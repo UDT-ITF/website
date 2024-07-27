@@ -17,7 +17,7 @@ editors:
     institution: Bodleian Libraries (University of Oxford)
   - name: Michael Hawkins
     ORCID: https://orcid.org/0000-0003-4306-7515
-    institution: Cambridge Digital Humanities, University of Cambridge & Digital Innovation and Development, Cambridge University Library
+    institution: Cambridge Digital Humanities (University of Cambridge) & Digital Innovation and Development (Cambridge University Library)
   - name: Robert Ralley
     ORCID: https://orcid.org/0000-0002-9769-754X
     institution: Cambridge Digital Humanities (University of Cambridge)
@@ -114,10 +114,6 @@ An ordered list of Annotation Pages. Annotation Collections allow higher level g
 
 Most properties defined in this specification may be associated with any of the resource types described above, and may have more than one value. Properties relate to the resource with which they are associated. For example, the `label` property on a Manifest is the human-readable label of the Manifest; the `label` property on a TextFrame is the human-readable label for that TextFrame.
 
-> ‘that it does not understand’ - does this mean properties not defined in the specification or properties that are completely bespoke. It’s the difference between it discovering a ‘label’ when it isn’t allowed (labels are known … but not in that context) and some completely new data structure.
-> > I added 'or are encountered in an undocumented context' to clarify. I'm not sure if that's what IIIF expects their clients to do, but it's what I would expect. Otherwise, it would be chaos - as each client attempts to figure out what a 'label' means in an undocumented context.
-> > > Just a small comment here from RR to say that both the comments above are by MH. I don't have anything helpful to say.
-
 The requirements for which properties each class contains are summarized in [Appendix A][prezi30-appendixa]. 
 
 This section also defines processing requirements for clients for each of the combinations of class and property. Any properties that a client does not understand or are encountered in an undocumented context  _MUST_ be ignored. See the [Linked Data Context and Extensions][prezi30-ldce] section for more information about extensions.
@@ -204,13 +200,10 @@ The value of the property _MUST_ be a JSON object, as described in the [language
  * Other types of resource _MAY_ have the `summary` property with at least one entry.<br/>
    Clients _MAY_ render `summary` on other types of resource.
 
-> Can you provide a summary of one of our items - either a case, note or text. Might as well keep it anchored with real examples.
-> > I've added something digested from the metadata of CASE14. I'm assuming that as it's an alternative to the metadata there shouldn't be any other details included, but I can add other bits if necessary. E.g. 'It is a horary consultation concerning Roger George (PERSON3030).'
-
 ``` json-doc
 {
     "summary": {
-        "en": ["A case from 19 March 1596 at 09:30, recorded by Dr Simon Forman in MS Ashmole 234, f. 3v (upper left part of page)."]
+        "en": ["A case from 19 March 1596 at 09:30 concerning Roger George, recorded by Dr Simon Forman in MS Ashmole 234, f. 3v (upper left part of page)."]
     }
 }
 ```
@@ -884,9 +877,7 @@ While any resource _MAY_ be the `target` of an Annotation, this specification on
 
 Additional motivations may be added to the Annotation to further clarify the intent, drawn from [extensions][prezi30-ldce] or other sources. Clients _MUST_ ignore motivation values that they do not understand. Other motivation values given in the Web Annotation specification _SHOULD_ be used where appropriate.
 
-> Here we'll obviously need to replace the values with whatever we're actually using.
-> > How’s this?
-> > > Reads well. I notice that the descriptions based on IIIF text pay far more attention to whether and how annotations are to be displayed. We may need to think carefully about what we say on this topic. Do we just need to say for 'asserting', 'classifying' and 'identifying' that they '_MAY_ be presented to the user as part of the representation of the TextFrame, or _MAY_ be presented in a different part of the user interface'? I can't see how we'd be more prescriptive than that, given the variety of things people are likely to want to do.
+> I notice that the descriptions based on IIIF text pay far more attention to whether and how annotations are to be displayed. We may need to think carefully about what we say on this topic. Do we just need to say for 'asserting', 'classifying' and 'identifying' that they '_MAY_ be presented to the user as part of the representation of the TextFrame, or _MAY_ be presented in a different part of the user interface'? I can't see how we'd be more prescriptive than that, given the variety of things people are likely to want to do.
   
 | Value          | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
 |----------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
@@ -945,20 +936,6 @@ Language _MAY_ be associated with strings that are intended to be displayed to t
 
 The values of these properties _MUST_ be JSON objects, with the keys being the [BCP 47][org-bcp-47] language code for the language, or if the language is either not known or the string does not have a language, then the key _MUST_ be the string `none`. The associated values _MUST_ be arrays of strings, where each item is the content in the given language.
 
-> I've (rather clumsily) commented out the proposed new example here, and below that added in an alternative, to a dual-text collection of French short stories (Penguin Books, 1966, edited by Pamela Lyon). The reason for that is that I think it's important that the third title/reference, the one with language set to "none", shouldn't have a recognisable language. The Whistler example in the IIIF API had a name/date reference there, for which you simply can't determine a language. So I've done the same with the Lyon volume. I suppose an alternative might be to use the Newton example but to give the "none" version as simply the word "Prolegomena", since that doesn't tell us whether it's English or Latin.
-
-> json-doc
-> {
->  "label": {
->    "lat": [
->      "Prolegomena ad lexici prophetici partem secundam in quibus agitur De forma sanctuarij Iudaici",
->    ],
->    "en": [
->      "Prolegomena to the second part of the Prophetic Lexicon, in which is treated the design of the Jewish Sanctuary"
->    ],
->    "none": [ "Prolegomena to the second part of the Prophetic Lexicon)" ]
->  }
-> }
 ``` json-doc
 {
   "label": {
@@ -1387,6 +1364,8 @@ TextFrames _MAY_ be treated as content resources for the purposes of annotating 
 ###  5.4. Range
 
 > This may be a question to which there's a simple technical answer. I'm still trying to settle in my mind how Range is useful in the Presentation API when you have custom_modes and custom_mode_definitions in the Text Information API. Those are meant to give you a mechanism to divide up a text into a hierarchical structure of different units (e.g. chapters within a book, or presumably articles in a newspaper). So does the Presentation API need a separate mechanism to record those same hierarchical divisions? Does this allow you to do different things?
+> > That's a good point. I can't see any use for it that couldn't be done better with a collection containing a bunch of manifests. Neil, what do you think? Delete Range altogether (here and passim)
+
 Ranges are used to represent structure within an object beyond the default order of the TextFrames in the `items` property of the Manifest, such as newspaper sections or articles, chapters within a book, or movements within a piece of music. Ranges can include TextFrames, parts of TextFrames, or other Ranges, creating a tree structure like a table of contents.
 
 The intent of adding a Range to the Manifest is to allow the client to display a linear or hierarchical navigation interface to enable the user to quickly move through the object's content. Clients _SHOULD_ present only Ranges that have the `label` property and do not have a `behavior` value `no-nav` to the user. Clients _SHOULD NOT_ render TextFrame labels as part of the navigation, and a Range that wraps the TextFrame _MUST_ be created if this is the desired presentation.
@@ -1506,43 +1485,39 @@ Content resources _MUST_ have an `id` property, with the value being the URI at 
 
 The type of the content resource _MUST_ be included, and _SHOULD_ be taken from the table listed under the definition of `type`. The `format` of the resource _SHOULD_ be included and, if so, _SHOULD_ be the media type that is returned when the resource is dereferenced. The `profile` of the resource, if it has one, _SHOULD_ also be included. Content resources in appropriate formats _MAY_ also have the `language` property. Content resources _MAY_ also have descriptive and linking properties, as defined in [section 3][prezi30-resource-properties].
 
-If the content resource is an Image, and a IIIF Image service is available for it, then the `id` property of the content resource _MAY_ be a complete URI to any particular representation supported by the Image Service, such as `https://example.org/image1/full/1000,/0/default.jpg`, but _MUST NOT_ be just the URI of the IIIF Image service. Its `type` value _MUST_ be the string `Image`. Its media type _MAY_ be listed in `format`, and its height and width _MAY_ be given as integer values for `height` and `width` respectively. The Image _SHOULD_ have the service [referenced][prezi30-terminology] from it using the `service` property.
+If the content resource is a text, and an ITF Image service is available for it, then the `id` property of the content resource _MAY_ be a complete URI to any particular representation supported by the Text Service, such as `https://example.org/itf/CASE20258/diplomatic/book/full/1`, but _MUST NOT_ be just the URI of the ITF Text service. Its `type` value _MUST_ be the string `Text`. The Text _SHOULD_ have the service [referenced][prezi30-terminology] from it using the `service` property.
 
 If there is a need to distinguish between content resources, then the resource _SHOULD_ have the `label` property.
 
 A TextFrame _MAY_ be treated as a content resource for the purposes of annotating it on to other TextFrames. In this situation, the TextFrame _MAY_ be [embedded][prezi30-terminology] within the Annotation, or require dereferencing to obtain its description.
 
-> Update json
-> > I'm really not sure I know what I'm doing with this one.
-
 ``` json-doc
 {
-  "@context": "http://iiif.io/api/presentation/{{ page.major }}/context.json",
-  "id": "https://example.org/itf/book1/annotation/p0001-image",
-  "type": "Annotation",
-  "motivation": "painting",
-  "body": {
-    "id": "https://example.org/itf/book1/page1/full/max/0/default.jpg",
-    "type": "Image",
-    "label": { "en": [ "Page 1" ], "es": [ "Página 1" ] },
-    "format": "image/jpeg",
-    "service": [
-      {
-        "id": "https://example.org/itf/book1/page1",
-        "type": "ImageService3",
-        "profile": "level2",
+    "@context": "http://textframe.io/api/presentation/{{ page.major }}/context.json",
+    "id": "https://example.org/itf/TEXT6/diplomatic/annotation-1",
+    "type": "Annotation",
+    "motivation": "writing",
+    "body": {
+        "id": "https://example.org/itf/TEXT6/diplomatic/book/p1/rich/html",
+        "type": "Text",
+        "label": {
+            "en": ["“A treatise touching the Defenc of Astrologie (fragment A)”"]
+        },
         "service": [
-          {
-            "@id": "https://example.org/itf/auth/login",
-            "@type": "AuthCookieService1"
-          }
+            {
+                "id": "https://example.org/itf/TEXT6/diplomatic/page1",
+                "type": "TexService1",
+                "profile": "level1",
+                "service": [
+                    {
+                        "@id": "https://example.org/itf/auth/login",
+                        "@type": "AuthCookieService1"
+                    }
+                ]
+            }
         ]
-      }
-    ],
-    "height": 2000,
-    "width": 1500
-  },
-  "target": "https://example.org/itf/book1/TextFrame/p1"
+    },
+    "target": "https://example.org/itf/TEXT6/diplomatic/TextFrame/p1"
 }
 ```
 
@@ -2630,12 +2605,6 @@ __Behavior Values__
     ]
 }
 ```
-
-### C. Versioning
-
-> Are we following Semantic Versioning? If so then we just need to remove 'Starting th version 2.0,' from this sentence. If not, we should perhaps remove this section.
-> > I'd be up for it, but we don’t have it set up in github workflows and we’d need to adhere to some strict format for commit messages (https://www.conventionalcommits.org/en/v1.0.0/).
-> > > There's no equivalent statement in the Text Fragment API / Text Information API document, so I'd guess we don't need to commit to it here, but I'll hold off deleting this section because this feels like a policy decision.
 
 ### D. Acknowledgements
 
