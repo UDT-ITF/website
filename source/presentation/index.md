@@ -20,7 +20,7 @@ editors:
     institution: Cambridge Digital Humanities, University of Cambridge & Digital Innovation and Development, Cambridge University Library
   - name: Robert Ralley
     ORCID: https://orcid.org/0000-0002-9769-754X
-    institution: Cambridge Digital Humanities, University of Cambridge
+    institution: Cambridge Digital Humanities (University of Cambridge)
   - name: Name Surname
     ORCID: https://orcid.org/xxxx-xxxx-xxxx-xxxx
     institution: Dept (Institute)
@@ -112,10 +112,11 @@ An ordered list of Annotation Pages. Annotation Collections allow higher level g
 
 ##  3. Resource Properties
 
-Most properties defined in this specification may be associated with any of the resource types described above, and may have more than one value. Properties relate to the resource with which they are associated. For example, the `label` property on a Manifest, is the human-readable label of the Manifest; the `label` property on a TextFrame is the human-readable label for that TextFrame.
+Most properties defined in this specification may be associated with any of the resource types described above, and may have more than one value. Properties relate to the resource with which they are associated. For example, the `label` property on a Manifest is the human-readable label of the Manifest; the `label` property on a TextFrame is the human-readable label for that TextFrame.
 
 > ‘that it does not understand’ - does this mean properties not defined in the specification or properties that are completely bespoke. It’s the difference between it discovering a ‘label’ when it isn’t allowed (labels are known … but not in that context) and some completely new data structure.
 > > I added 'or are encountered in an undocumented context' to clarify. I'm not sure if that's what IIIF expects their clients to do, but it's what I would expect. Otherwise, it would be chaos - as each client attempts to figure out what a 'label' means in an undocumented context.
+> > > Just a small comment here from RR to say that both the comments above are by MH. I don't have anything helpful to say.
 
 The requirements for which properties each class contains are summarized in [Appendix A][prezi30-appendixa]. 
 
@@ -204,11 +205,12 @@ The value of the property _MUST_ be a JSON object, as described in the [language
    Clients _MAY_ render `summary` on other types of resource.
 
 > Can you provide a summary of one of our items - either a case, note or text. Might as well keep it anchored with real examples.
+> > I've added something digested from the metadata of CASE14. I'm assuming that as it's an alternative to the metadata there shouldn't be any other details included, but I can add other bits if necessary. E.g. 'It is a horary consultation concerning Roger George (PERSON3030).'
 
 ``` json-doc
 {
     "summary": {
-        "en": ["This is a summary of the object."]
+        "en": ["A case from 19 March 1596 at 09:30, recorded by Dr Simon Forman in MS Ashmole 234, f. 3v (upper left part of page)."]
     }
 }
 ```
@@ -427,9 +429,6 @@ The value _MUST_ be a string, either taken from the [profiles registry][registry
 { "profile": "https://casebooks.lib.cam.ac.uk/about-us/editorial-and-tagging-guidelines" }
 ```
 
-> We may need this, but surely only for external content resources? I can't see how a TextFrame could have a duration.
-> > This feels like something suited towards interactive displays — show this quote for X seconds, then next one for y seconds.
-
 ##### duration
 
 The duration of the external content resource or TextFrame, given in seconds.
@@ -446,9 +445,6 @@ The value _MUST_ be a positive floating point number.
 ``` json-doc
 { "duration": 125.0 }
 ```
-
-> This may very well be something we need to worry about, but in that case it probably needs to be renamed. I take it this is where we'd look at text directionality or whatever you want to call it. (I think TEI call it 'writing mode'). I do wonder, though, to what extent this needs to be handled here, or whether it should be via the Text API. The two complicating factors I can think of are (1) that there are languages that could be written left to right or top to bottom, so you can't necessarily infer the direction from the language (so that I presume it needs to be encoded *somewhere* and can't just be left to be inferred); and (2) there will be instances in which (e.g.) a right-to-left script is embedded within a passage of left-to-right script (e.g. English-language discussions of the Old Testament). How would specifying a direction on a TextFrame in the Presentation API cope with that?
-> > I think this might actually be two issues — ‘writing mode’ for the direction of the text. viewingDirection, as I understand it, is more a case of how we arrange big chunks for text when displayed. Think of it being used to display a bunch of thumbnails in a certain way in some interactive display. I can see it being useful for us in this regard for a collection that has a side-by-side view of three manuscripts. A left to write language might want to put the frames containing exemplars A, B, C from left to right (with the leftmost indicating the best or one you should be focusing on). If it were a RTL language might prefer it going in the other direction. 
 
 ##### viewingDirection
 
@@ -493,6 +489,7 @@ In order to determine the behaviors that are governing a particular resource, th
 Clients should interpret behaviors on a Range only when that Range is selected or is in some other way the context for the user's current interaction with the resources. A Range with the `behavior` value `continuous`, in a Manifest with the `behavior` value `paged`, would mean that the Manifest's TextFrames should be rendered in a paged fashion, unless the range is selected to be viewed, and its included TextFrames would be rendered in that context only as being virtually stitched together. This might occur, for example, when an editor is making a 'sourcebook' that combines excerpts into a single text for use in classes.
 
 > We might want to require that some sort of notice is displayed when stiching them together in this fashion - like an ellipsis when quoting. Otherwise, it would be possible toeasily create 'wicked bibles' (so to speak) of their own making. 
+> > (I'm assuming we don't need to worry about quotations being inserted into sentences.) We could specify ellipses (U+2026 is a horizontal ellipsis in Unicode, but there's also a vertical equivalent, U+FE19) but we'll run into the problem that they're language-specific. E.g. In French for an omission you'd expect [...], with square brackets around them, and in Chinese and Japanese it seems you'd expect six dots, each one centred. So this would be a difficult thing to specify unless we just said: 'there should be a character or characters to indicate the omission, either an ellipsis or equivalent'. Or unless there's a list of options to be pointed at somewhere.
 
 The descriptions of the behavior values also lists the other values they are disjoint with, meaning that the same resource _MUST NOT_ have both of two or more from that set. In order to determine which is in effect, the client _SHOULD_ follow the inheritance rules above, taking the value from the closest resource. The user interface effects of the possible permutations of non-disjoint behavior values are client dependent.
 
@@ -532,8 +529,6 @@ The value _MUST_ be an array of strings.
 ```
 
 ###  3.3. Linking Properties
-
-> I've changed IIIF to ITF twice here, though this does make me think of a question I've raised much later in the document about how the relationship between IIIF and ITF resources is handled.
 
 These properties are references or links between resources, and split into external references where the linked object is outside the ITF space, and internal references where the linked object is an ITF resource. Clients typically create a link to the resource that is able to be activated by the user, or interact directly with the linked resource to improve the user's experience.
 
@@ -636,7 +631,7 @@ Implementations _SHOULD_ be prepared to recognize the `@id` and `@type` property
     {
       "@id": "https://example.org/itf/identifier",
       "@type": "ImageService2",
-      "profile": "http://textframe.io/api/level1.json"
+      "profile": "https://textframe.io/api/level1.json"
     }
   ]
 }
@@ -661,13 +656,13 @@ The value _MUST_ be an array of JSON objects. Each object _MUST_ a service resou
     {
       "@id": "https://example.org/itf/auth/login",
       "@type": "AuthCookieService1",
-      "profile": "http://itf.io/api/auth/1/login",
+      "profile": "https://textframe.io/api/auth/1/login",
       "label": "Login to Example Institution",
       "service": [
         {
           "@id": "https://example.org/itf/auth/token",
           "@type": "AuthTokenService1",
-          "profile": "http://itf.io/api/auth/1/token"          
+          "profile": "https://textframe.io/api/auth/1/token"          
         }
       ]
     }
@@ -758,9 +753,6 @@ The value _MUST_ be a JSON object, which _MUST_ have the `id` and `type` propert
 }
 ```
 
-> References to 'Range' here and presumably passim will need to be examined, and removed or amended unless we're going to add 'Range' or some equivalent to the ITF Presentation API. The IIIF Presentation API gives chapters in a book as an example of the kind of thing you'd use them for. Do we want/need them, or does the Text API's stuff about fragments mean we don't?
-> > How’s the above?
-
 ##### supplementary
 
 A link from this Range to an Annotation Collection that includes the `supplementing` Annotations of content resources for the Range. Clients might use this to present additional content to the user from a different TextFrame when interacting with the Range, or to jump to the next part of the Range within the same TextFrame. For example, the Range might represent a newspaper article that spans non-sequential pages, and then uses the `supplementary` property to reference an Annotation Collection that consists of the Annotations that record the text, split into Annotation Pages per newspaper page. Alternatively, the Range might represent the parts of a manuscript that have been transcribed or translated, when there are other parts that have yet to be worked on. The Annotation Collection would be the Annotations that transcribe or translate, respectively.
@@ -786,9 +778,6 @@ The value _MUST_ be a JSON object, which _MUST_ have the `id` and `type` propert
 These properties define the structure of the text being displayed in ITF by allowing the inclusion of child resources within parents, such as a TextFrame within a Manifest, or a Manifest within a Collection. The majority of use cases would use `items`, however there are two special cases for different sorts of structures.
 
 ##### items
-
-> I've changed 'IIIF' to 'ITF' here, but is this statement true of the ITF Presentation API (that most of its functionality is about order of child resources)? I'm not convinced it necessarily is.
-> > Is this a little better?
 
 `items` can be used to record the order in which child resources occur within a parent resource. This could be Collections or Manifests within a parent Collection, or TextFrames within a Manifest. All of these situations are covered with a single property, `items`.
 
@@ -824,7 +813,7 @@ The value _MUST_ be an array of JSON objects. Each item _MUST_ have the `id` and
 ```
 
 ##### structures
- 
+
 The structure of a text represented in a Manifest can be described using a hierarchy of Ranges. Ranges can be used to describe the "table of contents" of the text or other structures that the user can interact with beyond the order given by the `items` property of the Manifest. The hierarchy is built by nesting the child Range resources in the `items` array of the higher level Range. The top level Ranges of these hierarchies are given in the `structures` property.
 
 The value _MUST_ be an array of JSON objects. Each item _MUST_ have the `id` and `type` properties, and the `type` _MUST_ be `Range`.
@@ -897,7 +886,8 @@ Additional motivations may be added to the Annotation to further clarify the int
 
 > Here we'll obviously need to replace the values with whatever we're actually using.
 > > How’s this?
- 
+> > > Reads well. I notice that the descriptions based on IIIF text pay far more attention to whether and how annotations are to be displayed. We may need to think carefully about what we say on this topic. Do we just need to say for 'asserting', 'classifying' and 'identifying' that they '_MAY_ be presented to the user as part of the representation of the TextFrame, or _MAY_ be presented in a different part of the user interface'? I can't see how we'd be more prescriptive than that, given the variety of things people are likely to want to do.
+  
 | Value          | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
 |----------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | `asserting`    | Used when the editor or creation of the annotation is asserting or claiming something about the text or its contents that is described in the target. For example, it could be recording that the original document is damaged and that all (or a particular part) is illegible. This is likely going to be the most common motivation used by modern editors. |
@@ -955,18 +945,30 @@ Language _MAY_ be associated with strings that are intended to be displayed to t
 
 The values of these properties _MUST_ be JSON objects, with the keys being the [BCP 47][org-bcp-47] language code for the language, or if the language is either not known or the string does not have a language, then the key _MUST_ be the string `none`. The associated values _MUST_ be arrays of strings, where each item is the content in the given language.
 
-> Different (non-painting) example needed here.
+> I've (rather clumsily) commented out the proposed new example here, and below that added in an alternative, to a dual-text collection of French short stories (Penguin Books, 1966, edited by Pamela Lyon). The reason for that is that I think it's important that the third title/reference, the one with language set to "none", shouldn't have a recognisable language. The Whistler example in the IIIF API had a name/date reference there, for which you simply can't determine a language. So I've done the same with the Lyon volume. I suppose an alternative might be to use the Newton example but to give the "none" version as simply the word "Prolegomena", since that doesn't tell us whether it's English or Latin.
 
+> json-doc
+> {
+>  "label": {
+>    "lat": [
+>      "Prolegomena ad lexici prophetici partem secundam in quibus agitur De forma sanctuarij Iudaici",
+>    ],
+>    "en": [
+>      "Prolegomena to the second part of the Prophetic Lexicon, in which is treated the design of the Jewish Sanctuary"
+>    ],
+>    "none": [ "Prolegomena to the second part of the Prophetic Lexicon)" ]
+>  }
+> }
 ``` json-doc
 {
   "label": {
-    "lat": [
-      "Prolegomena ad lexici prophetici partem secundam in quibus agitur De forma sanctuarij Iudaici",
-    ],
     "en": [
-      "Prolegomena to the second part of the Prophetic Lexicon, in which is treated the design of the Jewish Sanctuary"
+      "French Short Stories Volume 1"
     ],
-    "none": [ "Prolegomena to the second part of the Prophetic Lexicon)" ]
+    "fr": [
+      "Nouvelles Françaises Tome 1"
+    ],
+    "none": [ "Lyon (1966)" ]
   }
 }
 ```
@@ -1099,7 +1101,7 @@ An example Collection document:
     },
     "items": [
         {
-            "@context": "http://textframe.io/api/presentation/1/context.json",
+            "@context": "https://textframe.io/api/presentation/1/context.json",
             "id": "https://example.org/itf/CASE16313/diplomatic/info.json",
             "type": "Manifest",
             "label": {
@@ -1147,7 +1149,7 @@ The Manifest _MUST_ have an `items` property, which is an array of JSON-LD objec
 
 ``` json-doc
 {
-    "@context": "http://textframe.io/api/presentation/1/context.json",
+    "@context": "https://textframe.io/api/presentation/1/context.json",
     "id": "https://example.org/itf/CASE16313/diplomatic/info.json",
     "type": "Manifest",
     "label": {
@@ -1185,11 +1187,19 @@ The Manifest _MUST_ have an `items` property, which is an array of JSON-LD objec
             "value": {
                 "en": ["1604-09-05T11:40:00"]
             }
+        },
+        {
+            "label": {
+                "en": ["Source"]
+            },
+            "value": {
+                "en": ["MS Ashmole 207, f. 211r (bottom left part of page)."]
+            }
         }
     ],
     "summary": [
         {
-            "en": ["Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris commodo magna nisl, ut condimentum eros gravida sit amet. Aliquam ultrices vel odio sodales mattis. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae."]
+            "en": ["A case from 5 September 1604 at 11:40, recorded by Mr Gerence James [Marks] and Mr Richard Napier [Sandy] [Richard Napier [Senior]] in MS Ashmole 207, f. 211r (bottom left part of page)."]
         }
     ],
      
@@ -1343,8 +1353,6 @@ Content resources are associated with the TextFrame via Web Annotations. Content
 
 Content that is derived from the TextFrame, such as IIIF images for the underlying resource or an audio representation of the text, _MUST_ be associated by an Annotation that has the `motivation` value `supplementing`. Annotations _MAY_ have any other `motivation` values as well. Thus, content of any type may be associated with the TextFrame via an Annotation that has the `motivation` value `writing`, meaning the content is _part of_ the TextFrame; an Annotation that has the `motivation` value `supplementing`, meaning the content is _from_ the TextFrame but not necessarily part of it; or an Annotation with another `motivation` meaning that it is somehow about the TextFrame.
 
-> This point seems fine but the example in the second sentence clearly needs to be altered. The last sentence of the paragraph doesn't seem to apply to us. Can that last sentence be deleted, or is there something comparable we need to say?
-
 TextFrames _MAY_ be treated as content resources for the purposes of annotating on to other TextFrames. For example, a TextFrame (TextFrame A) containing a commentary on a historical text along with Annotations may be annotated on to another TextFrame (TextFrame B) containing the historical text.
 
 ``` json-doc
@@ -1359,7 +1367,7 @@ TextFrames _MAY_ be treated as content resources for the purposes of annotating 
       "id": "https://example.org/itf/book1/content/p1/1",
       "type": "AnnotationPage",
       "items": [
-        // Painting Annotations on the TextFrame are included here
+        // Writing Annotations on the TextFrame are included here
       ]
     }
   ],
@@ -1378,8 +1386,7 @@ TextFrames _MAY_ be treated as content resources for the purposes of annotating 
 
 ###  5.4. Range
 
-> See my comment somewhere distantly above. Do we need range, for its ability to handle e.g. chapters in a book? Or is this kind of thing handled by the fragments discussed in the Text API?
-
+> This may be a question to which there's a simple technical answer. I'm still trying to settle in my mind how Range is useful in the Presentation API when you have custom_modes and custom_mode_definitions in the Text Information API. Those are meant to give you a mechanism to divide up a text into a hierarchical structure of different units (e.g. chapters within a book, or presumably articles in a newspaper). So does the Presentation API need a separate mechanism to record those same hierarchical divisions? Does this allow you to do different things?
 Ranges are used to represent structure within an object beyond the default order of the TextFrames in the `items` property of the Manifest, such as newspaper sections or articles, chapters within a book, or movements within a piece of music. Ranges can include TextFrames, parts of TextFrames, or other Ranges, creating a tree structure like a table of contents.
 
 The intent of adding a Range to the Manifest is to allow the client to display a linear or hierarchical navigation interface to enable the user to quickly move through the object's content. Clients _SHOULD_ present only Ranges that have the `label` property and do not have a `behavior` value `no-nav` to the user. Clients _SHOULD NOT_ render TextFrame labels as part of the navigation, and a Range that wraps the TextFrame _MUST_ be created if this is the desired presentation.
@@ -1389,8 +1396,6 @@ If there is no Range that has the `behavior` value `sequence`, and the Manifest 
 Ranges _MUST_ have URIs and they _SHOULD_ be HTTP(S) URIs. Top level Ranges are [embedded][prezi30-terminology] or externally [referenced][prezi30-terminology] within the Manifest in a `structures` property. These top level Ranges then embed or reference other Ranges, TextFrames or parts of TextFrames in the `items` property. Each entry in the `items` property _MUST_ be a JSON object, and it _MUST_ have the `id` and `type` properties. If a top level Range needs to be dereferenced by the client, then it _MUST NOT_ have the `items` property, such that clients are able to recognize that it should be retrieved in order to be processed.
 
 All of the TextFrames or parts that should be considered as being part of a Range _MUST_ be included within the Range's `items` property, or a descendant Range's `items`.
-
-> This paragraph needs altering to fit ITF a bit better. Time segments of a single TextFrame representing different sections of a piece of music clearly doesn't work as an example for us. But I'm reluctant to do anything with this paragraph until we've dealt with the wider question of whether we need Range at all, and if so what for.
 
 The TextFrames and parts of TextFrames need not be contiguous or in the same order as in the Manifest's `items` property or any other Range. Examples include newspaper articles that are continued in different sections, a chapter that starts halfway through a page, or a text that is divided into separate bound manuscript volumes.
 
@@ -1495,14 +1500,11 @@ Additional features of the Web Annotation data model _MAY_ also be used, such as
 
 Content resources are external web resources that are [referenced][prezi30-terminology] from within the Manifest or Collection. This includes images, video, audio, data, web pages or any other format.
 
-As described in the [TextFrame][prezi30-TextFrame] section, the content associated with a TextFrame (and therefore the content of a Manifest) is provided by the `body` property of Annotations with the `painting` motivation. Content resources can also be [referenced][prezi30-terminology] from `homepage`, `logo`, `rendering`, and `seeAlso` properties.
+As described in the [TextFrame][prezi30-TextFrame] section, the content associated with a TextFrame (and therefore the content of a Manifest) is provided by the `body` property of Annotations with the `writing` motivation. Content resources can also be [referenced][prezi30-terminology] from `homepage`, `logo`, `rendering`, and `seeAlso` properties.
 
 Content resources _MUST_ have an `id` property, with the value being the URI at which the resource can be obtained.
 
 The type of the content resource _MUST_ be included, and _SHOULD_ be taken from the table listed under the definition of `type`. The `format` of the resource _SHOULD_ be included and, if so, _SHOULD_ be the media type that is returned when the resource is dereferenced. The `profile` of the resource, if it has one, _SHOULD_ also be included. Content resources in appropriate formats _MAY_ also have the `language` property. Content resources _MAY_ also have descriptive and linking properties, as defined in [section 3][prezi30-resource-properties].
-
-> To what extent are we worrying about, or including in the spec, discussions about IIIF handling of external resources...? (This makes me wonder how ITF plays with IIIF in general. There are a lot of places in this API that envisage links to (or the inclusion of) images, videos, audio files and the like. Those are clearly going to be wanted by people making websites, so I suppose we need to specify how people annotate them to the TextFrame. But what beyond that? Can we just say: everything to do with images, videos, audio etc. has to be handled via IIIF?)
-> > I'd say that we keep in the existing bits, but not worry about it too much. At this point, I feel the concern should be ensuring that core functionality is documented rather than attempting to cater for all possibilities of additional resources.
 
 If the content resource is an Image, and a IIIF Image service is available for it, then the `id` property of the content resource _MAY_ be a complete URI to any particular representation supported by the Image Service, such as `https://example.org/image1/full/1000,/0/default.jpg`, but _MUST NOT_ be just the URI of the IIIF Image service. Its `type` value _MUST_ be the string `Image`. Its media type _MAY_ be listed in `format`, and its height and width _MAY_ be given as integer values for `height` and `width` respectively. The Image _SHOULD_ have the service [referenced][prezi30-terminology] from it using the `service` property.
 
@@ -1511,6 +1513,7 @@ If there is a need to distinguish between content resources, then the resource _
 A TextFrame _MAY_ be treated as a content resource for the purposes of annotating it on to other TextFrames. In this situation, the TextFrame _MAY_ be [embedded][prezi30-terminology] within the Annotation, or require dereferencing to obtain its description.
 
 > Update json
+> > I'm really not sure I know what I'm doing with this one.
 
 ``` json-doc
 {
@@ -1616,10 +1619,10 @@ The format for all responses is JSON, as described above. It is good practice fo
 
 If the server receives a request with an `Accept` header, it _SHOULD_ respond following the rules of [content negotiation][org-rfc-7231-conneg]. Note that content types provided in the `Accept` header of the request _MAY_ include parameters, for example `profile` or `charset`.
 
-If the request does not include an `Accept` header, the HTTP `Content-Type` header of the response _SHOULD_ have the value `application/ld+json` (JSON-LD) with the `profile` parameter given as the context document: `http://itf.io/api/presentation/1/context.json`.
+If the request does not include an `Accept` header, the HTTP `Content-Type` header of the response _SHOULD_ have the value `application/ld+json` (JSON-LD) with the `profile` parameter given as the context document: `https://textframe.io/api/presentation/1/context.json`.
 
 ```
-Content-Type: application/ld+json;profile="http://itf.io/api/presentation/1/context.json"
+Content-Type: application/ld+json;profile="https://textframe.io/api/presentation/1/context.json"
 ```
 {: .urltemplate}
 
@@ -1757,7 +1760,7 @@ __Behavior Values__
 
 ```json
 {
-    "@context": "http://textframe.io/api/presentation/1/context.json",
+    "@context": "https://textframe.io/api/presentation/1/context.json",
     "id": "https://example.org/itf/CASE20258/diplomatic/info.json",
     "type": "Manifest",
     "label": {
@@ -2632,6 +2635,7 @@ __Behavior Values__
 
 > Are we following Semantic Versioning? If so then we just need to remove 'Starting th version 2.0,' from this sentence. If not, we should perhaps remove this section.
 > > I'd be up for it, but we don’t have it set up in github workflows and we’d need to adhere to some strict format for commit messages (https://www.conventionalcommits.org/en/v1.0.0/).
+> > > There's no equivalent statement in the Text Fragment API / Text Information API document, so I'd guess we don't need to commit to it here, but I'll hold off deleting this section because this feels like a policy decision.
 
 ### D. Acknowledgements
 
