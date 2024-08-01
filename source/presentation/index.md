@@ -310,6 +310,7 @@ The value _MUST_ be an array of JSON objects, where each item in the array confo
 ##### navDate
 
 > NEIL: Perhaps call this "sortDate" bearing in mind text below?
+> > ROB: I don't have strong feelings, but sortDate works fine for me.
 
 A date that clients may use for navigation purposes when presenting the resource to the user in a date-based user interface, such as a calendar or timeline. More descriptive date ranges, intended for display directly to the user, *SHOULD* be included in the `metadata` property for human consumption.
 
@@ -482,11 +483,15 @@ In order to determine the behaviors that are governing a particular resource, th
 * TextFrames inherit behaviors from their referencing Manifest, but **DO NOT** inherit behaviors from any referencing Ranges, as there might be several with different behaviors.
 * Ranges inherit behaviors from any referencing Range and referencing Manifest.
 
+> If we're removing the section on 'Ranges' then we can take out the last bullet point above. I'm not sure what happens to the third bullet point. Does it need to lose everything after 'referencing Manifest'? (If we remove the whole of this section then the problem disappears.)
+
 Clients should interpret behaviors on a Range only when that Range is selected or is in some other way the context for the user's current interaction with the resources. A Range with the `behavior` value `continuous`, in a Manifest with the `behavior` value `paged`, would mean that the Manifest's TextFrames should be rendered in a paged fashion, unless the range is selected to be viewed, and its included TextFrames would be rendered in that context only as being virtually stitched together. This might occur, for example, when an editor is making a 'sourcebook' that combines excerpts into a single text for use in classes.
+> Again, if we're removing the section on ranges then I guess the paragraph above should be deleted too.
 
 > We might want to require that some sort of notice is displayed when stiching them together in this fashion - like an ellipsis when quoting. Otherwise, it would be possible toeasily create 'wicked bibles' (so to speak) of their own making. 
 > > (I'm assuming we don't need to worry about quotations being inserted into sentences.) We could specify ellipses (U+2026 is a horizontal ellipsis in Unicode, but there's also a vertical equivalent, U+FE19) but we'll run into the problem that they're language-specific. E.g. In French for an omission you'd expect [...], with square brackets around them, and in Chinese and Japanese it seems you'd expect six dots, each one centred. So this would be a difficult thing to specify unless we just said: 'there should be a character or characters to indicate the omission, either an ellipsis or equivalent'. Or unless there's a list of options to be pointed at somewhere.
 > > > I would favour pruning this right down to focus on things we have use cases for - there's a load of guff to make here to basically make IIIF viewers play slideshows with voiceovers in a very counterintuitive way. A better way would be to give a manifest and each textframe a time dimension. Textframes would also have a time offset within the manifest timeline to indicate when it appears,   annotations could then have a time+dureation in their target specification to indicate when they are invoked, and when they cease. Imagine viewing a timeline of versions of a document this way.   
+> > > > ROB: fwiw, looking through the behaviours one section at a time: (a) I'd be happy to lose 'Temporal Behaviors' on the grounds that those don't relate to our use-cases, and particularly if there's a better way of producing slideshows. Given shortage of time, I might be inclined to start that off as an issue. (b) 'Layout Behaviors' I can see being useful, particularly if someone is going to produce a page-turning view and someone else is going to put a collection of stone inscriptions up. I can easily see those behaviours being useful for fairly straightforward text resources. (c) 'Collection Behaviors' I'm not sure about. I'm not seeing anything essential but could be persuaded. (d) 'Range Behaviors' I'd guess disappear along with Ranges. (e) The 'Miscellaneous Behaviors' are just the option 'hidden', which seems potentially useful to me if that's the means by which you make the display of certain annotations optional.
 
 The descriptions of the behavior values also lists the other values they are disjoint with, meaning that the same resource _MUST NOT_ have both of two or more from that set. In order to determine which is in effect, the client _SHOULD_ follow the inheritance rules above, taking the value from the closest resource. The user interface effects of the possible permutations of non-disjoint behavior values are client dependent.
 
@@ -884,13 +889,16 @@ Additional motivations may be added to the Annotation to further clarify the int
 
 > I notice that the descriptions based on IIIF text pay far more attention to whether and how annotations are to be displayed. We may need to think carefully about what we say on this topic. Do we just need to say for 'asserting', 'classifying' and 'identifying' that they '_MAY_ be presented to the user as part of the representation of the TextFrame, or _MAY_ be presented in a different part of the user interface'? I can't see how we'd be more prescriptive than that, given the variety of things people are likely to want to do.
 > > Agreed - Possibly differentiate between annotations that are part of the object and MUST be handled (e.g. "writing") and the more interpretive stuff. 
-  
+> > > ROB: I've added the text.
+    
 | Value          | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
 |----------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `asserting`    | Used when the editor or creation of the annotation is asserting or claiming something about the text or its contents that is described in the target. For example, it could be recording that the original document is damaged and that all (or a particular part) is illegible. This is likely going to be the most common motivation used by modern editors. |
-| `classifying`  | Used when the annotation is classifying the Target as something, for example, classifying the text as a certain type of document, such as a letter. The difference between `classifying` and `asserting` is subtle, but significant. If editors are uncomfortable with the epistemological ramifications of using the verb `classifying`, they can easily use `asserting` instead. |
+| `asserting`    | Resources associated with a TextFrame by an Annotation that has the `movivation` value `asserting` _MAY_ be presented to the user as part of the representation of the TextFrame, or _MAY_ be presented in a different part of the user interface. This value is used when the editor or creator of the Annotation is asserting or claiming something about the target. For example, it could record that part of the original document is damaged and illegible. This is likely going to be the most common motivation used by modern editors. |
+> ROB: I'm rereading this and struggling with 'claiming something about the text or its contents that is described in the target'. Might it be simplified to something like 'claiming something about the target'?  that first sentence. Should it say 'creator' rather than 'creation'? And I'm not sure it's clear what's 'described in the target'. Might the first sentence simply be something like: 'Used for annotations that assert or claim something about the target.'?
+| `classifying`  | Resources associated with a TextFrame by an Annotation that has the `motivation` value `asserting`  _MAY_ be presented to the user as part of the representation of the TextFrame, or _MAY_ be presented in a different part of the user interface. This value is used when the annotation is classifying the target in some way. For example, it might classify the text as a certain type of document, such as a letter. Classification makes reference to an ontology, taxonomy or other controlled vocabulary, whereas assertion need not. The difference between `classifying` and `asserting` is subtle, but significant. If editors are uncomfortable with the epistemological ramifications of using the verb `classifying`, they can easily use `asserting` instead. |
 > Classification makes reference to an ontology, taxonomy or other controlled vocabulary, assertion need not
-| `identifying`  | Used when assigning an identity to the Target, such as the IRI that identifies a named entity with a mention of that entity within the text. |
+> > ROB: Aha. Yes, absolutely. I think that's right, and useful, so I've altered the text accordingly. I think now the sentence 'The difference between `classifying` and `asserting` is subtle, but significant.' can now be removed (though I haven't done it). (We've specified exactly what the difference between the two is, and we've also noted that you can use 'asserting' if you're scared of 'classifying', and I think that's all we need to say, so we don't need to warn about subtlety.) - rr
+| `identifying`  | Resources associated with a TextFrame by an Annotation that has the `motivation` value `identifying`  _MAY_ be presented to the user as part of the representation of the TextFrame, or _MAY_ be presented in a different part of the user interface. This value is used when assigning an identity to the target, such as the IRI that identifies a named entity with a mention of that entity within the text. |
 | `supplementing` | Resources associated with a TextFrame by an Annotation that has the `motivation` value `supplementing`  _MAY_ be presented to the user as part of the representation of the TextFrame, or _MAY_ be presented in a different part of the user interface. The content can be thought of as being _from_ the TextFrame. The use of this motivation with target resources other than TextFrames is undefined. For example, an Annotation that has the `motivation` value `supplementing`, a body of an Image and the target of part of the TextFrame is an instruction to present that Image to the user either in the TextFrame's rendering area or somewhere associated with it, and could be used to present an easier to read representation of a diagram. Similarly, a textual body is to be presented either in the targeted region of the TextFrame or otherwise associated with it, and might be OCR, a manual transcription or a translation of handwritten text, or captions for what is being said in a TextFrame with audio content. |
 | `writing`      | Resources associated with a TextFrame by an Annotation with the `motivation` value of `writing` _MUST_ be presented to the user as part of the visual representation of the TextFrame. The content can be thought of as being _of_ the TextFrame. It should be used, for example, to record text that is written onto the original document, such as page or folio numbers added to the document by a cataloguer, additions or annotations written on the page, etc. The use of this motivation with target resources other than TextFrames is undefined. |
 {: .api-table #table-motivations}
@@ -1368,77 +1376,77 @@ TextFrames _MAY_ be treated as content resources for the purposes of annotating 
 }
 ```
 
-###  5.4. Range
-
+> ###  5.4. Range
+> 
 > This may be a question to which there's a simple technical answer. I'm still trying to settle in my mind how Range is useful in the Presentation API when you have custom_modes and custom_mode_definitions in the Text Information API. Those are meant to give you a mechanism to divide up a text into a hierarchical structure of different units (e.g. chapters within a book, or presumably articles in a newspaper). So does the Presentation API need a separate mechanism to record those same hierarchical divisions? Does this allow you to do different things?
 > > That's a good point. I can't see any use for it that couldn't be done better with a collection containing a bunch of manifests. Neil, what do you think? Delete Range altogether (here and passim)
 > > > NEIL: I would lose Range, it changed between IIIF V1 and V2 so it's a mess anyway. Custom Modes is more powerful IMHO since they can be used more directly to address fragments.   
 
-Ranges are used to represent structure within an object beyond the default order of the TextFrames in the `items` property of the Manifest, such as newspaper sections or articles, chapters within a book, or movements within a piece of music. Ranges can include TextFrames, parts of TextFrames, or other Ranges, creating a tree structure like a table of contents.
+> Ranges are used to represent structure within an object beyond the default order of the TextFrames in the `items` property of the Manifest, such as newspaper sections or articles, chapters within a book, or movements within a piece of music. Ranges can include TextFrames, parts of TextFrames, or other Ranges, creating a tree structure like a table of contents.
+> 
+> The intent of adding a Range to the Manifest is to allow the client to display a linear or hierarchical navigation interface to enable the user to quickly move through the object's content. Clients _SHOULD_ present only Ranges that have the `label` property and do not have a `behavior` value `no-nav` to the user. Clients _SHOULD NOT_ render TextFrame labels as part of the navigation, and a Range that wraps the TextFrame _MUST_ be created if this is the desired presentation.
+> 
+> If there is no Range that has the `behavior` value `sequence`, and the Manifest does not have the `behavior` value `unordered`, then the client _SHOULD_ treat the order of the TextFrames in the Manifest's `items` array as the default order. If there is one Range that has the `behavior` value `sequence`, then the client _MUST_ instead use this Range for the ordering. If there is more than one Range that has the `behavior` value `sequence`, for example a second Range to represent an alternative ordering of the pages of a manuscript, the first Range _SHOULD_ be used as the default and the others _SHOULD_ be able to be selected. Ranges that have the `behavior` value `sequence` _MUST_ be directly within the `structures` property of the Manifest, and _MUST NOT_ be [embedded][prezi30-terminology] or [referenced][prezi30-terminology] within other Ranges. These Ranges may have limited hierarchical nesting, but clients are not expected to traverse very deep structures in determining the default order. If this Range includes parts of TextFrames, then these parts are the content to render by default and would generate separate entries in a navigation display. This allows for the TextFrame to include content outside of the default view, such as a color bar or ruler.
+> 
+> Ranges _MUST_ have URIs and they _SHOULD_ be HTTP(S) URIs. Top level Ranges are [embedded][prezi30-terminology] or externally [referenced][prezi30-terminology] within the Manifest in a `structures` property. These top level Ranges then embed or reference other Ranges, TextFrames or parts of TextFrames in the `items` property. Each entry in the `items` property _MUST_ be a JSON object, and it _MUST_ have the `id` and `type` properties. If a top level Range needs to be dereferenced by the client, then it _MUST NOT_ have the `items` property, such that clients are able to recognize that it should be retrieved in order to be processed.
+> 
+> All of the TextFrames or parts that should be considered as being part of a Range _MUST_ be included within the Range's `items` property, or a descendant Range's `items`.
+> 
+> The TextFrames and parts of TextFrames need not be contiguous or in the same order as in the Manifest's `items` property or any other Range. Examples include newspaper articles that are continued in different sections, a chapter that starts halfway through a page, or a text that is divided into separate bound manuscript volumes.
+> 
+> Ranges _MAY_ link to an Annotation Collection that has the content of the Range using the `supplementary` property. The [referenced][prezi30-terminology] Annotation Collection will contain Annotations that target areas of TextFrames within the Range and link content resources to those TextFrames.
 
-The intent of adding a Range to the Manifest is to allow the client to display a linear or hierarchical navigation interface to enable the user to quickly move through the object's content. Clients _SHOULD_ present only Ranges that have the `label` property and do not have a `behavior` value `no-nav` to the user. Clients _SHOULD NOT_ render TextFrame labels as part of the navigation, and a Range that wraps the TextFrame _MUST_ be created if this is the desired presentation.
+> ``` json-doc
+> {
+>   "@context": "http://iiif.io/api/presentation/{{ page.major }}/context.json",
+>   "id": "https://example.org/itf/book1/manifest",
+>   "type": "Manifest",
+>   // Metadata here ...
+> 
+>   "items": [
+>     // TextFrames here ...
+>   ],
+> 
+>   "structures": [
+>     {
+>       "id": "https://example.org/itf/book1/range/r0",
+>       "type": "Range",
+>       "label": { "en": [ "Table of Contents" ] },
+>       "items": [
+>         {
+>           "id":  "https://example.org/itf/book1/TextFrame/cover",
+>           "type": "TextFrame"
+>         },
+>         {
+>           "id": "https://example.org/itf/book1/range/r1",
+>           "type": "Range",
+>           "label": { "en": [ "Introduction" ] },
+>           "supplementary": {
+>             "id": "https://example.org/itf/book1/annocoll/introTexts",
+>             "type": "AnnotationCollection"
+>           },
+>           "items": [
+>             {
+>               "id": "https://example.org/itf/book1/TextFrame/p1",
+>               "type": "TextFrame"
+>             },
+>             {
+>               "id": "https://example.org/itf/book1/TextFrame/p2",
+>               "type": "TextFrame"
+>             }
+>           ]
+>         },
+>         {
+>           "id": "https://example.org/itf/book1/TextFrame/backCover",
+>           "type": "TextFrame"
+>         }
+>       ]
+>     }
+>   ]
+> }
+> ```
 
-If there is no Range that has the `behavior` value `sequence`, and the Manifest does not have the `behavior` value `unordered`, then the client _SHOULD_ treat the order of the TextFrames in the Manifest's `items` array as the default order. If there is one Range that has the `behavior` value `sequence`, then the client _MUST_ instead use this Range for the ordering. If there is more than one Range that has the `behavior` value `sequence`, for example a second Range to represent an alternative ordering of the pages of a manuscript, the first Range _SHOULD_ be used as the default and the others _SHOULD_ be able to be selected. Ranges that have the `behavior` value `sequence` _MUST_ be directly within the `structures` property of the Manifest, and _MUST NOT_ be [embedded][prezi30-terminology] or [referenced][prezi30-terminology] within other Ranges. These Ranges may have limited hierarchical nesting, but clients are not expected to traverse very deep structures in determining the default order. If this Range includes parts of TextFrames, then these parts are the content to render by default and would generate separate entries in a navigation display. This allows for the TextFrame to include content outside of the default view, such as a color bar or ruler.
-
-Ranges _MUST_ have URIs and they _SHOULD_ be HTTP(S) URIs. Top level Ranges are [embedded][prezi30-terminology] or externally [referenced][prezi30-terminology] within the Manifest in a `structures` property. These top level Ranges then embed or reference other Ranges, TextFrames or parts of TextFrames in the `items` property. Each entry in the `items` property _MUST_ be a JSON object, and it _MUST_ have the `id` and `type` properties. If a top level Range needs to be dereferenced by the client, then it _MUST NOT_ have the `items` property, such that clients are able to recognize that it should be retrieved in order to be processed.
-
-All of the TextFrames or parts that should be considered as being part of a Range _MUST_ be included within the Range's `items` property, or a descendant Range's `items`.
-
-The TextFrames and parts of TextFrames need not be contiguous or in the same order as in the Manifest's `items` property or any other Range. Examples include newspaper articles that are continued in different sections, a chapter that starts halfway through a page, or a text that is divided into separate bound manuscript volumes.
-
-Ranges _MAY_ link to an Annotation Collection that has the content of the Range using the `supplementary` property. The [referenced][prezi30-terminology] Annotation Collection will contain Annotations that target areas of TextFrames within the Range and link content resources to those TextFrames.
-
-``` json-doc
-{
-  "@context": "http://iiif.io/api/presentation/{{ page.major }}/context.json",
-  "id": "https://example.org/itf/book1/manifest",
-  "type": "Manifest",
-  // Metadata here ...
-
-  "items": [
-    // TextFrames here ...
-  ],
-
-  "structures": [
-    {
-      "id": "https://example.org/itf/book1/range/r0",
-      "type": "Range",
-      "label": { "en": [ "Table of Contents" ] },
-      "items": [
-        {
-          "id": "https://example.org/itf/book1/TextFrame/cover",
-          "type": "TextFrame"
-        },
-        {
-          "id": "https://example.org/itf/book1/range/r1",
-          "type": "Range",
-          "label": { "en": [ "Introduction" ] },
-          "supplementary": {
-            "id": "https://example.org/itf/book1/annocoll/introTexts",
-            "type": "AnnotationCollection"
-          },
-          "items": [
-            {
-              "id": "https://example.org/itf/book1/TextFrame/p1",
-              "type": "TextFrame"
-            },
-            {
-              "id": "https://example.org/itf/book1/TextFrame/p2",
-              "type": "TextFrame"
-            }
-          ]
-        },
-        {
-          "id": "https://example.org/itf/book1/TextFrame/backCover",
-          "type": "TextFrame"
-        }
-      ]
-    }
-  ]
-}
-```
-
-###  5.5. Annotation Page
+###  5.4. Annotation Page
 
 Association of Images and other content with their respective TextFrames is done via Annotations. Traditionally Annotations are used for associating commentary with the resource the Annotation's text or body is about; the [Web Annotation][org-w3c-webanno] model allows any resource to be associated with any other resource, or parts thereof, and it is reused for both commentary and `writing` resources on the TextFrame. Other resources beyond images might include IIIF images of the text, an audio or video performance of the text, commentary Annotations, tags and more.
 
@@ -1471,7 +1479,7 @@ The definition of `label` in the Web Annotation specification does not produce J
 }
 ```
 
-### 5.6. Annotation
+### 5.5. Annotation
 
 Annotations follow the [Web Annotation][org-w3c-webanno] data model. The description provided here is a summary plus any ITF specific requirements. The W3C standard is the official documentation.
 
@@ -1483,7 +1491,7 @@ Note that the Web Annotation data model defines different patterns for the `valu
 
 Additional features of the Web Annotation data model _MAY_ also be used, such as selecting a segment of the TextFrame or content resource, or embedding the comment within the Annotation. The use of these advanced features sometimes results in situations where the `target` is not a content resource, but instead a SpecificResource, a Choice, or other non-content object. Implementations should check the `type` of the resource and not assume that it is always content to be rendered.
 
-### 5.7. Content Resources
+### 5.6. Content Resources
 
 Content resources are external web resources that are [referenced][prezi30-terminology] from within the Manifest or Collection. This includes images, video, audio, data, web pages or any other format.
 
@@ -1529,7 +1537,7 @@ A TextFrame _MAY_ be treated as a content resource for the purposes of annotatin
 }
 ```
 
-### 5.8. Annotation Collection
+### 5.7. Annotation Collection
 
 Annotation Collections represent groupings of Annotation Pages that should be managed as a single whole, regardless of which TextFrame or resource they target. This allows, for example, all Annotations that make up a particular translation of a text to be collected together. A client might then present a user interface that allows all the Annotations in an Annotation Collection to be displayed or hidden according to the user's preference.
 
