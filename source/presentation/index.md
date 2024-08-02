@@ -27,7 +27,6 @@ editors:
 ---
 
 ## Status of this Document
-{:.no_toc}
 __This Version:__ {{ page.major }}.{{ page.minor }}.{{ page.patch }}{% if page.pre != 'final' %}-{{ page.pre }}{% endif %}
 
 __Previous Version:__ 
@@ -50,63 +49,59 @@ This is a DRAFT proposal for an Interoperable Text Framework (ITF) presentation 
 
 This document is intended for developers building applications that share 
 textual resources for display, computational analysis or any other purpose. 
-The background use-cases for developing the API are drawn from cultural heritage and research organisations but the use of the API is not restricted to these domains. 
+The background use-cases for developing the API are drawn from cultural heritage and research organizations but the use of the API is not restricted to these domains. 
 
 ### 1.2 Terminology
+
+This specification uses the following terms:
+
+* __embedded__: When a resource (A) is embedded within an embedding resource (B), the complete JSON representation of resource A is present within the JSON representation of resource B, and dereferencing the URI of resource A will not result in additional information. Example: Textframe A is embedded in Manifest B.
+* __referenced__: When a resource (A) is referenced from a referencing resource (B), an incomplete JSON representation of resource A is present within the JSON representation of resource B, and dereferencing the URI of resource A will result in additional information. Example:  Manifest A is referenced from Collection B.
+* __HTTP(S)__: The HTTP or HTTPS URI scheme and internet protocol.
+
+The terms _array_, _JSON object_, _number_, _string_, and _boolean_ in this document are to be interpreted as defined by the [Javascript Object Notation (JSON)](https://datatracker.ietf.org/doc/html/rfc8259) specification.
 
 The key words _MUST_, _MUST NOT_, _REQUIRED_, _SHALL_, _SHALL NOT_, _SHOULD_, _SHOULD NOT_, _RECOMMENDED_, and _OPTIONAL_ in this document are to be interpreted as described in [RFC 2119](https://datatracker.ietf.org/doc/html/rfc2119).
 
 ##  2. Resource Type Overview
 
-ITF’s objectives require a model in which one can characterize the compound object (via the _Manifest_ resource) and the individual views of the object (_TextFrame_ resources). A compound object may also have sections; for example, a book may have chapters of several pages, or a play might be divided into acts and scenes (_Range_ resources) and there may be groups of such objects (_Collection_ resources). These resource types, along with their properties, make up the ITF Presentation API.
+ITF’s objectives require a model in which one can characterize the compound object (via the _Manifest_ resource) and the individual views of the object (_TextFrame_ resources). A compound object may also have sections; for example, a book may have chapters of several pages, or a play might be divided into acts and scenes. There may be groups of such objects (_Collection_ resources). These resource types, along with their properties, make up the ITF Presentation API.
 
-This section provides an overview of the resource types (or classes) that are used in the specification. They are each presented in more detail in [Section 5][prezi30-resource-structure].
+This section provides an overview of the resource types (or classes) that are used in the specification. They are each presented in more detail in [Section 5](#5-resource-structure).
 
 ### 2.1. Defined Types
 
 This specification defines the following resource types:
 
 ##### Collection
-{: #overview-collection}
 
 An ordered list of Manifests, and/or further Collections. Collections allow Manifests and child Collections to be grouped in a hierarchical structure for presentation, which can be for generating navigation, showing dynamic results from a search, or providing fixed sets of related resources for any other purpose.
 
 ##### Manifest
-{: #overview-manifest}
 
 A description of the structure and properties of the compound object. It carries information needed for the client to present the content to the user, such as a title and other descriptive information about the object or the intellectual work that it conveys. Each Manifest usually describes how to present a single ‘text’. While this text may, of course, represent an entire document, such as a book, manuscript, or any portion thereof.
 
 ##### TextFrame
-{: #overview-textframe}
 
-A virtual container that represents a particular view of the object and has content resources associated with it or with parts of it. The TextFrame provides a frame of reference for the layout of the content, both spatially and temporally. The name of a TextFrame is derived from classic letterpress typesetting where individual letter blocks are arranged within a frame before being inked and pressed on physical sheets. The TextFrame functions analogously to IIIF’s Canvas, providing the container onto which other content is placed.
-
-##### Range
-{: #overview-range}
-
-An ordered list of TextFrames, and/or further Ranges. Ranges allow TextFrames to be grouped together in some way. It could be for content-based reasons, such as might be described in a table of contents or the set of scenes in a play. Or, it could be for reasons due to the physical features of the original item, such as page gatherings in a manuscript or printed book. Obviously, texts can be grouped together for any number of reasons that have nothing to due with the physicality of the object.
+A virtual container that represents a particular view of the object and has content resources associated with it or with parts of it. The TextFrame provides a frame of reference for the layout of the content. The name of a TextFrame is derived from classic letterpress typesetting where individual letter blocks are arranged within a frame before being inked and pressed on physical sheets. The TextFrame functions analogously to IIIF’s Canvas, providing the container onto which other content is placed.
 
 ### 2.2. Additional Types
 
-This specification makes use of types defined in the [Web Annotation Data Model][org-w3c-webanno] specification, in particular the following:
+This specification makes use of types defined in the [Web Annotation Data Model](https://www.w3.org/TR/annotation-model/) specification, in particular the following:
 
 ##### Annotation Page
-{: #overview-annotationpage}
 
 An ordered list of Annotations that is typically associated with a TextFrames but may be referenced from other types of resource. Annotation Pages collect and order lists of Annotations that provide commentary about a resource or content that is part of a TextFrames.
 
 ##### Annotation
-{: #overview-annotation}
 
 Annotations associate content resources with TextFrames. The same mechanism is used for all types of content, such as comments, tags, textual notes/enrichments, other textual resources, images, audios or video. This provides a single, unified method for aligning information, and provides a standards-based framework for distinguishing parts of resources and parts of TextFrames. As Annotations can be added later, it promotes a distributed system in which publishers can align their content with the descriptions created by others. Annotation-related functionality may also rely on further classes such as SpecificResource, Choice or Selectors.
 
 ##### Content 
-{: #overview-content}
 
 Web resources such as text, images, audio or video that are associated with a TextFrames via an Annotation, or provide a representation of any resource.
 
 ##### Annotation Collection
-{: #overview-annotationcollection}
 
 An ordered list of Annotation Pages. Annotation Collections allow higher level groupings of Annotations to be recorded. For example, all the English translation Annotations of a medieval French document could be kept separate from the transcription or an edition in modern French, or the director's commentary on a film can be separated from the script.
 
@@ -114,11 +109,11 @@ An ordered list of Annotation Pages. Annotation Collections allow higher level g
 
 Most properties defined in this specification may be associated with any of the resource types described above, and may have more than one value. Properties relate to the resource with which they are associated. For example, the `label` property on a Manifest is the human-readable label of the Manifest; the `label` property on a TextFrame is the human-readable label for that TextFrame.
 
-The requirements for which properties each class contains are summarized in [Appendix A][prezi30-appendixa]. 
+The requirements for which properties each class contains are summarized in [Appendix A](#a-summary-of-property-requirements). 
 
-This section also defines processing requirements for clients for each of the combinations of class and property. Any properties that a client does not understand or are encountered in an undocumented context  _MUST_ be ignored. See the [Linked Data Context and Extensions][prezi30-ldce] section for more information about extensions.
+This section also defines processing requirements for clients for each of the combinations of class and property. Any properties that a client does not understand or are encountered in an undocumented context  _MUST_ be ignored. See the [Linked Data Context and Extensions](#46-linked-data-context-and-extensions) section for more information about extensions.
 
- These requirements are for general purpose client implementations that are intended to be used to render the entire resource to the user, and not necessarily for consuming applications with specialized use or individual component implementations that might be used to construct a client. The inclusion of these requirements gives publishers a baseline expectation for how they can expect implementations advertised as compliant with this specification to behave when processing their content.
+These requirements are for general purpose client implementations that are intended to be used to render the entire resource to the user, and not necessarily for consuming applications with specialized use or individual component implementations that might be used to construct a client. The inclusion of these requirements gives publishers a baseline expectation for how they can expect implementations advertised as compliant with this specification to behave when processing their content.
 
 ###  3.1. Descriptive Properties
 
@@ -126,9 +121,9 @@ These properties describe or represent the resource they are associated with, an
 
 ##### label
 
-A human-readable label, name or title. The `label` property is intended to be displayed as a short, textual surrogate for the resource if a human needs to make a distinction between it and other similar resources. The `label` property can be internationalized, and each language can have multiple values. This pattern is described in more detail in the [languages][prezi30-languages] section.
+A human-readable label, name or title. The `label` property is intended to be displayed as a short, textual surrogate for the resource if a human needs to make a distinction between it and other similar resources. The `label` property can be internationalized, and each language can have multiple values. This pattern is described in more detail in the [languages](#language) section.
 
-The value of the property _MUST_ be a JSON object, as described in the [languages][prezi30-languages] section.
+The value of the property _MUST_ be a JSON object, as described in the [languages](#language) section.
 
  * A Collection _MUST_ have the `label` property with at least one entry.<br/>
    Clients _MUST_ render `label` on a Collection.
@@ -138,8 +133,6 @@ The value of the property _MUST_ be a JSON object, as described in the [language
    Clients _MUST_ render `label` on a TextFrame, and _SHOULD_ generate a `label` for TextFrames that do not have them.
  * A content resource _MAY_ have the `label` property with at least one entry. If there is a Choice of content resource for the same TextFrame, then they _SHOULD_ each have at least a `label` property with at least one entry.<br/>
    Clients _MAY_ render `label` on content resources, and _SHOULD_ render them when part of a Choice.
- * A Range _SHOULD_ have the `label` property with at least one entry. <br/>
-   Clients _MUST_ render `label` on a Range.
  * An Annotation Collection _SHOULD_ have the `label` property with at least one entry.<br/>
    Clients _SHOULD_ render `label` on an Annotation Collection.
  * Other types of resource _MAY_ have the `label` property with at least one entry.<br/>
@@ -157,7 +150,7 @@ The value of the property _MUST_ be a JSON object, as described in the [language
 
 An ordered list of descriptions to be displayed to the user when they interact with the resource, given as pairs of human-readable `label` and `value` entries. The content of these entries is intended for presentation only; descriptive semantics _SHOULD NOT_ be inferred. An entry might be used to convey information about the creation of the object, a physical description, ownership information, or other purposes.
 
-The value of the `metadata` property _MUST_ be an array of JSON objects, where each item in the array has both `label` and `value` properties. The values of both `label` and `value` _MUST_ be JSON objects, as described in the [languages][prezi30-languages] section.
+The value of the `metadata` property _MUST_ be an array of JSON objects, where each item in the array has both `label` and `value` properties. The values of both `label` and `value` _MUST_ be JSON objects, as described in the [languages](#language) section.
 
  * A Collection _SHOULD_ have the `metadata` property with at least one item. <br/>
    Clients _MUST_ render `metadata` on a Collection.
@@ -189,7 +182,7 @@ Clients _SHOULD_ display the entries in the order provided. Clients _SHOULD_ exp
 
 A short textual summary intended to be conveyed to the user. This could be used as a brief description for item-level search results, small-screen environments, or as an alternative user interface when the `metadata` property is not currently rendered. The `summary` property follows the same pattern as the `label` property described above.
 
-The value of the property _MUST_ be a JSON object, as described in the [languages][prezi30-languages] section.
+The value of the property _MUST_ be a JSON object, as described in the [languages](#language) section.
 
  * A Collection _SHOULD_ have the `summary` property with at least one entry.<br/>
    Clients _SHOULD_ render `summary` on a Collection.
@@ -212,7 +205,7 @@ The value of the property _MUST_ be a JSON object, as described in the [language
 
 Text that _MUST_ be shown when the resource is displayed or used. For example, the `requiredStatement` property could be used to present copyright or ownership statements, an acknowledgement of the owning and/or publishing institution, or any other text that the publishing organization deems critical to display to the user. Given the wide variation of potential client user interfaces, it will not always be possible to display this statement to the user in the client's initial state. If initially hidden, clients _MUST_ make the method of revealing it as obvious as possible.
 
-The value of the property _MUST_ be a JSON object, that has the `label` and `value` properties, just like a `metadata` property entry. The values of both `label` and `value` _MUST_ be JSON objects, as described in the [languages][prezi30-languages] section.
+The value of the property _MUST_ be a JSON object, that has the `label` and `value` properties, just like a `metadata` property entry. The values of both `label` and `value` _MUST_ be JSON objects, as described in the [languages](#language) section.
 
  * Any resource type _MAY_ have the `requiredStatement` property.<br/>
    Clients _MUST_ render `requiredStatement` on every resource type.
@@ -232,7 +225,7 @@ The value of the property _MUST_ be a JSON object, that has the `label` and `val
 
 ##### rights
 
-A string that identifies a license or rights statement that applies to the content of the resource, such as the JSON of a Manifest or the text in the TextFrame. The value _MUST_ be drawn from the set of [Creative Commons][org-cc-licenses] license URIs, the [RightsStatements.org][org-rs-terms] rights statement URIs, or those added via the [extension][prezi30-ldce] mechanism. The inclusion of this property is informative.
+A string that identifies a license or rights statement that applies to the content of the resource, such as the JSON of a Manifest or the text in the TextFrame. The value _MUST_ be drawn from the set of [Creative Commons](https://creativecommons.org/licenses/) license URIs, the [RightsStatements.org](https://rightsstatements.org/page/1.0/) rights statement URIs, or those added via the [extension](#46-linked-data-context-and-extensions) mechanism. The inclusion of this property is informative.
 
 If displaying rights information directly to the user is the desired interaction, or a publisher-defined label is needed, it is _RECOMMENDED_ to include the information using the `requiredStatement` property or in the `metadata` property.
 
@@ -256,10 +249,10 @@ The organization or person is represented as an `Agent` resource.
 
 * Agents _MUST_ have the `id` property, and its value _MUST_ be a string. The string _MUST_ be a URI that identifies the agent.
 * Agents _MUST_ have the `type` property, and its value _MUST_ be the string "Agent".
-* Agents _MUST_ have the `label` property, and its value _MUST_ be a JSON object as described in the [languages][prezi30-languages] section.
-* Agents _SHOULD_ have the `homepage` property, and its value _MUST_ be an array of JSON objects as described in the [homepage][prezi30-homepage] section.
-* Agents _SHOULD_ have the `logo` property, and its value _MUST_ be an array of JSON objects as described in the [logo][prezi30-logo] section.
-* Agents _MAY_ have the `seeAlso` property, and its value _MUST_ be an array of JSON object as described in the [seeAlso][prezi30-seealso] section.
+* Agents _MUST_ have the `label` property, and its value _MUST_ be a JSON object as described in the [languages](#language) section.
+* Agents _SHOULD_ have the `homepage` property, and its value _MUST_ be an array of JSON objects as described in the [homepage](#homepage) section.
+* Agents _SHOULD_ have the `logo` property, and its value _MUST_ be an array of JSON objects as described in the [logo](#logo-) section.
+* Agents _MAY_ have the `seeAlso` property, and its value _MUST_ be an array of JSON object as described in the [seeAlso](#seealso) section.
 
 The value _MUST_ be an array of JSON objects, where each item in the array conforms to the structure of an Agent, as described above.
 
@@ -307,32 +300,27 @@ The value _MUST_ be an array of JSON objects, where each item in the array confo
 }
 ```
 
-##### navDate
-
-> NEIL: Perhaps call this "sortDate" bearing in mind text below?
-> > ROB: I don't have strong feelings, but sortDate works fine for me.
+##### sortDate
 
 A date that clients may use for navigation purposes when presenting the resource to the user in a date-based user interface, such as a calendar or timeline. More descriptive date ranges, intended for display directly to the user, *SHOULD* be included in the `metadata` property for human consumption.
 
-The value _MUST_ be an [XSD dateTime literal][org-w3c-xsd-datetime]. The value _MUST_ have a timezone, and _SHOULD_ be given in UTC with the `Z` timezone indicator, but _MAY_ instead be given as an offset of the form `+hh:mm`.
+The value _MUST_ be an [XSD dateTime literal](https://www.w3.org/TR/xmlschema11-2/#dateTime). The value _MUST_ have a timezone, and _SHOULD_ be given in UTC with the `Z` timezone indicator, but _MAY_ instead be given as an offset of the form `+hh:mm`.
 
 The use of an XSD dateTime literal poses challenges for historical materials or those dated according to different calendars. Prior to 1752 England used the Julian Calendar. Dates on the Julian calendar could be off by almost a fortnight from the Gregorian. To further complicate things, Lady Day (25 March) and not 1 Jan was considered the start of the New Year. Finally, there’s the fact that timezones are a late nineteenth-century invention.
 
-At present, it’s recommended that these difficulties are glossed over in `navDate` since it is intended to provide a value to sort items chronologically. These difficulties are usually dealt with by domain experts when creating the textual resource and should be recorded using an appropriate textual form of the date in the `metadata` property. For example, documents written in England after 1 January and before Lady Day prior to 1752 were generally written with split years: ’19 January 1601/2’. In most instances, the most pragmatic solution would be to use the Julian date for the navDate: `1602-01-19:00:00:00Z’. If a collection of texts involved materials dated in multiple calendars, such as a collection of 17th-century letters to and from the continent and England, it would likely be worthwhile to convert the Julian dates into Gregorian so that the letters appear in the correct order. 
+At present, it’s recommended that these difficulties are glossed over in `sortDate` since it is intended to provide a value to sort items chronologically. These difficulties are usually dealt with by domain experts when creating the textual resource and should be recorded using an appropriate textual form of the date in the `metadata` property. For example, documents written in England after 1 January and before Lady Day prior to 1752 were generally written with split years: ’19 January 1601/2’. In most instances, the most pragmatic solution would be to use the Julian date for the sortDate: `1602-01-19:00:00:00Z’. If a collection of texts involved materials dated in multiple calendars, such as a collection of 17th-century letters to and from the continent and England, it would likely be worthwhile to convert the Julian dates into Gregorian so that the letters appear in the correct order. 
 
- * A Collection _MAY_ have the `navDate` property.<br/>
-   Clients _MAY_ render `navDate` on a Collection.
- * A Manifest _MAY_ have the `navDate` property.<br/>
-   Clients _MAY_ render `navDate` on a Manifest.
- * A Range _MAY_ have the `navDate` property.<br/>
-   Clients _MAY_ render `navDate` on a Range.
- * A TextFrame _MAY_ have the `navDate` property.<br/>
-   Clients _MAY_ render `navDate` on a TextFrame.
- * Other types of resource _MUST NOT_ have the `navDate` property.<br/>
-   Clients _SHOULD_ ignore `navDate` on other types of resource.
+ * A Collection _MAY_ have the `sortDate` property.<br/>
+   Clients _MAY_ render `sortDate` on a Collection.
+ * A Manifest _MAY_ have the `sortDate` property.<br/>
+   Clients _MAY_ render `sortDate` on a Manifest.
+ * A TextFrame _MAY_ have the `sortDate` property.<br/>
+   Clients _MAY_ render `sortDate` on a TextFrame.
+ * Other types of resource _MUST NOT_ have the `sortDate` property.<br/>
+   Clients _SHOULD_ ignore `sortDate` on other types of resource.
 
 ``` json-doc
-{ "navDate": "1602-01-19T00:00:00Z" }
+{ "sortDate": "1602-01-19T00:00:00Z" }
 ```
 
 ###  3.2. Technical Properties
@@ -341,11 +329,11 @@ These properties describe technical features of the resources, and are typically
 
 ##### id
 
-The URI that identifies the resource. If the resource is only available embedded within another resource (see the [terminology section][prezi30-terminology] for an explanation of "embedded"), such as a Range within a Manifest, then the URI _MAY_ be the URI of the embedding resource with a unique fragment on the end. TextFrames, however, _MUST_ have their own URI formatted according to the [ITF Text Fragment API](https://textframe.io/api/).
+The URI that identifies the resource. If the resource is only available embedded within another resource (see the [terminology section](#12-terminology) for an explanation of "embedded"), the URI _MAY_ be the URI of the embedding resource with a unique fragment on the end. TextFrames, however, _MUST_ have their own URI formatted according to the [ITF Text Fragment API](https://textframe.io/api/).
 
 The value _MUST_ be a string referring to the HTTP(S) URI for resources defined in this specification. If the resource is retrievable via HTTP(S), then the URI _MUST_ be the URI at which it is published. External resources, such as profiles, _MAY_ have non-HTTP(S) URIs defined by other communities.
 
-The existence of an HTTP(S) URI in the `id` property does not mean that the URI will always be dereferencable. If the resource with the `id` property is [embedded][prezi30-terminology], it _MAY_ also be dereferenceable. If the resource is referenced (again, see the [terminology section][prezi30-terminology] for an explanation of "referenced"), it _MUST_ be dereferenceable. The [definitions of the Resources][prezi30-resource-structure] give further guidance.
+The existence of an HTTP(S) URI in the `id` property does not mean that the URI will always be dereferenceable. If the resource with the `id` property is [embedded](#12-terminology), it _MAY_ also be dereferenceable. If the resource is [referenced](#12-terminology), it _MUST_ be dereferenceable. The [definitions of the Resources](#5-resource-structure) give further guidance.
 
  * All resource types _MUST_ have the `id` property.<br/>
    Clients _MAY_ render `id` on any resource type, and _SHOULD_ render `id` on Collections, Manifests and TextFrames.
@@ -360,7 +348,7 @@ The type or class of the resource. For classes defined for this specification, t
 
 For content resources, the value of `type` is drawn from other specifications. Recommendations for common content types such as text, image, or audio are given in the table below.
 
-The JSON objects that appear in the value of the `service` property will have many different classes, and can be used to distinguish the type of service, with specific properties defined in a [registered context document][prezi30-ldce].
+The JSON objects that appear in the value of the `service` property will have many different classes, and can be used to distinguish the type of service, with specific properties defined in a [registered context document](#46-linked-data-context-and-extensions).
 
 The value _MUST_ be a string.
 
@@ -397,9 +385,9 @@ The value _MUST_ be a string, and it _SHOULD_ be the value of the `Content-Type`
 
 ##### language
 
-The language or languages used in the content of this external resource. This property is already available from the Web Annotation model for content resources that are the body or target of an Annotation, however it _MAY_ also be used for resources [referenced][prezi30-terminology] from `homepage`, `rendering`, and `partOf`.
+The language or languages used in the content of this external resource. This property is already available from the Web Annotation model for content resources that are the body or target of an Annotation, however it _MAY_ also be used for resources [referenced](#12-terminology) from `homepage`, `rendering`, and `partOf`.
 
-The value _MUST_ be an array of strings. Each item in the array _MUST_ be a valid language code, as described in the [languages section][prezi30-languages].
+The value _MUST_ be an array of strings. Each item in the array _MUST_ be a valid language code, as described in the [languages section](#language).
 
  * An external resource _SHOULD_ have the `language` property with at least one item.<br/>
    Clients _SHOULD_ process the `language` of external resources.
@@ -414,9 +402,9 @@ The value _MUST_ be an array of strings. Each item in the array _MUST_ be a vali
 
 A schema or named set of functionality available from the resource. The profile can further clarify the `type` and/or `format` of an external resource or service, allowing clients to customize their handling of the resource that has the `profile` property.
 
-The value _MUST_ be a string, either taken from the [profiles registry][registry-profiles] or a URI.
+The value _MUST_ be a string, either taken from a URI.
 
-* Resources [referenced][prezi30-terminology] by the `seeAlso` or `service` properties _SHOULD_ have the `profile` property.<br/>
+* Resources [referenced](#12-terminology) by the `seeAlso` or `service` properties _SHOULD_ have the `profile` property.<br/>
   Clients _SHOULD_ process the `profile` of a service or external resource.
 * Other types of resource _MAY_ have the `profile` property.<br/>
   Clients _MAY_ process the `profile` of other types of resource.
@@ -425,26 +413,9 @@ The value _MUST_ be a string, either taken from the [profiles registry][registry
 { "profile": "https://casebooks.lib.cam.ac.uk/about-us/editorial-and-tagging-guidelines" }
 ```
 
-##### duration
-
-The duration of the external content resource or TextFrame, given in seconds.
-
-The value _MUST_ be a positive floating point number.
-
- * A TextFrame _MAY_ have the `duration` property.<br/>
-   Clients _MUST_ process `duration` on a TextFrame.
- * Content resources _SHOULD_ have the `duration` property, if appropriate to the resource type.<br/>
-   Clients _SHOULD_ process `duration` on content resources.
- * Other types of resource _MUST NOT_ have a `duration`.<br/>
-   Clients _SHOULD_ ignore `duration` on other types of resource.
-
-``` json-doc
-{ "duration": 125.0 }
-```
-
 ##### viewingDirection
 
-The direction in which a set of TextFrames _SHOULD_ be displayed to the user. It refers to the order in which multiple TextFrames are arranged and _not_ to the order of the text that they might contain. This specification defines four direction values in the table below. Others may be defined externally [as an extension][prezi30-ldce].
+The direction in which a set of TextFrames _SHOULD_ be displayed to the user. It refers to the order in which multiple TextFrames are arranged and _not_ to the order of the text that they might contain. This specification defines four direction values in the table below. Others may be defined externally [as an extension](#46-linked-data-context-and-extensions).
 
 The value _MUST_ be a string.
 
@@ -452,8 +423,6 @@ The value _MUST_ be a string.
    Clients _SHOULD_ process `viewingDirection` on a Collection.
  * A Manifest _MAY_ have the `viewingDirection` property.<br/>
    Clients _SHOULD_ process `viewingDirection` on a Manifest.
- * A Range _MAY_ have the `viewingDirection` property.<br/>
-   Clients _MAY_ process `viewingDirection` on a Range.
  * Other types of resource _MUST NOT_ have the `viewingDirection` property.<br/>
    Clients _SHOULD_ ignore `viewingDirection` on other types of resource.
 
@@ -463,7 +432,6 @@ The value _MUST_ be a string.
 | `right-to-left` | The object is displayed from right to left.                               |
 | `top-to-bottom` | The object is displayed from the top to the bottom.                       |
 | `bottom-to-top` | The object is displayed from the bottom to the top.                       |
-{: .api-table #table-direction}
 
 ``` json-doc
 { "viewingDirection": "left-to-right" }
@@ -472,26 +440,17 @@ The value _MUST_ be a string.
 > I'm fascinated by this section and this is a notion that might well prove useful, but as it stands I'm not sure there's anything here for us.
 > > Me too. I'm generally leaving most of it as is - apart from attempting to deal with the more image-specific bits.
 > > > My thought is to possible leave this out now unless we can clearly map to some of our use cases. 
+> > > > I think it could be mapped to presenting casebooks materials in a page-flip mechanism, as is done in Cambridge Digital Library.
+> > > > Please delete this conversation after checking the behaviour section and making sure I didn't leave in anything we didn't need.
 
 ##### behavior
 
-A set of user experience features that the publisher of the content would prefer the client to use when presenting the resource. This specification defines the values in the table below. Others may be defined externally as an [extension][prezi30-ldce].
+A set of user experience features that the publisher of the content would prefer the client to use when presenting the resource. This specification defines the values in the table below. Others may be defined externally as an [extension](#46-linked-data-context-and-extensions).
 
 In order to determine the behaviors that are governing a particular resource, there are four inheritance rules from resources that reference the current resource:
 * Collections inherit behaviors from their referencing Collection.
 * Manifests **DO NOT** inherit behaviors from any referencing Collections.
-* TextFrames inherit behaviors from their referencing Manifest, but **DO NOT** inherit behaviors from any referencing Ranges, as there might be several with different behaviors.
-* Ranges inherit behaviors from any referencing Range and referencing Manifest.
-
-> If we're removing the section on 'Ranges' then we can take out the last bullet point above. I'm not sure what happens to the third bullet point. Does it need to lose everything after 'referencing Manifest'? (If we remove the whole of this section then the problem disappears.)
-
-Clients should interpret behaviors on a Range only when that Range is selected or is in some other way the context for the user's current interaction with the resources. A Range with the `behavior` value `continuous`, in a Manifest with the `behavior` value `paged`, would mean that the Manifest's TextFrames should be rendered in a paged fashion, unless the range is selected to be viewed, and its included TextFrames would be rendered in that context only as being virtually stitched together. This might occur, for example, when an editor is making a 'sourcebook' that combines excerpts into a single text for use in classes.
-> Again, if we're removing the section on ranges then I guess the paragraph above should be deleted too.
-
-> We might want to require that some sort of notice is displayed when stiching them together in this fashion - like an ellipsis when quoting. Otherwise, it would be possible toeasily create 'wicked bibles' (so to speak) of their own making. 
-> > (I'm assuming we don't need to worry about quotations being inserted into sentences.) We could specify ellipses (U+2026 is a horizontal ellipsis in Unicode, but there's also a vertical equivalent, U+FE19) but we'll run into the problem that they're language-specific. E.g. In French for an omission you'd expect [...], with square brackets around them, and in Chinese and Japanese it seems you'd expect six dots, each one centred. So this would be a difficult thing to specify unless we just said: 'there should be a character or characters to indicate the omission, either an ellipsis or equivalent'. Or unless there's a list of options to be pointed at somewhere.
-> > > I would favour pruning this right down to focus on things we have use cases for - there's a load of guff to make here to basically make IIIF viewers play slideshows with voiceovers in a very counterintuitive way. A better way would be to give a manifest and each textframe a time dimension. Textframes would also have a time offset within the manifest timeline to indicate when it appears,   annotations could then have a time+dureation in their target specification to indicate when they are invoked, and when they cease. Imagine viewing a timeline of versions of a document this way.   
-> > > > ROB: fwiw, looking through the behaviours one section at a time: (a) I'd be happy to lose 'Temporal Behaviors' on the grounds that those don't relate to our use-cases, and particularly if there's a better way of producing slideshows. Given shortage of time, I might be inclined to start that off as an issue. (b) 'Layout Behaviors' I can see being useful, particularly if someone is going to produce a page-turning view and someone else is going to put a collection of stone inscriptions up. I can easily see those behaviours being useful for fairly straightforward text resources. (c) 'Collection Behaviors' I'm not sure about. I'm not seeing anything essential but could be persuaded. (d) 'Range Behaviors' I'd guess disappear along with Ranges. (e) The 'Miscellaneous Behaviors' are just the option 'hidden', which seems potentially useful to me if that's the means by which you make the display of certain annotations optional.
+* TextFrames inherit behaviors from their referencing Manifest.
 
 The descriptions of the behavior values also lists the other values they are disjoint with, meaning that the same resource _MUST NOT_ have both of two or more from that set. In order to determine which is in effect, the client _SHOULD_ follow the inheritance rules above, taking the value from the closest resource. The user interface effects of the possible permutations of non-disjoint behavior values are client dependent.
 
@@ -500,40 +459,25 @@ The value _MUST_ be an array of strings.
  * Any resource type _MAY_ have the `behavior` property with at least one item.<br/>
    Clients _SHOULD_ process `behavior` on any resource type.
 
-> Concerning 'facing-pages' - do we want to add a property that allows the frame to be identified as a recto or verso? That'd avoid the need for including empty TextFrames for empty pages with no content. We should assume that empty TextFrames are possible since a collection might include not just text (of each page) but also a link to an image. So, the page flip mechanism could deal with a situation where a particular TextFrame has no text but does include the properties necessary to point to the page image._
-> > I think that's sueful
-
-| Value              | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         |
-|--------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-|                    | **Temporal Behaviors**                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
-| `auto-advance`     | Valid on Collections, Manifests, TextFrames, and Ranges that include or are TextFrames with at least the `duration` dimension. When the client reaches the end of a TextFrame, or segment thereof as specified in a Range, with a duration dimension that has this behavior, it _SHOULD_ immediately proceed to the next TextFrame or segment and render it. If there is no subsequent TextFrame in the current context, then this behavior should be ignored. When applied to a Collection, the client should treat the first TextFrame of the next Manifest as following the last TextFrame of the previous Manifest, respecting any `start` property specified. Disjoint with `no-auto-advance`. |
-| `no-auto-advance`  | Valid on Collections, Manifests, TextFrames, and Ranges that include or are TextFrames with at least the `duration` dimension. When the client reaches the end of a TextFrame or segment with a duration dimension that has this behavior, it _MUST NOT_ proceed to the next TextFrame, if any. This is a default temporal behavior if not specified. Disjoint with `auto-advance`.                                                                                                                                                                                                                                                                                                                 |
-| `repeat`           | Valid on Collections and Manifests that include TextFrames that at least contain a `duration` dimension. When the client reaches the end of the duration of the final TextFrame in the resource, and the `behavior` value `auto-advance` is also in effect, the client _SHOULD_ return to the first TextFrame, or segment of TextFrame, in the resource that has the `behavior` value `repeat` and start playing again. If the `behavior` value `auto-advance` is not in effect, the client _SHOULD_ render a navigation control for the user to manually return to the first TextFrame or segment. Disjoint with `no-repeat`.                                                                      |
-| `no-repeat`        | Valid on Collections and Manifests that include TextFrames that at least contain a `duration` dimension. When the client reaches the end of the duration of the final TextFrame in the resource, the client _MUST NOT_ return to the first TextFrame, or segment of TextFrame. This is a default temporal behavior if not specified. Disjoint with `repeat`.                                                                                                                                                                                                                                                                                                                                        |
-|                    | **Layout Behaviors**                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
-| `unordered`        | Valid on Collections, Manifests and Ranges. The TextFrames included in resources that have this behavior have no inherent order, and user interfaces _SHOULD_ avoid implying an order to the user. Disjoint with `individuals`, `continuous`, and `paged`.                                                                                                                                                                                                                                                                                                                                                                                                                                          |
-| `individuals`      | Valid on Collections, Manifests, and Ranges. For Collections that have this behavior, each of the included Manifests are distinct objects in the given order. For Manifests and Ranges, the included TextFrames are distinct views, and _SHOULD NOT_ be presented in a page-turning interface. This is the default layout behavior if not specified. Disjoint with `unordered`, `continuous`, and `paged`.                                                                                                                                                                                                                                                                                          |
-| `continuous`       | Valid on Collections, Manifests and Ranges that include TextFrames. TextFrames included in resources with this behavior and with an appropriate rendering might display all of the TextFrames virtually stitched together, such as joining a series of excerpts or quotes. This behavior has no implication for audio resources. The `viewingDirection` of the Manifest will determine the appropriate arrangement of the TextFrames. Disjoint with `unordered`, `individuals` and `paged`.                                                                                                                                                                                                         |
-| `paged`            | Valid on Collections, Manifests and Ranges that include TextFrames that break the text into separate pages. TextFrames included in resources that have this behavior represent views that _SHOULD_ be presented in a page-turning interface if one is available. The first TextFrame is a single view (the first recto) and thus the second TextFrame likely represents the back of the object in the first TextFrame. If this is not the case, see the `behavior` value `non-paged`. Disjoint with `unordered`, `individuals`, `continuous`, `facing-pages` and `non-paged`.                                                                                                                       |
-| `facing-pages`     | Valid only on TextFrames that contain the text of a single page _and_ where TextFrames are provided for every recto and verso - even if the a particular frame contains no text because it is blank. TextFrames that have this behavior, in a Manifest that has the `behavior` value `paged`, _MUST_ be displayed by themselves, as they depict both parts of the opening. If all of the TextFrames are like this, then page turning is not possible, so simply use `individuals` instead. Disjoint with `paged` and `non-paged`.                                                                                                                                                                   |
-| `non-paged`        | Valid only on TextFrames. TextFrames that have this behavior _MUST NOT_ be presented in a page turning interface, and _MUST_ be skipped over when determining the page order. This behavior _MUST_ be ignored if the current Manifest does not have the `behavior` value `paged`. Disjoint with `paged` and `facing-pages`.                                                                                                                                                                                                                                                                                                                                                                         |
-|                    | **Collection Behaviors**                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            |
-| `multi-part`       | Valid only on Collections. Collections that have this behavior consist of multiple Manifests or Collections, which, together, form part of a logical whole or a contiguous set, such as multi-volume books or a set of journal issues. Clients might render these Collections as a table of contents or provide viewing interfaces that can easily advance from one member to the next. Disjoint with `together`.                                                                                                                                                                                                                                                                                   |
-| `together`         | Valid only on Collections. A client _SHOULD_ present all of the child Manifests to the user at once in a separate viewing area with its own controls. Clients _SHOULD_ catch attempts to create too many viewing areas. This behavior _SHOULD NOT_ be interpreted as applying to the members of any child resources. Disjoint with `multi-part`.                                                                                                                                                                                                                                                                                                                                                    |
-|                    | **Range Behaviors**                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 |
-| `sequence`         | Valid only on Ranges, where the Range is [referenced][prezi30-terminology] in the `structures` property of a Manifest. Ranges that have this behavior represent different orderings of the TextFrames listed in the `items` property of the Manifest, and user interfaces that interact with this order _SHOULD_ use the order within the selected Range, rather than the default order of `items`. Disjoint with `no-nav`.                                                                                                                                                                                                                                                                         |
-| `no-nav`           | Valid only on Ranges. Ranges that have this behavior _MUST NOT_ be displayed to the user in a navigation hierarchy. This allows for Ranges to be present that capture unnamed regions with no interesting content, such as the set of blank pages at the beginning of a book, or dead air between parts of a performance, that are still part of the Manifest but do not need to be navigated to directly. Disjoint with `sequence`.                                                                                                                                                                                                                                                                |
-|                    | **Miscellaneous Behaviors**                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         |
-| `hidden`           | Valid on Annotation Collections, Annotation Pages, Annotations, Specific Resources and Choices. If this behavior is provided, then the client _SHOULD NOT_ render the resource by default, but allow the user to turn it on and off. This behavior does not inherit, as it is not valid on Collections, Manifests, Ranges or TextFrames.                                                                                                                                                                                                                                                                                                                                                            |
-{: .api-table #table-behavior}
+| Value              | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
+|--------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+|                    | **Layout Behaviors**                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       |
+| `continuous`       | Valid on Collections and Manifests that include TextFrames. TextFrames included in resources with this behavior and with an appropriate rendering might display all of the TextFrames virtually stitched together, such as joining a series of excerpts or quotes. The `viewingDirection` of the Manifest will determine the appropriate arrangement of the TextFrames. Disjoint with `unordered`, `individuals` and `paged`.                                                                                                                                                                                                                                                                                                                                                                                                                              |
+| `facing-pages`     | Valid only on TextFrames that contain the text of a single page. Unless the TextFrames contain an annotation with the motivation `facing`, the client will assume the TextFrames follow a recto, verso sequence, with the first textframe being a recto. The client will consequently determine the facing of the page by its position within the sequence of textframes. If its position is an odd number, it will be assumed to be a recto; if it is an even number. TextFrames that have this behavior, in a Manifest that has the `behavior` value `paged`, _MUST_ be displayed by themselves, as they depict both parts of the opening. If all of the TextFrames are like this, then page turning is not possible, so simply use `individuals` instead. Disjoint with `paged` and `non-paged`.                                                                                                                                                                                           |
+| `individuals`      | Valid on Collections and Manifests. For Collections that have this behavior, each of the included Manifests are distinct objects in the given order. For Manifests, the included TextFrames are distinct views, and _SHOULD NOT_ be presented in a page-turning interface. This is the default layout behavior if not specified. Disjoint with `unordered`, `continuous`, and `paged`.                                                                                                                                                                                                                                                                                                                                                                                                                                                                     |
+| `non-paged`        | Valid only on TextFrames. TextFrames that have this behavior _MUST NOT_ be presented in a page turning interface, and _MUST_ be skipped over when determining the page order. This behavior _MUST_ be ignored if the current Manifest does not have the `behavior` value `paged`. Disjoint with `paged` and `facing-pages`.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
+| `paged`            | Valid on Collections and Manifests that include TextFrames that break the text into separate pages. TextFrames included in resources that have this behavior represent views that _SHOULD_ be presented in a page-turning interface if one is available. Unless the TextFrames contain an annotation with the motivation `facing`, the client will assume that the first TextFrame is a single view (the first recto) and thus the second TextFrame likely represents the back of the object in the first TextFrame. The client will consequently determine the facing of the page by its position within the sequence of textframes. If its position is an odd number, it will be assumed to be a recto; if it is an even number, it will be assumed to be a verso. Disjoint with `unordered`, `individuals`, `continuous`, `facing-pages` and `non-paged`. |
+| `unordered`        | Valid on Collections and Manifests. The TextFrames included in resources that have this behavior have no inherent order, and user interfaces _SHOULD_ avoid implying an order to the user. Disjoint with `individuals`, `continuous`, and `paged`.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         |
+|                    | **Miscellaneous Behavior**                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 |
+| `hidden`           | Valid on Annotation Collections, Annotation Pages, Annotations, Specific Resources and Choices. If this behavior is provided, then the client _SHOULD NOT_ render the resource by default, but allow the user to turn it on and off. This behavior does not inherit, as it is not valid on Collections, Manifests or TextFrames.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           |
 
 ``` json-doc
-{ "behavior": [ "auto-advance", "individuals" ] }
+{ "behavior": [ "facing-pages", "hidden" ] }
 ```
 
 ###  3.3. Linking Properties
 
-These properties are references or links between resources, and split into external references where the linked object is outside the ITF space, and internal references where the linked object is an ITF resource. Clients typically create a link to the resource that is able to be activated by the user, or interact directly with the linked resource to improve the user's experience.
+These properties are references or links between resources, and split into external references where the linked object is outside the ITF space, and internal references where the linked object is an ITF resource. Clients typically create a link to the resource that can be activated by the user, or interact directly with the linked resource to improve the user's experience.
 
 #### 3.3.1. External Links
 
@@ -547,8 +491,7 @@ The value of this property _MUST_ be an array of JSON objects, each of which _MU
    Clients _SHOULD_ render `homepage` on a Collection, Manifest or TextFrame, and _MAY_ render `homepage` on other types of resource.
 
 __Model Alignment__<br/>
-Please note that this specification, like the IIIF specification from which it is derived, has stricter requirements about the JSON pattern used for the `homepage` property than the [Web Annotation Data Model][org-w3c-webanno]. The ITF requirements are compatible, but the home page of an Agent found might only have a URI, or it might be a JSON object with other properties. See the section on [collisions between contexts][prezi30-context-collisions] for more information.
-{: .note}
+Please note that this specification, like the IIIF specification from which it is derived, has stricter requirements about the JSON pattern used for the `homepage` property than the [Web Annotation Data Model](https://www.w3.org/TR/annotation-model/). The ITF requirements are compatible, but the home page of an Agent found might only have a URI, or it might be a JSON object with other properties. See the section on [collisions between contexts](#47-term-collisions-between-contexts) for more information.
 
 ``` json-doc
 {
@@ -570,7 +513,7 @@ Please note that this specification, like the IIIF specification from which it i
 
 A small image resource that represents the Agent resource it is associated with. The logo _MUST_ be rendered when the resource is displayed or used, without cropping, rotating or otherwise distorting the image.
 
-When more than one logo is present, the client _SHOULD_ pick one of them, based on the information in the logo properties. For example, the client could select a logo of appropriate aspect ratio based on the `height` and `width` properties of the available logos. The client _MAY_ decide on the logo by inspecting properties defined as [extensions][prezi30-ldce].
+When more than one logo is present, the client _SHOULD_ pick one of them, based on the information in the logo properties. For example, the client could select a logo of appropriate aspect ratio based on the `height` and `width` properties of the available logos. The client _MAY_ decide on the logo by inspecting properties defined as [extensions](#46-linked-data-context-and-extensions).
 
 The value of this property _MUST_ be an array of JSON objects, each of which _MUST_ have `id` and `type` properties, and _SHOULD_ have `format`. The value of `type` _MUST_ be "Image".
 
@@ -593,7 +536,7 @@ The value of this property _MUST_ be an array of JSON objects, each of which _MU
 
 ##### service
 
-A service that the client might interact with to gain additional information or functionality when using the resource with the `service` property. The service resource _SHOULD_ have additional information associated with it in order to allow the client to determine how to make appropriate use of it. Please see the [Service Registry][registry-services] document for the details of currently known service types.
+A service that the client might interact with to gain additional information or functionality when using the resource with the `service` property. The service resource _SHOULD_ have additional information associated with it in order to allow the client to determine how to make appropriate use of it.
 
 The value _MUST_ be an array of JSON objects. Each object will have properties depending on the service's definition, but _MUST_ have either the `id` or `@id` and `type` or `@type` properties. Each object _SHOULD_ have a `profile` property.
 
@@ -624,7 +567,6 @@ For cross-version consistency, this specification defines the following values f
 | AuthCookieService1   | [Authentication API version 1] |
 | AuthTokenService1    | [Authentication API version 1] |
 | AuthLogoutService1   | [Authentication API version 1] |
-{: .api-table #table-service-types}
 
 Implementations _SHOULD_ be prepared to recognize the `@id` and `@type` property names used by older specifications, as well as `id` and `type`. Note that the `@context` key _SHOULD NOT_ be present within the `service`, but instead included at the beginning of the document. The example below includes both version 2 and version 3 IIIF Image API services.
 
@@ -702,7 +644,7 @@ The value _MUST_ be an array of JSON objects. Each item _MUST_ have the `id` and
 
 ##### partOf
 
-When a client encounters the `partOf` property, it might retrieve the [referenced][prezi30-terminology] containing resource, if it is not [embedded][prezi30-terminology] in the current representation, in order to contribute to the processing of the contained resource. For example, the `partOf` property on a TextFrame can be used to reference an external Manifest in order to enable the discovery of further relevant information. Similarly, a Manifest can reference a containing Collection using `partOf` to aid in navigation.
+When a client encounters the `partOf` property, it might retrieve the [referenced](#12-terminology) containing resource, if it is not [embedded](#12-terminology) in the current representation, in order to contribute to the processing of the contained resource. For example, the `partOf` property on a TextFrame can be used to reference an external Manifest in order to enable the discovery of further relevant information. Similarly, a Manifest can reference a containing Collection using `partOf` to aid in navigation.
 
 The value _MUST_ be an array of JSON objects. Each item _MUST_ have the `id` and `type` properties, and _SHOULD_ have the `label` property.
 
@@ -722,14 +664,12 @@ The value _MUST_ be an array of JSON objects. Each item _MUST_ have the `id` and
 
 ##### start
 
-A TextFrame, or part of a TextFrame, which the client _SHOULD_ focus upon or highlight on initialization of the resource that has the `start` property. The reference to part of a TextFrame is handled in the same way that Ranges reference parts of TextFrames. This property allows the client to begin with the first TextFrame that contains interesting content rather than requiring the user to manually navigate to find it.
+A TextFrame, or part of a TextFrame, that the client _SHOULD_ focus upon on initialization of the resource that has the `start` property. This property allows the client to begin with a specified text rather than requiring the user to manually navigate to find it.
 
 The value _MUST_ be a JSON object, which _MUST_ have the `id` and `type` properties. The object _MUST_ be either a TextFrame (as in the first example below), or a Specific Resource with a Selector and a `source` property where the value is a TextFrame (as in the second example below).
 
  * A Manifest _MAY_ have the `start` property.<br/>
    Clients _SHOULD_ process `start` on a Manifest.
- * A Range _MAY_ have the `start` property.<br/>
-   Clients _SHOULD_ process `start` on a Range.
  * Other types of resource _MUST NOT_ have the `start` property.<br/>
    Clients _SHOULD_ ignore `start` on other types of resource.
 
@@ -756,26 +696,6 @@ The value _MUST_ be a JSON object, which _MUST_ have the `id` and `type` propert
 }
 ```
 
-##### supplementary
-
-A link from this Range to an Annotation Collection that includes the `supplementing` Annotations of content resources for the Range. Clients might use this to present additional content to the user from a different TextFrame when interacting with the Range, or to jump to the next part of the Range within the same TextFrame. For example, the Range might represent a newspaper article that spans non-sequential pages, and then uses the `supplementary` property to reference an Annotation Collection that consists of the Annotations that record the text, split into Annotation Pages per newspaper page. Alternatively, the Range might represent the parts of a manuscript that have been transcribed or translated, when there are other parts that have yet to be worked on. The Annotation Collection would be the Annotations that transcribe or translate, respectively.
-
-The value _MUST_ be a JSON object, which _MUST_ have the `id` and `type` properties, and the `type` _MUST_ be `AnnotationCollection`.
-
- * A Range _MAY_ have the `supplementary` property.<br/>
-   Clients _MAY_ process `supplementary` on a Range.
- * Other types of resource _MUST NOT_ have the `supplementary` property.<br/>
-   Clients _SHOULD_ ignore `supplementary` on other types of resource.
-
-``` json-doc
-{
-    "supplementary": {
-        "id": "https://example.org/itf/1/annos/1",
-        "type": "AnnotationCollection"
-    }
-}
-```
-
 ### 3.4. Structural Properties
 
 These properties define the structure of the text being displayed in ITF by allowing the inclusion of child resources within parents, such as a TextFrame within a Manifest, or a Manifest within a Collection. The majority of use cases would use `items`, however there are two special cases for different sorts of structures.
@@ -794,8 +714,6 @@ The value _MUST_ be an array of JSON objects. Each item _MUST_ have the `id` and
    Clients _MUST_ process `items` on a TextFrame.
  * An Annotation Page _SHOULD_ have the `items` property with at least one item. Each item _MUST_ be an Annotation.<br/>
    Clients _MUST_ process `items` on an Annotation Page.
- * A Range _MUST_ have the `items` property with at least one item. Each item _MUST_ be a Range, a TextFrame or a Specific Resource where the source is a TextFrame.<br/>
-   Clients _SHOULD_ process `items` on a Range.
  * Other types of resource _MUST NOT_ have the `items` property.<br/>
    Clients _SHOULD_ ignore `items` on other types of resource.
 
@@ -815,33 +733,6 @@ The value _MUST_ be an array of JSON objects. Each item _MUST_ have the `id` and
 }
 ```
 
-##### structures
-
-The structure of a text represented in a Manifest can be described using a hierarchy of Ranges. Ranges can be used to describe the "table of contents" of the text or other structures that the user can interact with beyond the order given by the `items` property of the Manifest. The hierarchy is built by nesting the child Range resources in the `items` array of the higher level Range. The top level Ranges of these hierarchies are given in the `structures` property.
-
-The value _MUST_ be an array of JSON objects. Each item _MUST_ have the `id` and `type` properties, and the `type` _MUST_ be `Range`.
-
- * A Manifest _MAY_ have the `structures` property.<br/>
-   Clients _SHOULD_ process `structures` on a Manifest. The first hierarchy _SHOULD_ be presented to the user by default, and further hierarchies _SHOULD_ be able to be selected as alternative structures by the user.
- * Other types of resource _MUST NOT_ have the `structures` property.<br/>
-   Clients _SHOULD_ ignore `structures` on other types of resource.
-
-``` json-doc
-{
-    "structures": [
-        {
-            "id": "https://example.org/itf/range/1",
-            "type": "Range",
-            "items": [
-                { ... },
-                { ... },
-                ...
-            ]
-        }
-    ]
-}
-```
-
 ##### annotations
 
 An ordered list of Annotation Pages that contain commentary or other Annotations about this resource, separate from the Annotations that are used to supplement content on to a TextFrame. The `motivation` of the Annotations _MUST NOT_ be `supplementing`, and the target of the Annotations _MUST_ include this resource or part of it.
@@ -851,11 +742,9 @@ The value _MUST_ be an array of JSON objects. Each item _MUST_ have at least the
  * A Collection _MAY_ have the `annotations` property with at least one item.<br/>
    Clients _SHOULD_ process `annotations` on a Collection.
  * A Manifest _MAY_ have the `annotations` property with at least one item.<br/>
-   Clients _SHOULD_ process `annotations` on a Manifest,.
+   Clients _SHOULD_ process `annotations` on a Manifest.
  * A TextFrame _MAY_ have the `annotations` property with at least one item.<br/>
    Clients _SHOULD_ process `annotations` on a TextFrame.
- * A Range _MAY_ have the `annotations` property with at least one item.<br/>
-   Clients _SHOULD_ process `annotations` on a Range.
  * A content resource _MAY_ have the `annotations` property with at least one item.<br/>
    Clients _SHOULD_ process `annotations` on a content resource.
  * Other types of resource _MUST NOT_ have the `annotations` property.<br/>
@@ -885,23 +774,16 @@ This specification defines two values for the Web Annotation property of `motiva
 
 While any resource _MAY_ be the `target` of an Annotation, this specification only defines motivations for Annotations that target TextFrames. These motivations allow clients to determine how the Annotation should be rendered, by distinguishing between Annotations that provide the content that are _part of_ the original text and those that are _concern_ the text or its contents.
 
-Additional motivations may be added to the Annotation to further clarify the intent, drawn from [extensions][prezi30-ldce] or other sources. Clients _MUST_ ignore motivation values that they do not understand. Other motivation values given in the Web Annotation specification _SHOULD_ be used where appropriate.
-
-> I notice that the descriptions based on IIIF text pay far more attention to whether and how annotations are to be displayed. We may need to think carefully about what we say on this topic. Do we just need to say for 'asserting', 'classifying' and 'identifying' that they '_MAY_ be presented to the user as part of the representation of the TextFrame, or _MAY_ be presented in a different part of the user interface'? I can't see how we'd be more prescriptive than that, given the variety of things people are likely to want to do.
-> > Agreed - Possibly differentiate between annotations that are part of the object and MUST be handled (e.g. "writing") and the more interpretive stuff. 
-> > > ROB: I've added the text.
+Additional motivations may be added to the Annotation to further clarify the intent, drawn from [extensions](#46-linked-data-context-and-extensions) or other sources. Clients _MUST_ ignore motivation values that they do not understand. Other motivation values given in the Web Annotation specification _SHOULD_ be used where appropriate.
     
-| Value          | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
-|----------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `asserting`    | Resources associated with a TextFrame by an Annotation that has the `movivation` value `asserting` _MAY_ be presented to the user as part of the representation of the TextFrame, or _MAY_ be presented in a different part of the user interface. This value is used when the editor or creator of the Annotation is asserting or claiming something about the target. For example, it could record that part of the original document is damaged and illegible. This is likely going to be the most common motivation used by modern editors. |
-> ROB: I'm rereading this and struggling with 'claiming something about the text or its contents that is described in the target'. Might it be simplified to something like 'claiming something about the target'?  that first sentence. Should it say 'creator' rather than 'creation'? And I'm not sure it's clear what's 'described in the target'. Might the first sentence simply be something like: 'Used for annotations that assert or claim something about the target.'?
-| `classifying`  | Resources associated with a TextFrame by an Annotation that has the `motivation` value `asserting`  _MAY_ be presented to the user as part of the representation of the TextFrame, or _MAY_ be presented in a different part of the user interface. This value is used when the annotation is classifying the target in some way. For example, it might classify the text as a certain type of document, such as a letter. Classification makes reference to an ontology, taxonomy or other controlled vocabulary, whereas assertion need not. The difference between `classifying` and `asserting` is subtle, but significant. If editors are uncomfortable with the epistemological ramifications of using the verb `classifying`, they can easily use `asserting` instead. |
-> Classification makes reference to an ontology, taxonomy or other controlled vocabulary, assertion need not
-> > ROB: Aha. Yes, absolutely. I think that's right, and useful, so I've altered the text accordingly. I think now the sentence 'The difference between `classifying` and `asserting` is subtle, but significant.' can now be removed (though I haven't done it). (We've specified exactly what the difference between the two is, and we've also noted that you can use 'asserting' if you're scared of 'classifying', and I think that's all we need to say, so we don't need to warn about subtlety.) - rr
-| `identifying`  | Resources associated with a TextFrame by an Annotation that has the `motivation` value `identifying`  _MAY_ be presented to the user as part of the representation of the TextFrame, or _MAY_ be presented in a different part of the user interface. This value is used when assigning an identity to the target, such as the IRI that identifies a named entity with a mention of that entity within the text. |
-| `supplementing` | Resources associated with a TextFrame by an Annotation that has the `motivation` value `supplementing`  _MAY_ be presented to the user as part of the representation of the TextFrame, or _MAY_ be presented in a different part of the user interface. The content can be thought of as being _from_ the TextFrame. The use of this motivation with target resources other than TextFrames is undefined. For example, an Annotation that has the `motivation` value `supplementing`, a body of an Image and the target of part of the TextFrame is an instruction to present that Image to the user either in the TextFrame's rendering area or somewhere associated with it, and could be used to present an easier to read representation of a diagram. Similarly, a textual body is to be presented either in the targeted region of the TextFrame or otherwise associated with it, and might be OCR, a manual transcription or a translation of handwritten text, or captions for what is being said in a TextFrame with audio content. |
-| `writing`      | Resources associated with a TextFrame by an Annotation with the `motivation` value of `writing` _MUST_ be presented to the user as part of the visual representation of the TextFrame. The content can be thought of as being _of_ the TextFrame. It should be used, for example, to record text that is written onto the original document, such as page or folio numbers added to the document by a cataloguer, additions or annotations written on the page, etc. The use of this motivation with target resources other than TextFrames is undefined. |
-{: .api-table #table-motivations}
+| Value           | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          |
+|-----------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `asserting`     | Used when the editor or creator of the Annotation is asserting or claiming something about the target. For example, it could record that part of the original document is damaged and illegible.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     |
+| `classifying`   | Used when the annotation is classifying the target in some way. For example, it might classify the text as a certain type of document, such as a letter. Classification makes reference to an ontology, taxonomy or other controlled vocabulary, whereas assertion need not. If editors are uncomfortable with the epistemological ramifications of using the verb `classifying`, they can use `asserting` instead.                                                                                                                                                                                                                                                                                                                                                                  |
+| `facing`        | Used on textframes containing text broken into separate pages. It must take the values of either `r` or `v` (for recto or verso). It will only be used when specifying the [behavior](#behavior) as `paged` or `facing-pages`.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       |
+| `identifying`   | Used when assigning an identity to the target, such as the IRI that identifies a named entity with a mention of that entity within the text.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         |
+| `supplementing` | The content can be thought of as being _from_ the TextFrame. The use of this motivation with target resources other than TextFrames is undefined. For example, an Annotation that has the `motivation` value `supplementing`, a body of an Image and the target of part of the TextFrame is an instruction to present that Image to the user either in the TextFrame's rendering area or somewhere associated with it, and could be used to present an easier to read representation of a diagram. Similarly, a textual body is to be presented either in the targeted region of the TextFrame or otherwise associated with it, and might be OCR, a manual transcription or a translation of handwritten text, or captions for what is being said in a TextFrame with audio content. |
+| `writing`       | Used to record text that is written onto the original document, such as page or folio numbers added to the document by a cataloguer, additions or annotations written on the page, etc. The content can be thought of as being _of_ the TextFrame. The use of this motivation with target resources other than TextFrames is undefined.                                                                                                                                                                                                                                                                                                                                                                                                                                              |
 
 ##  4. JSON-LD Considerations
 
@@ -909,11 +791,11 @@ This section describes features applicable to all the Presentation API content. 
 
 ### 4.1. Case Sensitivity
 
-Terms in JSON-LD are [case sensitive][org-w3c-json-ld-case]. The cases of properties and enumerated values in ITF Presentation API responses _MUST_ match those used in this specification. For example to specify that a resource is a Manifest, the property _MUST_ be given as `type` and not `Type`, `TYPE` or `tYpE`, and the value _MUST_ be given as `Manifest` and not `manifest`, `MANIFEST` or `manIfEsT`.
+Terms in JSON-LD are [case sensitive](https://www.w3.org/TR/json-ld11/#the-context). The cases of properties and enumerated values in ITF Presentation API responses _MUST_ match those used in this specification. For example to specify that a resource is a Manifest, the property _MUST_ be given as `type` and not `Type`, `TYPE` or `tYpE`, and the value _MUST_ be given as `Manifest` and not `manifest`, `MANIFEST` or `manIfEsT`.
 
 ### 4.2. Resource Representations
 
-Resource descriptions _SHOULD_ be [embedded][prezi30-terminology] within the JSON description of parent resources, and _MAY_ also be available via separate requests from the HTTP(S) URI given in the resource's `id` property. Links to resources _MUST_ be given as a JSON object with the `id` and `type` properties and _SHOULD_ have `format` or `profile` to give a hint as to what sort of resource is being referred to.
+Resource descriptions _SHOULD_ be [embedded](#12-terminology) within the JSON description of parent resources, and _MAY_ also be available via separate requests from the HTTP(S) URI given in the resource's `id` property. Links to resources _MUST_ be given as a JSON object with the `id` and `type` properties and _SHOULD_ have `format` or `profile` to give a hint as to what sort of resource is being referred to.
 
 ``` json-doc
 {
@@ -934,22 +816,24 @@ Any of the properties in the API that can have multiple values _MUST_ always be 
 
 ``` json-doc
 {
-  "thumbnail": [
-    {
-      "id": "https://example.org/images/thumb1.jpg",
-      "type": "Image",
-      "format": "image/jpeg"
-    }
-  ]
+    "metadata": [
+        {
+            "label": { "en": ["Author"] },
+            "value": { "en": ["Dr Simon Forman"]}
+        },
+        {
+            "label": { "en": ["Date"] },
+            "value": { "en": ["30 November 1596 at 08:30"] }
+        }
+    ]
 }
 ```
 
 ### 4.4. Language of Property Values
-{: #language-of-property-values}
 
 Language _MAY_ be associated with strings that are intended to be displayed to the user for the `label` and `summary` properties, plus the `label` and `value` properties of the `metadata` and `requiredStatement` objects.
 
-The values of these properties _MUST_ be JSON objects, with the keys being the [BCP 47][org-bcp-47] language code for the language, or if the language is either not known or the string does not have a language, then the key _MUST_ be the string `none`. The associated values _MUST_ be arrays of strings, where each item is the content in the given language.
+The values of these properties _MUST_ be JSON objects, with the keys being the [BCP 47](https://www.rfc-editor.org/info/bcp47) language code for the language, or if the language is either not known or the string does not have a language, then the key _MUST_ be the string `none`. The associated values _MUST_ be arrays of strings, where each item is the content in the given language.
 
 ``` json-doc
 {
@@ -965,7 +849,7 @@ The values of these properties _MUST_ be JSON objects, with the keys being the [
 }
 ```
 
-Note that [BCP 47][org-bcp-47] allows the script of the text to be included after a hyphen, such as `ar-latn`, and clients should be aware of this possibility.
+Note that [BCP 47](https://www.rfc-editor.org/info/bcp47) allows the script of the text to be included after a hyphen, such as `ar-latn`, and clients should be aware of this possibility.
 
 In the case where multiple values are supplied, clients _MUST_ use the following algorithm to determine which values to display to the user.
 
@@ -975,7 +859,7 @@ In the case where multiple values are supplied, clients _MUST_ use the following
   * If all the values have a language associated with them, and none match the language preference, the client _MUST_ select a language and display all the values associated with that language.
   * If some of the values have a language associated with them, but none match the language preference, the client _MUST_ display all the values that do not have a language associated with them.
 
-Note that this does not apply to [embedded][prezi30-terminology] textual bodies in Annotations, which use the Web Annotation pattern of `value` and `language` as separate properties.
+Note that this does not apply to [embedded](#12-terminology) textual bodies in Annotations, which use the Web Annotation pattern of `value` and `language` as separate properties.
 
 ### 4.5. HTML Markup in Property Values
 
@@ -986,7 +870,7 @@ In order to avoid HTML or script injection attacks, clients _MUST_ remove:
   * Tags such as `script`, `style`, `object`, `form`, `input` and similar.
   * All attributes other than `href` on the `a` tag, `src` and `alt` on the `img` tag.
   * All `href` attributes that start with the strings other than "http:", "https:", and "mailto:".
-  * CData sections.
+  * CDATA sections.
   * XML Comments.
   * Processing instructions.
 
@@ -1002,9 +886,9 @@ Clients _SHOULD_ allow only `a`, `b`, `br`, `i`, `img`, `p`, `small`, `span`, `s
 
 ### 4.6. Linked Data Context and Extensions
 
-The top level resource in the response _MUST_ have the `@context` property, and it _SHOULD_ appear as the very first key/value pair in the JSON representation. This tells Linked Data processors how to interpret the document. The ITF Presentation API context, below, _MUST_ occur once per response in the top-most resource, and, thus, _MUST NOT_ appear within [embedded][prezi30-terminology] resources. For example, when embedding a TextFrame within a Manifest, the TextFrame will not have the `@context` property.
+The top level resource in the response _MUST_ have the `@context` property, and it _SHOULD_ appear as the very first key/value pair in the JSON representation. This tells Linked Data processors how to interpret the document. The ITF Presentation API context, below, _MUST_ occur once per response in the top-most resource, and, thus, _MUST NOT_ appear within [embedded](#12-terminology) resources. For example, when embedding a TextFrame within a Manifest, the TextFrame will not have the `@context` property.
 
-The value of the `@context` property _MUST_ be either the URI `https://textframe.io/api/presentation/{{ page.major }}/context.json` or a JSON array with the URI `https://textframe.io/api/presentation/{{ page.major }}/context.json` as the last item. Further contexts, such as those for local or [registered extensions][registry], _MUST_ be added at the beginning of the array.
+The value of the `@context` property _MUST_ be either the URI `https://textframe.io/api/presentation/{{ page.major }}/context.json` or a JSON array with the URI `https://textframe.io/api/presentation/{{ page.major }}/context.json` as the last item. Further contexts _MUST_ be added at the beginning of the array.
 
 ``` json-doc
 {
@@ -1012,7 +896,7 @@ The value of the `@context` property _MUST_ be either the URI `https://textframe
 }
 ```
 
-Any additional properties beyond those defined in this specification or the Web Annotation Data Model _SHOULD_ be mapped to RDF predicates using further context documents. These extensions _SHOULD_ be added to the top level `@context` property, and _MUST_ be added before the above context. The JSON-LD 1.1 functionality of predicate specific context definitions, known as [scoped contexts][org-w3c-json-ld-scoped-contexts], _MUST_ be used to minimize cross-extension collisions. Extensions intended for community use _SHOULD_ be [registered in the extensions registry][registry], but registration is not mandatory.
+Any additional properties beyond those defined in this specification or the Web Annotation Data Model _SHOULD_ be mapped to RDF predicates using further context documents. These extensions _SHOULD_ be added to the top level `@context` property, and _MUST_ be added before the above context. The JSON-LD 1.1 functionality of predicate specific context definitions, known as [scoped contexts](https://www.w3.org/TR/json-ld/#scoped-contexts), _MUST_ be used to minimize cross-extension collisions.
 
 ``` json-doc
 {
@@ -1027,29 +911,29 @@ The JSON representation _MUST NOT_ include the `@graph` key at the top level. Th
 
 ### 4.7. Term Collisions between Contexts
 
-There are some common terms used in more than one JSON-LD context document. Every attempt has been made to minimize these collisions, but some are inevitable. In order to know which specification is in effect at any given point, the class of the resource that has the property is the primary governing factor. Properties on Annotation-based resources, therefore, use the context from the [Web Annotation Data Model][org-w3c-webanno], whereas properties on classes defined by this specification use the ITF Presentation API context's definition.
+There are some common terms used in more than one JSON-LD context document. Every attempt has been made to minimize these collisions, but some are inevitable. In order to know which specification is in effect at any given point, the class of the resource that has the property is the primary governing factor. Properties on Annotation-based resources, therefore, use the context from the [Web Annotation Data Model](https://www.w3.org/TR/annotation-model/), whereas properties on classes defined by this specification use the ITF Presentation API context's definition.
 
-There is one property that is in direct conflict: the `label` property is defined by both and is available for every resource. The use of `label` in ITF follows modern best practices for internationalization by allowing the language to be associated with the value using the language map construction [described above][prezi30-languages]. The Web Annotation Data Model uses it only for [Annotation Collections][prezi30-annocoll], and mandates the format is a string. For this property, the API overrides the definition from the Annotation model to ensure that labels can consistently be represented in multiple languages.
+There is one property that is in direct conflict: the `label` property is defined by both and is available for every resource. The use of `label` in ITF follows modern best practices for internationalization by allowing the language to be associated with the value using the language map construction [described above](#language). The Web Annotation Data Model uses it only for [Annotation Collections](#annotation-collection), and mandates the format is a string. For this property, the API overrides the definition from the Annotation model to ensure that labels can consistently be represented in multiple languages.
 
 The following properties are defined by both, and the ITF representation is more specific than the Web Annotation Data Model but are not in conflict, or are never used on the same resource:
 
-| Property   | Notes on non-conflicting differences with the Web Annotation Data Model                                                                                                                                                                                                               |
-|------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `homepage` | In ITF the home page of a resource is represented as a JSON object, whereas in the Web Annotation Data Model it can also be a string. |
-| `type`     | In ITF the type is singular, whereas in the Web Annotation Data Model there can be more than one type. |
-| `format`   | In ITF the format of a resource is also singular, whereas in the Web Annotation Data Model there can be more than one format. |
-| `language` | In ITF the `language` property always takes an array, whereas in the Web Annotation Data Model it can be a single string. |
-| `start`    | The `start` property is used on a Manifest to refer to the start TextFrame or part of a TextFrame and thus is a JSON object, whereas in the Web Annotation Data Model it is used on a TextPositionSelector to give the start offset into the textual content and is thus an integer. |
+| Property   | Notes on non-conflicting differences with the Web Annotation Data Model                                                                                                                                                                                                                 |
+|------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `homepage` | In ITF the home page of a resource is represented as a JSON object, whereas in the Web Annotation Data Model it can also be a string.                                                                                                                                                   |
+| `type`     | In ITF the type is singular, whereas in the Web Annotation Data Model there can be more than one type.                                                                                                                                                                                  |
+| `format`   | In ITF the format of a resource is also singular, whereas in the Web Annotation Data Model there can be more than one format.                                                                                                                                                           |
+| `language` | In ITF the `language` property always takes an array, whereas in the Web Annotation Data Model it can be a single string.                                                                                                                                                               |
+| `start`    | The `start` property is used on a Manifest to refer to the starting TextFrame or part of a TextFrame and thus is a JSON object, whereas in the Web Annotation Data Model it is used on a TextPositionSelector to give the start offset into the textual content and is thus an integer. |
 
 The `rights`, `partOf`, and `items` properties are defined by both in the same way.
 
 ### 4.8. Keyword Mappings
 
-The JSON-LD keywords `@id`, `@type` and `@none` are mapped to `id`, `type` and `none` by the Presentation API [linked data context][prezi30-ldce]. Thus in content conforming to this version of the Presentation API, the only JSON key beginning with `@` will be `@context`. However, the content may include data conforming to older specifications or external specifications that use keywords beginning with `@`. Clients should expect to encounter both syntaxes.
+The JSON-LD keywords `@id`, `@type` and `@none` are mapped to `id`, `type` and `none` by the Presentation API [linked data context](#46-linked-data-context-and-extensions). Thus in content conforming to this version of the Presentation API, the only JSON key beginning with `@` will be `@context`. However, the content may include data conforming to older specifications or external specifications that use keywords beginning with `@`. Clients should expect to encounter both syntaxes.
 
 ##  5. Resource Structure
 
-This section provides a detailed description of the resource types used in this specification. [Section 2][prezi30-type-overview] provides an overview of the resource types and figures illustrating allowed relationships between them, and [Appendix A][prezi30-appendixa] provides summary tables of the property requirements.
+This section provides a detailed description of the resource types used in this specification. [Section 2](#2-resource-type-overview) provides an overview of the resource types and figures illustrating allowed relationships between them, and [Appendix A](#a-summary-of-property-requirements) provides summary tables of the property requirements.
 
 ### 5.1. Collection
 
@@ -1062,13 +946,13 @@ The intended usage of Collections is to allow clients to:
   * Visualize lists or hierarchies of related Manifests.
   * Provide navigation through a list or hierarchy of available Manifests.
 
-Collections _MAY_ be [embedded][prezi30-terminology] inline within other Collections, such as when the Collection is used primarily to subdivide a larger one into smaller pieces. However, Manifests _MUST NOT_ be [embedded][prezi30-terminology] within Collections. An [embedded][prezi30-terminology] Collection _SHOULD_ also have its own URI from which the JSON description is available.
+Collections _MAY_ be [embedded](#12-terminology) inline within other Collections, such as when the Collection is used primarily to subdivide a larger one into smaller pieces. However, Manifests _MUST NOT_ be [embedded](#12-terminology) within Collections. An [embedded](#12-terminology) Collection _SHOULD_ also have its own URI from which the JSON description is available.
 
-Manifests or Collections _MAY_ be [referenced][prezi30-terminology] from more than one Collection. For example, an institution might define four Collections: one for modern works, one for historical works, one for newspapers and one for books. The Manifest for a historical newspaper would then appear in both the historical Collection and the newspaper Collection. Alternatively, the institution may choose to have two separate newspaper Collections, and reference each as a sub-Collection of modern and historical.
+Manifests or Collections _MAY_ be [referenced](#12-terminology) from more than one Collection. For example, an institution might define four Collections: one for modern works, one for historical works, one for newspapers and one for books. The Manifest for a historical newspaper would then appear in both the historical Collection and the newspaper Collection. Alternatively, the institution may choose to have two separate newspaper Collections, and reference each as a sub-Collection of modern and historical.
 
 Collections with an empty `items` property are allowed but discouraged. For example, if the user performs a search that matches no Manifests, then the server _MAY_ return a Collection response with no Manifests.
 
-Collections or Manifests [referenced][prezi30-terminology] in the `items` property _MUST_ have the `id`, `type` and `label` properties.
+Collections or Manifests [referenced](#12-terminology) in the `items` property _MUST_ have the `id`, `type` and `label` properties.
 
 An example Collection document:
 
@@ -1137,7 +1021,7 @@ The Manifest resource typically represents a single object and any intellectual 
 
 The identifier in `id` _MUST_ be able to be dereferenced to retrieve the JSON description of the Manifest, and thus _MUST_ use the HTTP(S) URI scheme.
 
-The Manifest _MUST_ have an `items` property, which is an array of JSON-LD objects. Each object is a TextFrame, with requirements as described in the next section. The Manifest _MAY_ also have a `structures` property listing one or more [Ranges][prezi30-range] which describe additional structure of the content, such as might be rendered as a table of contents. The Manifest _MAY_ have an `annotations` property, which includes Annotation Page resources where the Annotations have the Manifest as their `target`. These will typically be comment style Annotations, and _MUST NOT_ have `writing` as their `motivation`.
+The Manifest _MUST_ have an `items` property, which is an array of JSON-LD objects. Each object is a TextFrame, with requirements as described in the next section. The Manifest _MAY_ have an `annotations` property, which includes Annotation Page resources where the Annotations have the Manifest as their `target`. These will typically be comment style Annotations, and _MUST NOT_ have `writing` as their `motivation`.
 
 ``` json-doc
 {
@@ -1196,7 +1080,7 @@ The Manifest _MUST_ have an `items` property, which is an array of JSON-LD objec
     ],
      
     // Presentation Information
-    "navDate": "1604-09-05T11:40:00",
+    "sortDate": "1604-09-05T11:40:00",
 
     // Rights Information
     "rights": "https://creativecommons.org/licenses/by/4.0/",
@@ -1312,16 +1196,6 @@ The Manifest _MUST_ have an `items` property, which is an array of JSON-LD objec
         }
     ],
 
-    // structure of the resource, described with Ranges
-    "structures": [
-        {
-            "id": "https://example.org/itf/book1/range/top",
-            "type": "Range"
-      // Ranges members should be included here
-        }
-    // Any additional top level Ranges can be included here
-    ],
-
     // Commentary Annotations on the Manifest
     "annotations": [
         {
@@ -1337,11 +1211,11 @@ The Manifest _MUST_ have an `items` property, which is an array of JSON-LD objec
 
 ###  5.3. TextFrame
 
-The TextFrame represents an individual frame or view that acts as the container for assembling the content resources it contains. TextFrames _MUST_ be identified by a URI and it _MUST_ be an HTTP(S) URI. The URI of the TextFrame _MUST NOT_ contain an anchor fragment (a `#` followed by further characters). TextFrames _MAY_ be able to be dereferenced separately from the Manifest via their URIs as well as being [embedded][prezi30-terminology].
+The TextFrame represents an individual frame or view that acts as the container for assembling the content resources it contains. TextFrames _MUST_ be identified by an HTTP(S) URI. The URI of the TextFrame _MUST NOT_ contain an anchor fragment (a `#` followed by further characters). TextFrames _MAY_ be able to be dereferenced separately from the Manifest via their URIs as well as being [embedded](#12-terminology).
 
 Every TextFrame _SHOULD_ have a `label` to display. If one is not provided, the client _SHOULD_ automatically generate one for use based on the TextFrame's position within the `items` property.
 
-Content resources are associated with the TextFrame via Web Annotations. Content that is to be rendered as part of the TextFrame _MUST_ be associated by an Annotation that has the `motivation` value `writing`. These Annotations are recorded in the `items` of one or more Annotation Pages, referred to in the `items` array of the TextFrame. Annotations that do not have the `motivation` value `writing` _MUST NOT_ be in pages [referenced][prezi30-terminology] in `items`, but instead in the `annotations` property. Referenced, external Annotation Pages _MUST_ have the `id` and `type` properties.
+Content resources are associated with the TextFrame via Web Annotations. Content that is to be rendered as part of the TextFrame _MUST_ be associated by an Annotation that has the `motivation` value `writing`. These Annotations are recorded in the `items` of one or more Annotation Pages, referred to in the `items` array of the TextFrame. Annotations that do not have the `motivation` value `writing` _MUST NOT_ be in pages [referenced](#12-terminology) in `items`, but instead in the `annotations` property. Referenced, external Annotation Pages _MUST_ have the `id` and `type` properties.
 
 Content that is derived from the TextFrame, such as IIIF images for the underlying resource or an audio representation of the text, _MUST_ be associated by an Annotation that has the `motivation` value `supplementing`. Annotations _MAY_ have any other `motivation` values as well. Thus, content of any type may be associated with the TextFrame via an Annotation that has the `motivation` value `writing`, meaning the content is _part of_ the TextFrame; an Annotation that has the `motivation` value `supplementing`, meaning the content is _from_ the TextFrame but not necessarily part of it; or an Annotation with another `motivation` meaning that it is somehow about the TextFrame.
 
@@ -1376,87 +1250,16 @@ TextFrames _MAY_ be treated as content resources for the purposes of annotating 
 }
 ```
 
-> ###  5.4. Range
-> 
-> This may be a question to which there's a simple technical answer. I'm still trying to settle in my mind how Range is useful in the Presentation API when you have custom_modes and custom_mode_definitions in the Text Information API. Those are meant to give you a mechanism to divide up a text into a hierarchical structure of different units (e.g. chapters within a book, or presumably articles in a newspaper). So does the Presentation API need a separate mechanism to record those same hierarchical divisions? Does this allow you to do different things?
-> > That's a good point. I can't see any use for it that couldn't be done better with a collection containing a bunch of manifests. Neil, what do you think? Delete Range altogether (here and passim)
-> > > NEIL: I would lose Range, it changed between IIIF V1 and V2 so it's a mess anyway. Custom Modes is more powerful IMHO since they can be used more directly to address fragments.   
-
-> Ranges are used to represent structure within an object beyond the default order of the TextFrames in the `items` property of the Manifest, such as newspaper sections or articles, chapters within a book, or movements within a piece of music. Ranges can include TextFrames, parts of TextFrames, or other Ranges, creating a tree structure like a table of contents.
-> 
-> The intent of adding a Range to the Manifest is to allow the client to display a linear or hierarchical navigation interface to enable the user to quickly move through the object's content. Clients _SHOULD_ present only Ranges that have the `label` property and do not have a `behavior` value `no-nav` to the user. Clients _SHOULD NOT_ render TextFrame labels as part of the navigation, and a Range that wraps the TextFrame _MUST_ be created if this is the desired presentation.
-> 
-> If there is no Range that has the `behavior` value `sequence`, and the Manifest does not have the `behavior` value `unordered`, then the client _SHOULD_ treat the order of the TextFrames in the Manifest's `items` array as the default order. If there is one Range that has the `behavior` value `sequence`, then the client _MUST_ instead use this Range for the ordering. If there is more than one Range that has the `behavior` value `sequence`, for example a second Range to represent an alternative ordering of the pages of a manuscript, the first Range _SHOULD_ be used as the default and the others _SHOULD_ be able to be selected. Ranges that have the `behavior` value `sequence` _MUST_ be directly within the `structures` property of the Manifest, and _MUST NOT_ be [embedded][prezi30-terminology] or [referenced][prezi30-terminology] within other Ranges. These Ranges may have limited hierarchical nesting, but clients are not expected to traverse very deep structures in determining the default order. If this Range includes parts of TextFrames, then these parts are the content to render by default and would generate separate entries in a navigation display. This allows for the TextFrame to include content outside of the default view, such as a color bar or ruler.
-> 
-> Ranges _MUST_ have URIs and they _SHOULD_ be HTTP(S) URIs. Top level Ranges are [embedded][prezi30-terminology] or externally [referenced][prezi30-terminology] within the Manifest in a `structures` property. These top level Ranges then embed or reference other Ranges, TextFrames or parts of TextFrames in the `items` property. Each entry in the `items` property _MUST_ be a JSON object, and it _MUST_ have the `id` and `type` properties. If a top level Range needs to be dereferenced by the client, then it _MUST NOT_ have the `items` property, such that clients are able to recognize that it should be retrieved in order to be processed.
-> 
-> All of the TextFrames or parts that should be considered as being part of a Range _MUST_ be included within the Range's `items` property, or a descendant Range's `items`.
-> 
-> The TextFrames and parts of TextFrames need not be contiguous or in the same order as in the Manifest's `items` property or any other Range. Examples include newspaper articles that are continued in different sections, a chapter that starts halfway through a page, or a text that is divided into separate bound manuscript volumes.
-> 
-> Ranges _MAY_ link to an Annotation Collection that has the content of the Range using the `supplementary` property. The [referenced][prezi30-terminology] Annotation Collection will contain Annotations that target areas of TextFrames within the Range and link content resources to those TextFrames.
-
-> ``` json-doc
-> {
->   "@context": "http://iiif.io/api/presentation/{{ page.major }}/context.json",
->   "id": "https://example.org/itf/book1/manifest",
->   "type": "Manifest",
->   // Metadata here ...
-> 
->   "items": [
->     // TextFrames here ...
->   ],
-> 
->   "structures": [
->     {
->       "id": "https://example.org/itf/book1/range/r0",
->       "type": "Range",
->       "label": { "en": [ "Table of Contents" ] },
->       "items": [
->         {
->           "id":  "https://example.org/itf/book1/TextFrame/cover",
->           "type": "TextFrame"
->         },
->         {
->           "id": "https://example.org/itf/book1/range/r1",
->           "type": "Range",
->           "label": { "en": [ "Introduction" ] },
->           "supplementary": {
->             "id": "https://example.org/itf/book1/annocoll/introTexts",
->             "type": "AnnotationCollection"
->           },
->           "items": [
->             {
->               "id": "https://example.org/itf/book1/TextFrame/p1",
->               "type": "TextFrame"
->             },
->             {
->               "id": "https://example.org/itf/book1/TextFrame/p2",
->               "type": "TextFrame"
->             }
->           ]
->         },
->         {
->           "id": "https://example.org/itf/book1/TextFrame/backCover",
->           "type": "TextFrame"
->         }
->       ]
->     }
->   ]
-> }
-> ```
-
 ###  5.4. Annotation Page
 
-Association of Images and other content with their respective TextFrames is done via Annotations. Traditionally Annotations are used for associating commentary with the resource the Annotation's text or body is about; the [Web Annotation][org-w3c-webanno] model allows any resource to be associated with any other resource, or parts thereof, and it is reused for both commentary and `writing` resources on the TextFrame. Other resources beyond images might include IIIF images of the text, an audio or video performance of the text, commentary Annotations, tags and more.
+Association of Images and other content with their respective TextFrames is done via Annotations. Traditionally Annotations are used for associating commentary with the resource the Annotation's text or body is about; the [Web Annotation](https://www.w3.org/TR/annotation-model/) model allows any resource to be associated with any other resource, or parts thereof, and it is reused for both commentary and `writing` resources on the TextFrame. Other resources beyond images might include IIIF images of the text, an audio or video performance of the text, commentary Annotations, tags and more.
 
-These Annotations are collected together in Annotation Page resources, which are included in the `items` property from the TextFrame. Each Annotation Page can be [embedded][prezi30-terminology] in its entirety, if the Annotations should be processed as soon as possible when the user navigates to that TextFrame, or a reference to an external page. This reference _MUST_ include `id` and `type`, _MUST NOT_ include `items` and _MAY_ include other properties, such as `behavior`. All the Annotations in the Annotation Page _SHOULD_ have the TextFrame as their `target`. Clients _SHOULD_ process the Annotation Pages and their items in the order given in the TextFrame. Publishers may choose to expedite the processing of [embedded][prezi30-terminology] Annotation Pages by ordering them before external pages, which will need to be dereferenced by the client.
+These Annotations are collected together in Annotation Page resources, which are included in the `items` property from the TextFrame. Each Annotation Page can be [embedded](#12-terminology) in its entirety, if the Annotations should be processed as soon as possible when the user navigates to that TextFrame, or a reference to an external page. This reference _MUST_ include `id` and `type`, _MUST NOT_ include `items` and _MAY_ include other properties, such as `behavior`. All the Annotations in the Annotation Page _SHOULD_ have the TextFrame as their `target`. Clients _SHOULD_ process the Annotation Pages and their items in the order given in the TextFrame. Publishers may choose to expedite the processing of [embedded](#12-terminology) Annotation Pages by ordering them before external pages, which will need to be dereferenced by the client.
 
 An Annotation Page _MUST_ have an HTTP(S) URI given in `id`, and _MAY_ have any of the other properties defined in this specification or the Web Annotation specification. The Annotations are listed in the `items` property of the Annotation Page.
 
 __Incompatibility Warning__<br/>
-The definition of `label` in the Web Annotation specification does not produce JSON conformant with the structure defined in this specification for languages. Given the absolute requirement for internationalized labels and the strong desire for consistently handling properties, the `label` property on Annotation model classes does not conform to the string requirement of the Web Annotation Data Model. This [issue has been filed with the W3C][github-webanno-437] and will hopefully be addressed in a future version of the standard.
-{: .warning}
+The definition of `label` in the Web Annotation specification does not produce JSON conformant with the structure defined in this specification for languages. Given the absolute requirement for internationalized labels and the strong desire for consistently handling properties, the `label` property on Annotation model classes does not conform to the string requirement of the Web Annotation Data Model.
 
 ``` json-doc
 {
@@ -1481,9 +1284,9 @@ The definition of `label` in the Web Annotation specification does not produce J
 
 ### 5.5. Annotation
 
-Annotations follow the [Web Annotation][org-w3c-webanno] data model. The description provided here is a summary plus any ITF specific requirements. The W3C standard is the official documentation.
+Annotations follow the [Web Annotation](https://www.w3.org/TR/annotation-model/) data model. The description provided here is a summary plus any ITF specific requirements. The W3C standard is the official documentation.
 
-Annotations _MUST_ have their own HTTP(S) URIs, conveyed in the `id` property. The JSON-LD description of the Annotation _SHOULD_ be returned if the URI is dereferenced, according to the [Web Annotation Protocol][org-w3c-webanno-protocol].
+Annotations _MUST_ have their own HTTP(S) URIs, conveyed in the `id` property. The JSON-LD description of the Annotation _SHOULD_ be returned if the URI is dereferenced, according to the [Web Annotation Protocol](https://www.w3.org/TR/annotation-protocol/).
 
 When Annotations are used to associate content resources with a TextFrame, the content resource is linked in the `body` of the Annotation. The URI of the TextFrame _MUST_ be repeated in the `target` property of the Annotation, or the `source` property of a Specific Resource used in the `target` property.
 
@@ -1493,19 +1296,19 @@ Additional features of the Web Annotation data model _MAY_ also be used, such as
 
 ### 5.6. Content Resources
 
-Content resources are external web resources that are [referenced][prezi30-terminology] from within the Manifest or Collection. This includes images, video, audio, data, web pages or any other format.
+Content resources are external web resources that are [referenced](#12-terminology) from within the Manifest or Collection. This includes images, video, audio, data, web pages or any other format.
 
-As described in the [TextFrame][prezi30-TextFrame] section, the content associated with a TextFrame (and therefore the content of a Manifest) is provided by the `body` property of Annotations with the `writing` motivation. Content resources can also be [referenced][prezi30-terminology] from `homepage`, `logo`, `rendering`, and `seeAlso` properties.
+As described in the [TextFrame](#textframe) section, the content associated with a TextFrame (and therefore the content of a Manifest) is provided by the `body` property of Annotations with the `writing` motivation. Content resources can also be [referenced](#12-terminology) from `homepage`, `logo`, `rendering`, and `seeAlso` properties.
 
 Content resources _MUST_ have an `id` property, with the value being the URI at which the resource can be obtained.
 
-The type of the content resource _MUST_ be included, and _SHOULD_ be taken from the table listed under the definition of `type`. The `format` of the resource _SHOULD_ be included and, if so, _SHOULD_ be the media type that is returned when the resource is dereferenced. The `profile` of the resource, if it has one, _SHOULD_ also be included. Content resources in appropriate formats _MAY_ also have the `language` property. Content resources _MAY_ also have descriptive and linking properties, as defined in [section 3][prezi30-resource-properties].
+The type of the content resource _MUST_ be included, and _SHOULD_ be taken from the table listed under the definition of `type`. The `format` of the resource _SHOULD_ be included and, if so, _SHOULD_ be the media type that is returned when the resource is dereferenced. The `profile` of the resource, if it has one, _SHOULD_ also be included. Content resources in appropriate formats _MAY_ also have the `language` property. Content resources _MAY_ also have descriptive and linking properties, as defined in [section 3](#3-resource-properties).
 
-If the content resource is a text, and an ITF Image service is available for it, then the `id` property of the content resource _MAY_ be a complete URI to any particular representation supported by the Text Service, such as `https://example.org/itf/CASE20258/diplomatic/book/full/1`, but _MUST NOT_ be just the URI of the ITF Text service. Its `type` value _MUST_ be the string `Text`. The Text _SHOULD_ have the service [referenced][prezi30-terminology] from it using the `service` property.
+If the content resource is a text, and an ITF Image service is available for it, then the `id` property of the content resource _MAY_ be a complete URI to any particular representation supported by the Text Service, such as `https://example.org/itf/CASE20258/diplomatic/book/full/1`, but _MUST NOT_ be just the URI of the ITF Text service. Its `type` value _MUST_ be the string `Text`. The Text _SHOULD_ have the service [referenced](#12-terminology) from it using the `service` property.
 
 If there is a need to distinguish between content resources, then the resource _SHOULD_ have the `label` property.
 
-A TextFrame _MAY_ be treated as a content resource for the purposes of annotating it on to other TextFrames. In this situation, the TextFrame _MAY_ be [embedded][prezi30-terminology] within the Annotation, or require dereferencing to obtain its description.
+A TextFrame _MAY_ be treated as a content resource for the purposes of annotating it on to other TextFrames. In this situation, the TextFrame _MAY_ be [embedded](#12-terminology) within the Annotation, or require dereferencing to obtain its description.
 
 ``` json-doc
 {
@@ -1606,31 +1409,29 @@ Clients are only expected to follow links to Presentation API resources. Unlike 
 
 ###  6.3. Responses
 
-The format for all responses is JSON, as described above. It is good practice for all resources with an HTTP(S) URI to provide their description when the URI is dereferenced. If a resource is [referenced][prezi30-terminology] within a response, rather than being [embedded][prezi30-terminology], then it _MUST_ be able to be dereferenced.
+The format for all responses is JSON, as described above. It is good practice for all resources with an HTTP(S) URI to provide their description when the URI is dereferenced. If a resource is [referenced](#12-terminology) within a response, rather than being [embedded](#12-terminology), then it _MUST_ be able to be dereferenced.
 
-If the server receives a request with an `Accept` header, it _SHOULD_ respond following the rules of [content negotiation][org-rfc-7231-conneg]. Note that content types provided in the `Accept` header of the request _MAY_ include parameters, for example `profile` or `charset`.
+If the server receives a request with an `Accept` header, it _SHOULD_ respond following the rules of [content negotiation](https://datatracker.ietf.org/doc/html/rfc7231#section-5.3.2). Note that content types provided in the `Accept` header of the request _MAY_ include parameters, for example `profile` or `charset`.
 
 If the request does not include an `Accept` header, the HTTP `Content-Type` header of the response _SHOULD_ have the value `application/ld+json` (JSON-LD) with the `profile` parameter given as the context document: `https://textframe.io/api/presentation/1/context.json`.
 
 ```
 Content-Type: application/ld+json;profile="https://textframe.io/api/presentation/1/context.json"
 ```
-{: .urltemplate}
 
 If the `Content-Type` header `application/ld+json` cannot be generated due to server configuration details, then the `Content-Type` header _SHOULD_ instead be `application/json` (regular JSON), without a `profile` parameter.
 
 ```
 Content-Type: application/json
 ```
-{: .urltemplate}
 
-The HTTP server _MUST_ follow the [CORS requirements][org-w3c-cors] to enable browser-based clients to retrieve the descriptions. If the server receives a request with one of the content types above in the Accept header, it _SHOULD_ respond with that content type following the rules of [content negotiation][org-rfc-7231-conneg]. Recipes for enabling CORS and conditional Content-Type headers are provided in the [Apache HTTP Server Implementation Notes][notes-apache].
+The HTTP server _MUST_ follow the [CORS requirements](https://fetch.spec.whatwg.org/) to enable browser-based clients to retrieve the descriptions. If the server receives a request with one of the content types above in the Accept header, it _SHOULD_ respond with that content type following the rules of [content negotiation](https://datatracker.ietf.org/doc/html/rfc7231#section-5.3.2).
 
 Responses _SHOULD_ be compressed by the server as there are significant performance gains to be made for very repetitive data structures.
 
 ## 7. Authentication
 
-It may be necessary to restrict access to the descriptions made available via the Presentation API. As the primary means of interaction with the descriptions is by web browsers using XmlHttpRequests across domains, there are some considerations regarding the most appropriate methods for authenticating users and authorizing their access. The approach taken is described in the [Authentication][itf-auth] specification, and requires requesting a token to add to the requests to identify the user. This token might also be used for other requests defined by other APIs.
+It may be necessary to restrict access to the descriptions made available via the Presentation API. As the primary means of interaction with the descriptions is by web browsers using XmlHttpRequests across domains, there are some considerations regarding the most appropriate methods for authenticating users and authorizing their access. The approach taken is described in the [Authentication specification](#7-authentication), and requires requesting a token to add to the requests to identify the user. This token might also be used for other requests defined by other APIs.
 
 It is possible to include Image API service descriptions within the Manifest, and within those it is also possible to include links to the Authentication API's services that are needed to interact with the image content. The first time an Authentication API service is included within a Manifest, it _MUST_ be the complete description. Subsequent references _SHOULD_ be just the URI of the service, and clients are expected to look up the details from the full description by matching the URI. Clients _MUST_ anticipate situations where the Authentication service description in the Manifest is out of date: the source of truth is the Image Information document, or other system that references the Authentication API services.
 
@@ -1638,111 +1439,85 @@ It is possible to include Image API service descriptions within the Manifest, an
 
 ### A. Summary of Property Requirements
 
-| Icon                       | Meaning     |
-| -------------------------- | ----------- |
-| ![required][icon3-req]      | Required    |
-| ![recommended][icon3-rec]   | Recommended |
-| ![optional][icon3-opt]      | Optional    |
-| ![not allowed][icon3-na]    | Not Allowed |
-{: .api-table #table-reqs-icons}
+| Abbreviation  | Meaning     |
+|---------------| ----------- |
+| **REQ**       | Required    |
+| **REC**       | Recommended |
+| **OPT**       | Optional    |
+| **NA**        | Not Allowed |
 
 
 __Descriptive and Rights Properties__
 
-|                      | label                     | metadata                  | summary                   | requiredStatement      | rights                 | navDate                   | language                  |
-| -------------------- | -----------------------   | ------------------------- | ------------------------- | ---------------------- | ---------------------- | ------------------------- | ------------------------- |
-| Collection           | ![required][icon3-req]    | ![recommended][icon3-rec] | ![recommended][icon3-rec] | ![optional][icon3-opt] | ![optional][icon3-opt] | ![optional][icon3-opt]    | ![not allowed][icon3-na]  |
-| Manifest             | ![required][icon3-req]    | ![recommended][icon3-rec] | ![recommended][icon3-rec] | ![optional][icon3-opt] | ![optional][icon3-opt] | ![optional][icon3-opt]    | ![not allowed][icon3-na]  |
-| TextFrame               | ![recommended][icon3-rec] | ![optional][icon3-opt]    | ![optional][icon3-opt]    | ![optional][icon3-opt] | ![optional][icon3-opt] | ![optional][icon3-opt]    | ![not allowed][icon3-na]  |
-| Annotation           | ![optional][icon3-opt]    | ![optional][icon3-opt]    | ![optional][icon3-opt]    | ![optional][icon3-opt] | ![optional][icon3-opt] | ![not allowed][icon3-na]  | ![not allowed][icon3-na]  |
-| AnnotationPage       | ![optional][icon3-opt]    | ![optional][icon3-opt]    | ![optional][icon3-opt]    | ![optional][icon3-opt] | ![optional][icon3-opt] | ![not allowed][icon3-na]  | ![not allowed][icon3-na]  |
-| Range                | ![recommended][icon3-rec] | ![optional][icon3-opt]    | ![optional][icon3-opt]    | ![optional][icon3-opt] | ![optional][icon3-opt] | ![optional][icon3-opt]    | ![not allowed][icon3-na]  |
-| AnnotationCollection | ![recommended][icon3-rec] | ![optional][icon3-opt]    | ![optional][icon3-opt]    | ![optional][icon3-opt] | ![optional][icon3-opt] | ![not allowed][icon3-na]  | ![not allowed][icon3-na]  |
-| Content Resources    | ![optional][icon3-opt]    | ![optional][icon3-opt]    | ![optional][icon3-opt]    | ![optional][icon3-opt] | ![optional][icon3-opt] | ![not allowed][icon3-na]  | ![recommended][icon3-rec] |
-{: .api-table #table-reqs-1}
+|                      | label   | metadata  | summary   | requiredStatement  | rights  | sortDate  | language  |
+| -------------------- |---------|-----------|-----------|--------------------|---------|-----------|-----------|
+| Collection           | **REQ** | **REC**   | **REC**   | **OPT**            | **OPT** | **OPT**   | **NA**    |
+| Manifest             | **REQ** | **REC**   | **REC**   | **OPT**            | **OPT** | **OPT**   | **NA**    |
+| TextFrame            | **REC** | **OPT**   | **OPT**   | **OPT**            | **OPT** | **OPT**   | **NA**    |
+| Annotation           | **OPT** | **OPT**   | **OPT**   | **OPT**            | **OPT** | **NA**    | **NA**    |
+| AnnotationPage       | **OPT** | **OPT**   | **OPT**   | **OPT**            | **OPT** | **NA**    | **NA**    |
+| AnnotationCollection | **REC** | **OPT**   | **OPT**   | **OPT**            | **OPT** | **NA**    | **NA**    |
+| Content Resources    | **OPT** | **OPT**   | **OPT**   | **OPT**            | **OPT** | **NA**    | **REC**   |
 
-|                      | provider                  | thumbnail                 | placeholderTextFrame        | accompanyingTextFrame       |
-| -------------------- | ------------------------- | ------------------------- | ------------------------ | ------------------------ |
-| Collection           | ![recommended][icon3-rec] | ![recommended][icon3-rec] | ![optional][icon3-opt]   | ![optional][icon3-opt]   |
-| Manifest             | ![recommended][icon3-rec] | ![recommended][icon3-rec] | ![optional][icon3-opt]   | ![optional][icon3-opt]   |
-| TextFrame               | ![optional][icon3-opt]    | ![optional][icon3-opt]    | ![optional][icon3-opt]\* | ![optional][icon3-opt]\* |
-| Annotation           | ![optional][icon3-opt]    | ![optional][icon3-opt]    | ![not allowed][icon3-na] | ![not allowed][icon3-na] |
-| AnnotationPage       | ![optional][icon3-opt]    | ![optional][icon3-opt]    | ![not allowed][icon3-na] | ![not allowed][icon3-na] |
-| Range                | ![optional][icon3-opt]    | ![optional][icon3-opt]    | ![optional][icon3-opt]   | ![optional][icon3-opt]   |
-| AnnotationCollection | ![optional][icon3-opt]    | ![optional][icon3-opt]    | ![not allowed][icon3-na] | ![not allowed][icon3-na] |
-| Content Resources    | ![optional][icon3-opt]    | ![optional][icon3-opt]    | ![not allowed][icon3-na] | ![not allowed][icon3-na] |
-{: .api-table #table-reqs-1a}
-
-\*A TextFrame that is the value of a `placeholderTextFrame` or `accompanyingTextFrame` property may not have either of those properties itself.<br/>
+|                      | provider  |
+|----------------------|-----------|
+| Collection           | **REC**   |
+| Manifest             | **REC**   |
+| TextFrame            | **OPT**   |
+| Annotation           | **OPT**   |
+| AnnotationPage       | **OPT**   |
+| AnnotationCollection | **OPT**   |
+| Content Resources    | **OPT**   |
 
 __Technical Properties__
 
-|                       | id                      | type                   | format                   | profile                  | height                   | width                    | duration                  | viewingDirection         | behavior               | timeMode                 |
-| --------------------  | ----------------------- | ---------------------- | ------------------------ | ------------------------ | ------------------------ | ------------------------ | ------------------------- | ------------------------ | ---------------------- | ------------------------ |
-| Collection            | ![required][icon3-req]  | ![required][icon3-req] | ![not allowed][icon3-na] | ![not allowed][icon3-na] | ![not allowed][icon3-na] | ![not allowed][icon3-na] | ![not allowed][icon3-na]  | ![optional][icon3-opt]   | ![optional][icon3-opt] | ![not allowed][icon3-na] |
-| Manifest              | ![required][icon3-req]  | ![required][icon3-req] | ![not allowed][icon3-na] | ![not allowed][icon3-na] | ![not allowed][icon3-na] | ![not allowed][icon3-na] | ![not allowed][icon3-na]  | ![optional][icon3-opt]   | ![optional][icon3-opt] | ![not allowed][icon3-na] |
-| TextFrame                | ![required][icon3-req]  | ![required][icon3-req] | ![not allowed][icon3-na] | ![not allowed][icon3-na] | ![optional][icon3-opt]\* | ![optional][icon3-opt]\* | ![optional][icon3-opt]    | ![not allowed][icon3-na] | ![optional][icon3-opt] | ![not allowed][icon3-na] |
-| Annotation            | ![required][icon3-req]  | ![required][icon3-req] | ![not allowed][icon3-na] | ![not allowed][icon3-na] | ![not allowed][icon3-na] | ![not allowed][icon3-na] | ![not allowed][icon3-na]  | ![not allowed][icon3-na] | ![optional][icon3-opt] | ![optional][icon3-opt]   |
-| Annotation Page       | ![required][icon3-req]  | ![required][icon3-req] | ![not allowed][icon3-na] | ![not allowed][icon3-na] | ![not allowed][icon3-na] | ![not allowed][icon3-na] | ![not allowed][icon3-na]  | ![not allowed][icon3-na] | ![optional][icon3-opt] | ![not allowed][icon3-na] |
-| Range                 | ![required][icon3-req]  | ![required][icon3-req] | ![not allowed][icon3-na] | ![not allowed][icon3-na] | ![not allowed][icon3-na] | ![not allowed][icon3-na] | ![not allowed][icon3-na]  | ![optional][icon3-opt]   | ![optional][icon3-opt] | ![not allowed][icon3-na] |
-| Annotation Collection | ![required][icon3-req]  | ![required][icon3-req] | ![not allowed][icon3-na] | ![not allowed][icon3-na] | ![not allowed][icon3-na] | ![not allowed][icon3-na] | ![not allowed][icon3-na]  | ![not allowed][icon3-na] | ![optional][icon3-opt] | ![not allowed][icon3-na] |
-| Content Resources     | ![required][icon3-req]  | ![required][icon3-req] | ![optional][icon3-opt]   | ![optional][icon3-opt]   | ![optional][icon3-opt]   | ![optional][icon3-opt]   | ![optional][icon3-opt]    | ![not allowed][icon3-na] | ![optional][icon3-opt] | ![not allowed][icon3-na] |
-{: .api-table #table-reqs-2}
-
-\*If a TextFrame has either of `height` and `width`, it _MUST_ have the other, as described in the [definitions][prezi30-height] of those properties.<br/>
-
+|                       | id      | type    | format  | profile  | viewingDirection | behavior  |
+| --------------------  |---------|---------|---------|----------|------------------|-----------|
+| Collection            | **REQ** | **REQ** | **NA**  | **NA**   | **OPT**          | **OPT**   |
+| Manifest              | **REQ** | **REQ** | **NA**  | **NA**   | **OPT**          | **OPT**   |
+| TextFrame             | **REQ** | **REQ** | **NA**  | **NA**   | **NA**           | **OPT**   |
+| Annotation            | **REQ** | **REQ** | **NA**  | **NA**   | **NA**           | **OPT**   |
+| Annotation Page       | **REQ** | **REQ** | **NA**  | **NA**   | **NA**           | **OPT**   |
+| Annotation Collection | **REQ** | **REQ** | **NA**  | **NA**   | **NA**           | **OPT**   |
+| Content Resources     | **REQ** | **REQ** | **OPT** | **OPT**  | **NA**           | **OPT**   |
 
 __Linking Properties__
 
-|                       | seeAlso                 | service                 | homepage               | rendering              | partOf                 | start                    | supplementary            | services                 |
-| --------------------  | ----------------------- | ----------------------- | ---------------------- | ---------------------- | ---------------------- | ----------------------   | ------------------------ | ------------------------ |
-| Collection            | ![optional][icon3-opt]  | ![optional][icon3-opt]  | ![optional][icon3-opt] | ![optional][icon3-opt] | ![optional][icon3-opt] | ![not allowed][icon3-na] | ![not allowed][icon3-na] | ![optional][icon3-opt]   |
-| Manifest              | ![optional][icon3-opt]  | ![optional][icon3-opt]  | ![optional][icon3-opt] | ![optional][icon3-opt] | ![optional][icon3-opt] | ![optional][icon3-opt]   | ![not allowed][icon3-na] | ![optional][icon3-opt]   |
-| TextFrame                | ![optional][icon3-opt]  | ![optional][icon3-opt]  | ![optional][icon3-opt] | ![optional][icon3-opt] | ![optional][icon3-opt] | ![not allowed][icon3-na] | ![not allowed][icon3-na] | ![not allowed][icon3-na] |
-| Annotation            | ![optional][icon3-opt]  | ![optional][icon3-opt]  | ![optional][icon3-opt] | ![optional][icon3-opt] | ![optional][icon3-opt] | ![not allowed][icon3-na] | ![not allowed][icon3-na] | ![not allowed][icon3-na] |
-| Annotation Page       | ![optional][icon3-opt]  | ![optional][icon3-opt]  | ![optional][icon3-opt] | ![optional][icon3-opt] | ![optional][icon3-opt] | ![not allowed][icon3-na] | ![not allowed][icon3-na] | ![not allowed][icon3-na] |
-| Range                 | ![optional][icon3-opt]  | ![optional][icon3-opt]  | ![optional][icon3-opt] | ![optional][icon3-opt] | ![optional][icon3-opt] | ![optional][icon3-opt]   | ![optional][icon3-opt]   | ![not allowed][icon3-na] |
-| Annotation Collection | ![optional][icon3-opt]  | ![optional][icon3-opt]  | ![optional][icon3-opt] | ![optional][icon3-opt] | ![optional][icon3-opt] | ![not allowed][icon3-na] | ![not allowed][icon3-na] | ![not allowed][icon3-na] |
-| Content Resources     | ![optional][icon3-opt]  | ![optional][icon3-opt]  | ![optional][icon3-opt] | ![optional][icon3-opt] | ![optional][icon3-opt] | ![not allowed][icon3-na] | ![not allowed][icon3-na] | ![not allowed][icon3-na] |
-{: .api-table #table-reqs-3}
+|                       | seeAlso  | service  | homepage  | rendering  | partOf  | start   | services  |
+| --------------------  |----------|----------|-----------|------------|---------|---------|-----------|
+| Collection            | **OPT**  | **OPT**  | **OPT**   | **OPT**    | **OPT** | **NA**  | **OPT**   |
+| Manifest              | **OPT**  | **OPT**  | **OPT**   | **OPT**    | **OPT** | **OPT** | **OPT**   |
+| TextFrame             | **OPT**  | **OPT**  | **OPT**   | **OPT**    | **OPT** | **NA**  | **NA**    |
+| Annotation            | **OPT**  | **OPT**  | **OPT**   | **OPT**    | **OPT** | **NA**  | **NA**    |
+| Annotation Page       | **OPT**  | **OPT**  | **OPT**   | **OPT**    | **OPT** | **NA**  | **NA**    |
+| Annotation Collection | **OPT**  | **OPT**  | **OPT**   | **OPT**    | **OPT** | **NA**  | **NA**    |
+| Content Resources     | **OPT**  | **OPT**  | **OPT**   | **OPT**    | **OPT** | **NA**  | **NA**    |
 
 
 __Structural Properties__
 
-|                       | items                      | structures                 | annotations                |
-| --------------------- | -------------------------- | -------------------------- | -------------------------- |
-| Collection            | ![required][icon3-req]     | ![not allowed][icon3-na]   | ![optional][icon3-opt]     |
-| Manifest              | ![required][icon3-req]     | ![optional][icon3-opt]     | ![optional][icon3-opt]     |
-| TextFrame                | ![recommended][icon3-rec]  | ![not allowed][icon3-na]   | ![optional][icon3-opt]     |
-| Annotation            | ![not allowed][icon3-na]   | ![not allowed][icon3-na]   | ![not allowed][icon3-na]   |
-| Annotation Page       | ![recommended][icon3-rec]  | ![not allowed][icon3-na]   | ![not allowed][icon3-na]   |
-| Range                 | ![required][icon3-req]     | ![not allowed][icon3-na]   | ![optional][icon3-opt]     |
-| Annotation Collection | ![not allowed][icon3-na]   | ![not allowed][icon3-na]   | ![not allowed][icon3-na]   |
-| Content Resources     | ![not allowed][icon3-na]   | ![not allowed][icon3-na]   | ![optional][icon3-opt]     |
-{: .api-table #table-reqs-4}
+|                       | items   | structures  | annotations |
+| --------------------- |---------|-------------|-------------|
+| Collection            | **REQ** | **NA**      | **OPT**     |
+| Manifest              | **REQ** | **OPT**     | **OPT**     |
+| TextFrame             | **REC** | **NA**      | **OPT**     |
+| Annotation            | **NA**  | **NA**      | **NA**      |
+| Annotation Page       | **REC** | **NA**      | **NA**      |
+| Annotation Collection | **NA**  | **NA**      | **NA**      |
+| Content Resources     | **NA**  | **NA**      | **OPT**     |
 
 
 __Behavior Values__
 
-|                 | Collection               | Manifest                 | TextFrame                   | Range                    |
-| --------------- | ------------------------ | ------------------------ | ------------------------ | ------------------------ |
-| auto-advance    | ![optional][icon3-opt]   | ![optional][icon3-opt]   | ![optional][icon3-opt]   | ![optional][icon3-opt]   |
-| continuous      | ![optional][icon3-opt]   | ![optional][icon3-opt]   | ![not allowed][icon3-na] | ![optional][icon3-opt]   |
-| facing-pages    | ![not allowed][icon3-na] | ![not allowed][icon3-na] | ![optional][icon3-opt]   | ![not allowed][icon3-na] |
-| individuals     | ![optional][icon3-opt]   | ![optional][icon3-opt]   | ![not allowed][icon3-na] | ![optional][icon3-opt]   |
-| multi-part      | ![optional][icon3-opt]   | ![not allowed][icon3-na] | ![not allowed][icon3-na] | ![not allowed][icon3-na] |
-| no-auto-advance | ![optional][icon3-opt]   | ![optional][icon3-opt]   | ![optional][icon3-opt]   | ![optional][icon3-opt]   |
-| no-nav          | ![not allowed][icon3-na] | ![not allowed][icon3-na] | ![not allowed][icon3-na] | ![optional][icon3-opt]   |
-| no-repeat       | ![optional][icon3-opt]   | ![optional][icon3-opt]   | ![not allowed][icon3-na] | ![not allowed][icon3-na] |
-| non-paged       | ![not allowed][icon3-na] | ![not allowed][icon3-na] | ![optional][icon3-opt]   | ![not allowed][icon3-na] |
-| hidden \*       | ![not allowed][icon3-na] | ![not allowed][icon3-na] | ![not allowed][icon3-na] | ![not allowed][icon3-na] |
-| paged           | ![optional][icon3-opt]   | ![optional][icon3-opt]   | ![not allowed][icon3-na] | ![optional][icon3-opt]   |
-| repeat          | ![optional][icon3-opt]   | ![optional][icon3-opt]   | ![not allowed][icon3-na] | ![not allowed][icon3-na] |
-| sequence        | ![not allowed][icon3-na] | ![not allowed][icon3-na] | ![not allowed][icon3-na] | ![optional][icon3-opt]   |
-| thumbnail-nav   | ![not allowed][icon3-na] | ![not allowed][icon3-na] | ![not allowed][icon3-na] | ![optional][icon3-opt]   |
-| together        | ![optional][icon3-opt]   | ![not allowed][icon3-na] | ![not allowed][icon3-na] | ![not allowed][icon3-na] |
-| unordered       | ![optional][icon3-opt]   | ![optional][icon3-opt]   | ![not allowed][icon3-na] | ![optional][icon3-opt] |
-{: .api-table #table-reqs-5}
+|               | Collection  | Manifest  | TextFrame  |
+|---------------|-------------|-----------|------------|
+| continuous    | **OPT**     | **OPT**   | **NA**     |
+| facing-pages  | **NA**      | **NA**    | **OPT**    |
+| individuals   | **OPT**     | **OPT**   | **NA**     |
+| non-paged     | **NA**      | **NA**    | **OPT**    |
+| hidden \*     | **NA**      | **NA**    | **NA**     |
+| paged         | **OPT**     | **OPT**   | **NA**     |
+| unordered     | **OPT**     | **OPT**   | **NA**     |
 
 \* `hidden` is allowed on Annotation Collections, Annotation Pages, Annotations, Specific Resources and Choices, as these are the classes that result in rendering content to the user.
 
@@ -1766,7 +1541,7 @@ __Behavior Values__
         }
     },
     {
-    "navDate": ["1602-01-19T10:00:00"]}
+    "sortDate": ["1602-01-19T10:00:00"]}
     "metadata": [
         {
             "label": {
