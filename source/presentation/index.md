@@ -45,6 +45,8 @@ __Previous Version:__
 
 This is a DRAFT proposal for an Interoperable Text Framework (ITF) presentation API specification for discussion. Its base text was derived from the [IIIF Presentation API](https://github.com/IIIF/api).
 
+**NOTE:** The JSON fragments and examples in this document have not yet been fully updated to match the specification.
+
 ### 1.1 Audience
 
 This document is intended for developers building applications that share 
