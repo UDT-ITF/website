@@ -437,12 +437,6 @@ The value _MUST_ be a string.
 { "viewingDirection": "left-to-right" }
 ```
 
-> I'm fascinated by this section and this is a notion that might well prove useful, but as it stands I'm not sure there's anything here for us.
-> > Me too. I'm generally leaving most of it as is - apart from attempting to deal with the more image-specific bits.
-> > > My thought is to possible leave this out now unless we can clearly map to some of our use cases. 
-> > > > I think it could be mapped to presenting casebooks materials in a page-flip mechanism, as is done in Cambridge Digital Library.
-> > > > Please delete this conversation after checking the behaviour section and making sure I didn't leave in anything we didn't need.
-
 ##### behavior
 
 A set of user experience features that the publisher of the content would prefer the client to use when presenting the resource. This specification defines the values in the table below. Others may be defined externally as an [extension](#46-linked-data-context-and-extensions).
