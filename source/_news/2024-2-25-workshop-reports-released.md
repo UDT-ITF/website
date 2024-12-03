@@ -13,4 +13,6 @@ The Oxford workshop considered the question: ["How do we construct a useful text
 
 The Cambridge workshop built on this and asked ["To what extent can we map existing practices to annotations and text fragments?"](/publications/2023-02-24-cambridge).
 
+The Notre Dame workshop series involved transcribing a particularly tricky set of texts, the papers of Thomas Harriot, and asked, ["How do we make Thomas Harriot digitally legible?"](/publications/2023-nd-report/)
+
 Based on the outcomes on these workshops, a draft technical specification for an [Interoperable Text Framework](/api) is being developed. 
